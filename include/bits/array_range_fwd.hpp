@@ -5,10 +5,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_BITS_ARRAY_RANGE_FWD_HPP
-#define RANGE_LAYER_BITS_ARRAY_RANGE_FWD_HPP
-
-#include "../range_traits.hpp"
+#ifndef RANGE_LAYER_ARRAY_RANGE_FWD_HPP
+#define RANGE_LAYER_ARRAY_RANGE_FWD_HPP
 
 namespace range_layer {
 

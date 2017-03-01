@@ -5,10 +5,9 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_BITS_ARRAY_RANGE_TCC
-#define RANGE_LAYER_BITS_ARRAY_RANGE_TCC
+#ifndef RANGE_LAYER_ARRAY_RANGE_TCC
+#define RANGE_LAYER_ARRAY_RANGE_TCC
 
-#include "../range_traits.hpp"
 #include <iterator> // std::distance
 
 namespace range_layer {

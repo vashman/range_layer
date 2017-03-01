@@ -46,10 +46,9 @@ struct output {
   /* output_size */
   static constexpr bool const
     is_size_known = Range::is_output_size_known;
-
 };
 
-};
+}; /* range traits */
 
 } /* range layer */
 #endif

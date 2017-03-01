@@ -8,8 +8,6 @@
 #ifndef RANGE_LAYER_BITS_ARRAY_RANGE_HPP
 #define RANGE_LAYER_BITS_ARRAY_RANGE_HPP
 
-#include "../range_traits.hpp"
-
 namespace range_layer {
 
 template <typename T>

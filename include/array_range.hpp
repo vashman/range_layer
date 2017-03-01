@@ -8,6 +8,7 @@
 #ifndef RANGE_LAYER_ARRAY_RANGE_HPP
 #define RANGE_LAYER_ARRAY_RANGE_HPP
 
+#include "range_traits.hpp"
 #include "bits/array_range_fwd.hpp"
 #include "bits/array_range.hpp"
 #include "bits/array_range.tcc"
