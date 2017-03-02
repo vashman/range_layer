@@ -12,7 +12,8 @@
 
 namespace range_layer {
 
-template <typename Range>
+template <
+  typename Range, typename Traits = range_traits<Range> >
 class sub_range {
 
 public:
@@ -26,24 +27,23 @@ std::size_t pos;
 
 public:
 
-static constexpr bool const is_output = Range::is_output;
-static constexpr bool const is_input = Range::is_input;
+static constexpr bool const is_output = Traits::is_output;
+static constexpr bool const is_input = Traits::is_input;
 static constexpr bool const
-  is_input_contiguous = Range::is_input_contiguous;
+  is_input_contiguous = Traits::input::is_contiguous;
 static constexpr bool const
-  is_input_temporary = Range::is_input_temporary;
+  is_input_temporary = Traits::input::is_temporary;
 static constexpr bool const
-  is_input_size_known = Range::is_input_size_known;
+  is_input_size_known = Traits::input::is_size_known;
 static constexpr bool const
-  is_output_contiguous = Range::is_output_contiguous;
+  is_output_contiguous = Traits::output::is_contiguous;
 static constexpr bool const
-  is_output_temporary = Range::is_output_temporary;
+  is_output_temporary = Traits::output::is_temporary;
 static constexpr bool const
-  is_output_size_known = Range::is_output_size_known;
+  is_output_size_known = Traits::output::is_size_known;
 static constexpr bool const
-  is_reversable = Range::is_reversable;
-using difference_type
-  = typename range_traits<Range>::difference_type;
+  is_reversable = Traits::is_reversable;
+using difference_type = typename Traits::difference_type;
 
 sub_range (
   Range
@@ -61,16 +61,16 @@ void jump();
 
 };
 
-template <typename Range>
+template <typename Range, typename Traits>
 void
-sub_range<Range>::jump (
+sub_range<Range, Traits>::jump (
 ){
 this->range = next(this->range, this->next_jump);
 this->next_jump = 0;
 }
 
-template <typename Range>
-sub_range<Range>::sub_range (
+template <typename Range, typename Traits>
+sub_range<Range, Traits>::sub_range (
   Range _range
 , std::size_t _start
 , std::size_t _finish
@@ -83,10 +83,10 @@ sub_range<Range>::sub_range (
 , pos {_start}
 {}
 
-template <typename Range>
+template <typename Range, typename Traits>
 auto
 read (
-  sub_range<Range> & _range
+  sub_range<Range, Traits> & _range
 ) -> decltype (read(_range.range))
 {
 _range.jump();
@@ -94,10 +94,10 @@ _range.jump();
 return read(_range.range);
 }
 
-template <typename Range, typename T>
+template <typename Range, typename T, typename Traits>
 void
 write (
-  sub_range<Range> & _range
+  sub_range<Range, Traits> & _range
 , T const & _var
 ){
 _range.jump();
@@ -105,28 +105,28 @@ _range.jump();
 write(_range.range, _var);
 }
 
-template <typename Range>
+template <typename Range, typename Traits>
 auto
 read (
-  sub_range<Range> && _range
+  sub_range<Range, Traits> && _range
 ) -> decltype (read(_range.range))
 {
 return read(_range.range);
 }
 
-template <typename Range, typename T>
+template <typename Range, typename T, typename Traits>
 void
 write (
-  sub_range<Range> && _range
+  sub_range<Range, Traits> && _range
 , T const & _var
 ){
 write(_range, _var);
 }
 
-template <typename Range>
+template <typename Range, typename Traits>
 bool
 is_readable (
-  sub_range<Range> _range
+  sub_range<Range, Traits> _range
 ){
 _range.jump();
   if ((_range.pos > _range.finish) && _range.finish != 0)
@@ -134,37 +134,37 @@ _range.jump();
 return is_readable(_range.range);
 }
 
-template <typename Range>
-typename range_traits<Range>::difference_type
+template <typename Range, typename Traits>
+typename Traits::difference_type
 input_size (
-  sub_range<Range> _range
+  sub_range<Range, Traits> _range
 ){
 return input_size(_range.range);
 }
 
-template <typename Range>
-typename range_traits<Range>::difference_type
+template <typename Range, typename Traits>
+typename Traits::difference_type
 output_size (
-  sub_range<Range> _range
+  sub_range<Range, Traits> _range
 ){
 return output_size(_range.range);
 }
 
-template <typename Range>
+template <typename Range, typename Traits>
 bool
 is_writable (
-  sub_range<Range> _range
+  sub_range<Range, Traits> _range
 ){
 _range.jump();
   if (_range.pos < _range.start) return false;
 return is_writable(_range.range);
 }
 
-template <typename Range>
-sub_range<Range>
+template <typename Range, typename Traits>
+sub_range<Range, Traits>
 next (
-  sub_range<Range> _range
-, typename range_traits<Range>::difference_type _n = 1
+  sub_range<Range, Traits> _range
+, typename Traits::difference_type _n = 1
 ){
 _range.next_jump += _n;
 _range.pos += _range.next_jump;
@@ -177,11 +177,11 @@ _range.next_jump = 0;
 return _range;
 }
 
-template <typename Range>
-sub_range<Range>
+template <typename Range, typename Traits>
+sub_range<Range, Traits>
 prev (
-  sub_range<Range> _range
-, typename range_traits<Range>::difference_type _n = 1
+  sub_range<Range, Traits> _range
+, typename Traits::difference_type _n = 1
 ){
 _range.jump();
 _range.prev_jump += _n;

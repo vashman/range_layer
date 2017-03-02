@@ -10,219 +10,223 @@
 
 namespace range_layer {
 
-template <typename Range, typename Func>
+template <typename Func, typename Range, typename Traits>
 struct input_transform_range;
 
-template <typename Range, typename Func>
+template <typename Func, typename Range, typename Traits>
 struct output_transform_range;
 
 // Input
-template <typename Range, typename Func>
+template <typename Func, typename Range, typename Traits>
 auto
 read (
-  input_transform_range<Range, Func> & _range
+  input_transform_range<Func, Range, Traits> & _range
 )
 -> decltype (_range.func(read(_range.range)));
 
-template <typename Range, typename Func>
+template <typename Func, typename Range, typename Traits>
 auto
 read (
-  input_transform_range<Range, Func> && _range
+  input_transform_range<Func, Range, Traits> && _range
 )
 -> decltype (_range.func(read(_range.range)));
 
-template <typename Range, typename Func>
+template <typename Func, typename Range, typename Traits>
 bool
 is_readable (
-  input_transform_range<Range, Func> &
+  input_transform_range<Func, Range, Traits> &
 );
 
-template <typename Range, typename Func>
-typename range_traits<Range>::difference_type
+template <typename Func, typename Range, typename Traits>
+typename Traits::difference_type
 input_size (
-  input_transform_range<Range, Func> &
+  input_transform_range<Func, Range, Traits> &
 );
 
-template <typename Range, typename Func>
+template <typename Func, typename Range, typename Traits>
 bool
 is_readable (
-  input_transform_range<Range, Func> &&
+  input_transform_range<Func, Range, Traits> &&
 );
 
-template <typename Range, typename Func>
-typename range_traits<Range>::difference_type
+template <typename Func, typename Range, typename Traits>
+typename Traits::difference_type
 input_size (
-  input_transform_range<Range, Func> &&
+  input_transform_range<Func, Range, Traits> &&
 );
 
-template <typename T, typename Range, typename Func>
+template
+<typename T, typename Range, typename Traits, typename Func>
 void
 write (
-  input_transform_range<Range, Func> &
+  input_transform_range<Func, Range, Traits> &
 , T const & _var
 );
 
-template <typename T, typename Range, typename Func>
+template
+<typename T, typename Range, typename Traits, typename Func>
 void
 write (
-  input_transform_range<Range, Func> &&
+  input_transform_range<Func, Range, Traits> &&
 , T const & _var
 );
 
-template <typename Range, typename Func>
+template <typename Func, typename Range, typename Traits>
 bool
 is_writable (
-  input_transform_range<Range, Func> &
+  input_transform_range<Func, Range, Traits> &
 );
 
-template <typename Range, typename Func>
+template <typename Func, typename Range, typename Traits>
 bool
 is_writable (
-  input_transform_range<Range, Func> &&
+  input_transform_range<Func, Range, Traits> &&
 );
 
-template <typename Range, typename Func>
-typename range_traits<Range>::difference_type
+template <typename Func, typename Range, typename Traits>
+typename Traits::difference_type
 output_size (
-  input_transform_range<Range, Func> &
+  input_transform_range<Func, Range, Traits> &
 );
 
-template <typename Range, typename Func>
-typename range_traits<Range>::difference_type
+template <typename Func, typename Range, typename Traits>
+typename Traits::difference_type
 output_size (
-  input_transform_range<Range, Func> &&
+  input_transform_range<Func, Range, Traits> &&
 );
 
-template <typename Range, typename Func>
-input_transform_range<Range, Func>
+template <typename Func, typename Range, typename Traits>
+input_transform_range<Func, Range, Traits>
 next (
-  input_transform_range<Range, Func> &
-, typename range_traits<Range>::difference_type _n = 1
+  input_transform_range<Func, Range, Traits> &
+, typename Traits::difference_type _n = 1
 );
 
-template <typename Range, typename Func>
-input_transform_range<Range, Func>
+template <typename Func, typename Range, typename Traits>
+input_transform_range<Func, Range, Traits>
 next (
-  input_transform_range<Range, Func> &&
-, typename range_traits<Range>::difference_type _n = 1
+  input_transform_range<Func, Range, Traits> &&
+, typename Traits::difference_type _n = 1
 );
 
-template <typename Range, typename Func>
-input_transform_range<Range, Func>
+template <typename Func, typename Range, typename Traits>
+input_transform_range<Func, Range, Traits>
 prev (
-  input_transform_range<Range, Func> &&
-, typename range_traits<Range>::difference_type _n = 1
+  input_transform_range<Func, Range, Traits> &&
+, typename Traits::difference_type _n = 1
 );
 
-template <typename Range, typename Func>
-input_transform_range<Range, Func>
+template <typename Func, typename Range, typename Traits>
+input_transform_range<Func, Range, Traits>
 prev (
-  input_transform_range<Range, Func> &
-, typename range_traits<Range>::difference_type _n = 1
+  input_transform_range<Func, Range, Traits> &
+, typename Traits::difference_type _n = 1
 );
 
 // Output
-template <typename Range, typename Func>
+template <typename Func, typename Range, typename Traits>
 auto
 read (
-  output_transform_range<Range, Func> & _range
+  output_transform_range<Func, Range, Traits> & _range
 )
 -> decltype (read(_range.range));
 
-template <typename Range, typename Func>
+template <typename Func, typename Range, typename Traits>
 auto
 read (
-  output_transform_range<Range, Func> && _range
+  output_transform_range<Func, Range, Traits> && _range
 )
 -> decltype (read(_range.range));
 
-template <typename Range, typename Func>
+template <typename Func, typename Range, typename Traits>
 bool
 is_readable (
-  output_transform_range<Range, Func> &
+  output_transform_range<Func, Range, Traits> &
 );
 
-template <typename Range, typename Func>
+template <typename Func, typename Range, typename Traits>
 bool
 is_readable (
-  output_transform_range<Range, Func> &&
+  output_transform_range<Func, Range, Traits> &&
 );
 
-template <typename Range, typename Func>
-typename range_traits<Range>::difference_type
+template <typename Func, typename Range, typename Traits>
+typename Traits::difference_type
 input_size (
-  output_transform_range<Range, Func> &
+  output_transform_range<Func, Range, Traits> &
 );
 
-template <typename Range, typename Func>
-typename range_traits<Range>::difference_type
+template <typename Func, typename Range, typename Traits>
+typename Traits::difference_type
 input_size (
-  output_transform_range<Range, Func> &&
+  output_transform_range<Func, Range, Traits> &&
 );
 
-template <typename T, typename Range, typename Func>
+template
+<typename T, typename Range, typename Traits, typename Func>
 void
 write (
-  output_transform_range<Range, Func> &
+  output_transform_range<Func, Range, Traits> &
 , T const & _var
 );
 
-template <typename T, typename Range, typename Func>
+template
+<typename T, typename Range, typename Traits, typename Func>
 void
 write (
-  output_transform_range<Range, Func> &&
+  output_transform_range<Func, Range, Traits> &&
 , T const & _var
 );
 
-template <typename Range, typename Func>
+template <typename Func, typename Range, typename Traits>
 bool
 is_writable (
-  output_transform_range<Range, Func> &
+  output_transform_range<Func, Range, Traits> &
 );
 
-template <typename Range, typename Func>
+template <typename Func, typename Range, typename Traits>
 bool
 is_writable (
-  output_transform_range<Range, Func> &&
+  output_transform_range<Func, Range, Traits> &&
 );
 
-template <typename Range, typename Func>
-typename range_traits<Range>::difference_type
+template <typename Func, typename Range, typename Traits>
+typename Traits::difference_type
 output_size (
-  output_transform_range<Range, Func> &
+  output_transform_range<Func, Range, Traits> &
 );
 
-template <typename Range, typename Func>
-typename range_traits<Range>::difference_type
+template <typename Func, typename Range, typename Traits>
+typename Traits::difference_type
 output_size (
-  output_transform_range<Range, Func> &&
+  output_transform_range<Func, Range, Traits> &&
 );
 
-template <typename Range, typename Func>
-output_transform_range<Range, Func>
+template <typename Func, typename Range, typename Traits>
+output_transform_range<Func, Range, Traits>
 next (
-  output_transform_range<Range, Func> &
-, typename range_traits<Range>::difference_type _n = 1
+  output_transform_range<Func, Range, Traits> &
+, typename Traits::difference_type _n = 1
 );
 
-template <typename Range, typename Func>
-output_transform_range<Range, Func>
+template <typename Func, typename Range, typename Traits>
+output_transform_range<Func, Range, Traits>
 next (
-  output_transform_range<Range, Func> &&
+  output_transform_range<Func, Range, Traits> &&
+, typename Traits::difference_type _n = 1
+);
+
+template <typename Func, typename Range, typename Traits>
+output_transform_range<Func, Range, Traits>
+prev (
+  output_transform_range<Func, Range, Traits> &&
 , typename range_traits<Range>::difference_type _n = 1
 );
 
-template <typename Range, typename Func>
-output_transform_range<Range, Func>
+template <typename Func, typename Range, typename Traits>
+output_transform_range<Func, Range, Traits>
 prev (
-  output_transform_range<Range, Func> &&
-, typename range_traits<Range>::difference_type _n = 1
-);
-
-template <typename Range, typename Func>
-output_transform_range<Range, Func>
-prev (
-  output_transform_range<Range, Func> &
+  output_transform_range<Func, Range, Traits> &
 , typename range_traits<Range>::difference_type _n = 1
 );
 

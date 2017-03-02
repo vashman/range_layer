@@ -1,7 +1,7 @@
 #include <iostream>
 #include <array>
-#include "../include/array_range.hpp"
 #include "../include/sub_range.hpp"
+#include "../include/array_range.hpp"
 
 using std::array;
 using range_layer::array_range;

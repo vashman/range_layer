@@ -1,9 +1,9 @@
 #include <string>
 #include <array>
 #include <iostream>
-#include "../include/array_range.hpp"
 #include "../include/transform_range.hpp"
 #include "../include/iota_range.hpp"
+#include "../include/array_range.hpp"
 
 using std::string;
 using std::cout;
@@ -14,21 +14,21 @@ using range_layer::input_transform_range;
 using range_layer::output_transform_range;
 
 template <typename Range, typename Func>
-input_transform_range<Range, Func>
+input_transform_range<Func, Range, range_layer::range_traits<Range>>
 make_itransform_range (
   Range _range
 , Func _func
 ){
-return input_transform_range<Range, Func>{_range, _func};
+return input_transform_range<Func, Range, range_layer::range_traits<Range>>{_range, _func};
 }
 
 template <typename Range, typename Func>
-output_transform_range<Range, Func>
+output_transform_range<Func, Range, range_layer::range_traits<Range>>
 make_otransform_range (
   Range _range
 , Func _func
 ){
-return output_transform_range<Range, Func>{_range, _func};
+return output_transform_range<Func, Range, range_layer::range_traits<Range>>{_range, _func};
 }
 
 int main (){

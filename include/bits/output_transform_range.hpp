@@ -10,32 +10,34 @@
 
 namespace range_layer {
 
-template <typename Range, typename Func>
+template <
+  typename Func
+, typename Range
+, typename Traits = range_traits<Range> >
 struct output_transform_range {
 
-using trait = range_traits<Range>;
-static constexpr bool const is_output = trait::is_output;
-static constexpr bool const is_input = trait::is_input;
+static constexpr bool const is_output = Traits::is_output;
+static constexpr bool const is_input = Traits::is_input;
 static constexpr bool const
-  is_input_contiguous = trait::input::is_contiguous;
+  is_input_contiguous = Traits::input::is_contiguous;
 
 static constexpr bool const
-  is_input_temporary = trait::input::is_temporary;
+  is_input_temporary = Traits::input::is_temporary;
 
 static constexpr bool const
-  is_input_size_known = trait::input::is_size_known;
+  is_input_size_known = Traits::input::is_size_known;
 
 static constexpr bool const
-  is_output_contiguous = trait::output::is_contiguous;
+  is_output_contiguous = Traits::output::is_contiguous;
 
 static constexpr bool const
-  is_output_temporary = trait::output::is_temporary;
+  is_output_temporary = Traits::output::is_temporary;
 
 static constexpr bool const
-  is_output_size_known = trait::output::is_size_known;
+  is_output_size_known = Traits::output::is_size_known;
 
 static constexpr bool const
-  is_reversable = trait::is_reversable;
+  is_reversable = Traits::is_reversable;
 
 Range range;
 Func func;
