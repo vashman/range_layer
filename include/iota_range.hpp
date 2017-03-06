@@ -21,16 +21,34 @@ static constexpr bool const is_input = true;
 static constexpr bool const is_input_contiguous = false;
 static constexpr bool const is_input_temporary = true;
 static constexpr bool const is_input_size_known = true;
+static constexpr bool const is_input_position_known = true;
 static constexpr bool const is_output_contiguous = false;
 static constexpr bool const is_output_temporary = false;
 static constexpr bool const is_output_size_known = false;
+static constexpr bool const is_output_position_known = true;
 static constexpr bool const is_reversable = true;
 using difference_type = T;
 
-// must be ++, --
+// must have ++, --
 T count;
 
 };
+
+template <typename T>
+typename range_traits<iota_range<T>>::difference_type
+input_position (
+  iota_range<T> const & _range
+){
+return _range.count;
+}
+
+template <typename T>
+typename range_traits<iota_range<T>>::difference_type
+output_position (
+  iota_range<T> const & _range
+){
+return _range.count;
+}
 
 template <typename T>
 T

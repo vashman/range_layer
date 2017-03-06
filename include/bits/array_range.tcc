@@ -51,7 +51,7 @@ typename range_traits<array_range<T>>::difference_type
 input_size (
   array_range<T> const & _range
 ){
-return std::distance(_range.pos, _range.end_pos);
+return std::distance(_range.array, _range.end_pos);
 }
 
 template <typename T>
@@ -107,6 +107,22 @@ prev (
 ){
 _range.pos -= _n;
 return _range;
+}
+
+template <typename T>
+typename range_traits<array_range<T>>::difference_type
+input_position (
+  array_range<T> const & _range
+){
+std::distance(_range.pos, _range.end_pos);
+}
+
+template <typename T>
+typename range_traits<array_range<T>>::difference_type
+output_position (
+  array_range<T> const & _range
+){
+return input_position(_range);
 }
 
 } /* range layer */

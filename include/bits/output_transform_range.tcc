@@ -154,6 +154,26 @@ _range.range = prev(_range.range, _n);
 return _range;
 }
 
+template <typename Func, typename Range, typename Traits>
+  typename range_traits
+  <output_transform_range<Func, Range, Traits>>
+::difference_type
+input_position (
+ output_transform_range<Func, Range, Traits> & _range
+){
+return input_position(_range);
+}
+
+template <typename Func, typename Range, typename Traits>
+  typename range_traits
+  <output_transform_range<Func, Range, Traits>>
+::difference_type
+output_position (
+ output_transform_range<Func, Range, Traits> & _range
+){
+return output_position(_range);
+}
+
 } /* range layer */
 #endif
 

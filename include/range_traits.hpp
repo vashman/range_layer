@@ -32,9 +32,12 @@ struct input {
 
   static constexpr bool const
     is_temporary = Range::is_input_temporary;
-  /* input_size */
+
   static constexpr bool const
     is_size_known = Range::is_input_size_known;
+
+  static constexpr bool const
+    is_position_known = Range::is_input_position_known;
 };
 
 struct output {
@@ -43,9 +46,12 @@ struct output {
 
   static constexpr bool const
     is_temporary = Range::is_output_temporary;
-  /* output_size */
+
   static constexpr bool const
     is_size_known = Range::is_output_size_known;
+
+  static constexpr bool const
+    is_position_known = Range::is_output_position_known;
 };
 
 }; /* range traits */

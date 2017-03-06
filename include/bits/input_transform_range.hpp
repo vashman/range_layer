@@ -24,6 +24,9 @@ static constexpr bool const is_input_temporary = true;
 static constexpr bool const
   is_input_size_known = Traits::input::is_size_known;
 
+static constexpr bool const is_input_position_known
+  = Traits::input::is_position_known;
+
 static constexpr bool const
   is_output_contiguous = Traits::output::is_contiguous;
 
@@ -32,6 +35,9 @@ static constexpr bool const
 
 static constexpr bool const
   is_output_size_known = Traits::output::is_size_known;
+
+static constexpr bool const is_output_position_known
+  = Traits::output::is_position_known;
 
 static constexpr bool const
   is_reversable = Traits::is_reversable;

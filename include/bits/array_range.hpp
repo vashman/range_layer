@@ -24,9 +24,11 @@ static constexpr bool const is_input = true;
 static constexpr bool const is_input_contiguous = true;
 static constexpr bool const is_input_temporary = false;
 static constexpr bool const is_input_size_known = true;
+static constexpr bool const is_input_position_known = true;
 static constexpr bool const is_output_contiguous = true;
 static constexpr bool const is_output_temporary = false;
 static constexpr bool const is_output_size_known = true;
+static constexpr bool const is_output_position_known = true;
 static constexpr bool const is_reversable = true;
 using difference_type = std::size_t;
 
@@ -49,6 +51,8 @@ friend bool is_writable<T> (array_range const &);
 friend difference_type output_size<T> (array_range const &);
 friend array_range next<T> (array_range &, difference_type);
 friend array_range prev<T> (array_range &, difference_type);
+friend difference_type input_position (array_range const &);
+friend difference_type output_position(array_range const &);
 
 };
 

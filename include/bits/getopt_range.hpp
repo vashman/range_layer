@@ -32,9 +32,11 @@ static constexpr bool const is_input = true;
 static constexpr bool const is_input_contiguous = false;
 static constexpr bool const is_input_temporary = true;
 static constexpr bool const is_input_size_known = false;
+static constexpr bool const is_input_position_known = false;
 static constexpr bool const is_output_contiguous = false;
 static constexpr bool const is_output_temporary = false;
 static constexpr bool const is_output_size_known = false;
+static constexpr bool const is_output_position_known= false;
 static constexpr bool const is_reversable = false;
 using difference_type = std::size_t;
 

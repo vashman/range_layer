@@ -79,6 +79,18 @@ prev (
   ::difference_type _n = 1
 );
 
+template <typename T>
+typename range_traits<array_range<T>>::difference_type
+input_position (
+  array_range<T> const &
+);
+
+template <typename T>
+typename range_traits<array_range<T>>::difference_type
+output_position (
+  array_range<T> const &
+);
+
 } /* range layer */
 #endif
 
