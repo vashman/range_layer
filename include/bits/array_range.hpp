@@ -49,8 +49,8 @@ friend difference_type input_size<T> (array_range const &);
 friend void write<T> (array_range &, T const &);
 friend bool is_writable<T> (array_range const &);
 friend difference_type output_size<T> (array_range const &);
-friend array_range next<T> (array_range &, difference_type);
-friend array_range prev<T> (array_range &, difference_type);
+friend array_range next<T> (array_range, difference_type);
+friend array_range prev<T> (array_range, difference_type);
 friend difference_type input_position (array_range const &);
 friend difference_type output_position(array_range const &);
 

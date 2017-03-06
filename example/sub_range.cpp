@@ -5,15 +5,20 @@
 
 using std::array;
 using range_layer::array_range;
-using range_layer::sub_range;
+using range_layer::lower_bound;
+using range_layer::upper_bound;
 
 int main (){
 array<int, 7> arr {{0, 1, 2, 3, 4, 5, 6}};
 
-sub_range<array_range<int>> arr_rng {
-  array_range<int> {arr.data(), arr.data()+arr.size()}
+upper_bound <lower_bound<array_range<int>>> arr_rng {
+lower_bound<array_range<int>> {
+  next(array_range<int> {arr.data(), arr.data()+arr.size()})
 , 1
+, 1
+}
 , 3
+, 0
 };
 
 std::cout << "\nsize is: " << input_size(arr_rng);

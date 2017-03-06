@@ -9,9 +9,11 @@
 #define RANGE_LAYER_SUB_RANGE_HPP
 
 #include "range_traits.hpp"
+#include "bits/lower_bound.hpp"
+#include "bits/upper_bound.hpp"
 
 namespace range_layer {
-
+/*
 template <
   typename Range, typename Traits = range_traits<Range> >
 class sub_range {
@@ -193,7 +195,7 @@ _range.pos -= _range.prev_jump;
 _range.range = prev(_range.range, _range.prev_jump);
 _range.prev_jump = 0;
 return _range;
-}
+}*/
 
 } /* range layer */
 #endif

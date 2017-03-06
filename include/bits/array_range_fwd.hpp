@@ -66,7 +66,7 @@ output_size (
 template <typename T>
 array_range<T>
 next (
-  array_range<T> &
+  array_range<T>
 ,   typename range_traits<array_range<T>>
   ::difference_type _n = 1
 );
@@ -74,7 +74,7 @@ next (
 template <typename T>
 array_range<T>
 prev (
-  array_range<T> &
+  array_range<T>
 ,   typename range_traits<array_range<T>>
   ::difference_type _n = 1
 );

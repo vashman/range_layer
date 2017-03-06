@@ -92,7 +92,7 @@ return input_size(_range);
 template <typename T>
 array_range<T>
 next (
-  array_range<T> & _range
+  array_range<T> _range
 , typename range_traits<array_range<T>>::difference_type _n
 ){
 _range.pos += _n;
@@ -102,7 +102,7 @@ return _range;
 template <typename T>
 array_range<T>
 prev (
-  array_range<T> & _range
+  array_range<T> _range
 , typename range_traits<array_range<T>>::difference_type _n
 ){
 _range.pos -= _n;
