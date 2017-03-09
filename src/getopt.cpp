@@ -5,14 +5,12 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_GETOPT_HPP
-#define RANGE_LAYER_GETOPT_HPP
+#ifndef RANGE_LAYER_GETOPT_CPP
+#define RANGE_LAYER_GETOPT_CPP
 
-#include "bits/getopt_fwd.hpp"
-#include "bits/program_option.hpp"
-#include "bits/getopt_iterator.hpp"
-#include "range_traits.hpp"
-#include "bits/getopt_range.hpp"
+#include "../include/getopt.hpp"
+#include "bits/getopt_range.cpp"
+#include "bits/program_option.cpp"
 
 #endif
 

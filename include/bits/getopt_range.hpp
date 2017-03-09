@@ -8,11 +8,7 @@
 #ifndef RANGE_LAYER_GETOPT_RANGE_HPP
 #define RANGE_LAYER_GETOPT_RANGE_HPP
 
-#include "getopt_fwd.hpp"
 #include <string>
-#include "bits/getopt_iterator.hpp"
-#include "bits/program_option.hpp"
-#include "range_traits.hpp"
 
 namespace range_layer {
 

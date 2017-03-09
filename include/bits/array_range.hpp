@@ -8,6 +8,8 @@
 #ifndef RANGE_LAYER_BITS_ARRAY_RANGE_HPP
 #define RANGE_LAYER_BITS_ARRAY_RANGE_HPP
 
+#include <iterator>
+
 namespace range_layer {
 
 template <typename T>
@@ -30,7 +32,8 @@ static constexpr bool const is_output_temporary = false;
 static constexpr bool const is_output_size_known = true;
 static constexpr bool const is_output_position_known = true;
 static constexpr bool const is_reversable = true;
-using difference_type = std::size_t;
+using difference_type
+  = typename std::iterator_traits<T*>::difference_type;
 
 array_range (
   T *
@@ -51,8 +54,11 @@ friend bool is_writable<T> (array_range const &);
 friend difference_type output_size<T> (array_range const &);
 friend array_range next<T> (array_range, difference_type);
 friend array_range prev<T> (array_range, difference_type);
-friend difference_type input_position (array_range const &);
-friend difference_type output_position(array_range const &);
+friend
+difference_type input_position<T> (array_range const &);
+
+friend
+difference_type output_position<T>(array_range const &);
 
 };
 

@@ -5,8 +5,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_GETOPT_RANGE_TCC
-#define RANGE_LAYER_GETOPT_RANGE_TCC
+#ifndef RANGE_LAYER_GETOPT_RANGE_CPP
+#define RANGE_LAYER_GETOPT_RANGE_CPP
 
 #include <unistd.h>
 
@@ -56,7 +56,7 @@ return (-1 == _range.rv) && (_range.local_argc > 0);
 getopt_range
 next (
   getopt_range _range
-, typename range_traits<getopt_range>::difference_type _n = 1
+, typename range_traits<getopt_range>::difference_type _n
 ){
 /* set getopt state to local state. */
 int global_optind = optind;

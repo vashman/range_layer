@@ -18,34 +18,22 @@ struct program_option {
 std::tuple <char, std::string> option;
 
 bool
-has_arg () const {
-using std::get;
-
-return ! get<1>(this->option).empty();
-}
+has_arg () const;
 
 char &
-get_option (){
-return std::get<0>(this->option);
-}
+get_option ();
 
 std::string &
-get_arg (){
-return std::get<1>(this->option);
-}
+get_arg ();
 
 program_option (
-  char _opt
-)
-: option (_opt, "")
-{}
+  char
+);
 
 program_option (
-  char _opt
-, std::string _str
-)
-: option (_opt, _str)
-{}
+  char
+, std::string
+);
 
 program_option (program_option const &) = default;
 program_option (program_option &&) = default;

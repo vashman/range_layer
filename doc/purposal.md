@@ -23,10 +23,11 @@ No transversal on construction
 ------------------------------------------------------------
 1. When constructing a range type, no obervable transversal
    should take place.
+2. The ctor should not eat any part of the range.
 
 Automatic transversal
 ------------------------------------------------------------
-1. Reading or Writing to a range should transvese once,
+1. Reading or Writing to a range should transverse once,
    when the operation completes.
 
 Non-const observation
@@ -35,6 +36,12 @@ Non-const observation
    object may change.
 2. An exception is that observing the postion does gurantee
    constness.
+
+Non-blocking calls
+------------------------------------------------------------
+The following calls shall be non-blocking;
+1. `is_readable`
+2. `is_writable`
 
 Allow move / copy / refrence passing
 ------------------------------------------------------------
@@ -52,8 +59,12 @@ Transversal traits
 
 Data traits
 ------------------------------------------------------------
-------------------------------------------------------------
 
+Invalidation
+------------------------------------------------------------
+Invalidation occurs when:
+1. The pointed to device / contianer is destroyed.
+2. An out of bound read / write occurs.
 
 6 Technical Specifications
 ============================================================

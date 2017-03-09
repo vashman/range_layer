@@ -10,6 +10,7 @@ array<int, 5> arr {{0, 1, 2, 3, 4}};
 array_range<int> arr_rng
   {arr.data(), arr.data()+arr.size()};
 std::cout << "\nsize is: " << input_size(arr_rng);
+
 if (!is_readable(arr_rng)) std::cout << "unable to read";
 
 int temp = read(arr_rng);

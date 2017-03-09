@@ -8,6 +8,8 @@
 #ifndef RANGE_LAYER_GETOPT_FWD_HPP
 #define RANGE_LAYER_GETOPT_FWD_HPP
 
+#include <cstddef>
+
 namespace range_layer {
 
 struct program_option;
