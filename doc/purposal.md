@@ -50,6 +50,13 @@ The following calls shall be implemented as non-blocking;
 1. `read_size`
 2. `write_size`
 
+Seperate input & output postions
+------------------------------------------------------------
+The postions of intput and output may be differnt at the
+time of construction. Their postions / transversal will be
+synced after that point, but either or may go on when the
+other ends.
+
 Allow move / copy / refrence passing
 ------------------------------------------------------------
 1. The range object can be passed around by moving,
@@ -63,6 +70,12 @@ Allow move / copy / refrence return
 
 No size
 ------------------------------------------------------------
+
+Read & Write end / begin may differ
+------------------------------------------------------------
+1. The functions `is_write_end`, `is_write_begin` and the
+   functions `is_read_end`, `is_read_begin` may not return 
+   true at the same time.
 
 No position
 ------------------------------------------------------------
@@ -96,20 +109,22 @@ overloads for `range &&` and `Range&`.
 ### Basic
 1. `Range next (Range);`
 2. `Range next (Range, size_type);`
-3. `bool is_last (Range);`
-
-### If reverseable
-1. `Range prev (Range);`
-2. `Range prev (Range, size_type);`
-3. `bool is_first (Range);`
 
 ### Read
 1. `T read (Range);`
 2. `size_type read_size (Range);`
+3. `bool is_read_end (Range);`
 
 ### write
 1. `void write (Range, T const &);`
 2. `size_type write_size (Range);`
+3. `bool is_write_end (Range);`
+
+### If reverseable
+1. `Range prev (Range);`
+2. `Range prev (Range, size_type);`
+3. `bool is_read_begin (Range);`
+4. `bool is_write_begin (Range);`
 
 ### If erasable
 1. `void erase (Range);`
@@ -126,36 +141,32 @@ When the container / device is modified from inseration or
 erasure, the above rules still hold.
 
 The following operations cannot invalidate a range;
-1. `is_last`
-2. `is_first`
-3. `read_size`
-4. `write_size`
+1. `is_read_begin`
+2. `is_read_end`
+3. `is_write_begin`
+4. `is_write_end`
+5. `read_size`
+6. `write_size`
 
+### Tempory data
+When the input / output has `is_tempeary` set to `true`, the
+read / write functions cannot only be called once per
+postion in the range.
+
+### Validation gurantees for multiple instances.
 Ranges are catgorized with 3 validation tags; single, synced
 , unsynced,These provide gurantess under which operations
 the range will be valid / invalid under.
 
-### Single
-1. The range will become invalid after any read or write.
-   Transvering the range while in bounds, will revalidate
-   the range.
+1. Single: When the range is transvered, Only the
+   transversed range will be valid. All copies will become
+   invalid.
 
-2. When the range is transvered, Only the transversed range
-   will be valid. All copies will become invalid.
-
-#### Concurrancy
-
-### Synced
-1. All ranges for the instance are equal, regular
+2. Synced: All ranges for the instance are equal, regular
    invalidation occurs for the group at once.
 
-#### Concurrancy
-
-### Unsynced
-1. All ranges instances are seperate and can only themselves
-   become invalid through regular invalidation.
-
-#### Concurrancy
+3. Unsynced: All ranges instances are seperate and can only
+   themselves become invalid through regular invalidation.
 
 6 Technical Specifications
 ============================================================
