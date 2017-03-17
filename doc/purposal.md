@@ -44,9 +44,9 @@ X ------------------------------------------------------------
 X 1. Observing the class does not gurantee constness and the
 X   object may change.
 
-Non-blocking calls
+Locking calls
 ------------------------------------------------------------
-The following calls shall be implemented as non-blocking;
+The following function calls may block and can lock;
 1. `read_size`
 2. `write_size`
 
@@ -73,12 +73,15 @@ No size
 
 Read & Write end / begin may differ
 ------------------------------------------------------------
-1. The functions `is_write_end`, `is_write_begin` and the
-   functions `is_read_end`, `is_read_begin` may not return 
-   true at the same time.
+1. The `read_size` & `write_size` may differ in size.
 
 No position
 ------------------------------------------------------------
+
+Types
+------------------------------------------------------------
+1. `range_traits`:
+2. `range_size_type`:
 
 Traits
 ------------------------------------------------------------
@@ -90,10 +93,6 @@ The basic trait type is `static constexpr bool const`.
 4. `is_erasable`: Data can be erased from the range.
 5. `static constexpr validation_type validation const`: Type
    used to hold the validation gurantee for the range.
-6. `using size_type`: Type used to represent the readable
-   / writable size.
-7. `static constexpr size_type const zero`: The equivlent of
-   zero on none of the above type.
 
 ### Data traits
 Duplicate traits for both input and output.
@@ -113,18 +112,16 @@ overloads for `range &&` and `Range&`.
 ### Read
 1. `T read (Range);`
 2. `size_type read_size (Range);`
-3. `bool is_read_end (Range);`
 
 ### write
 1. `void write (Range, T const &);`
 2. `size_type write_size (Range);`
-3. `bool is_write_end (Range);`
 
 ### If reverseable
 1. `Range prev (Range);`
 2. `Range prev (Range, size_type);`
-3. `bool is_read_begin (Range);`
-4. `bool is_write_begin (Range);`
+3. `S rwrite_size (Range);`
+3. `S rread_size (Range);`
 
 ### If erasable
 1. `void erase (Range);`
@@ -141,12 +138,10 @@ When the container / device is modified from inseration or
 erasure, the above rules still hold.
 
 The following operations cannot invalidate a range;
-1. `is_read_begin`
-2. `is_read_end`
-3. `is_write_begin`
-4. `is_write_end`
-5. `read_size`
-6. `write_size`
+1. `rread_size`
+2. `rwrite_size`
+3. `read_size`
+4. `write_size`
 
 ### Tempory data
 When the input / output has `is_tempeary` set to `true`, the

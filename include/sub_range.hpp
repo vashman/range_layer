@@ -12,7 +12,6 @@
 #include "bits/lower_bound.hpp"
 #include "bits/upper_bound.hpp"
 
-namespace range_layer {
 /*
 template <
   typename Range, typename Traits = range_traits<Range> >

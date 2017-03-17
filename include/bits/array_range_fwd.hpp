@@ -26,14 +26,8 @@ read (
 );
 
 template <typename T>
-bool
-is_readable (
-  array_range<T> const &
-);
-
-template <typename T>
-typename range_traits<array_range<T>>::difference_type
-input_size (
+typename range_traits<array_range<T>>::size_type
+read_size (
   array_range<T> const &
 );
 
@@ -52,14 +46,8 @@ write (
 );
 
 template <typename T>
-bool
-is_writable (
-  array_range<T> const &
-);
-
-template <typename T>
-typename range_traits<array_range<T>>::difference_type
-output_size (
+typename range_traits<array_range<T>>::size_type
+write_size (
   array_range<T> const &
 );
 
@@ -67,26 +55,24 @@ template <typename T>
 array_range<T>
 next (
   array_range<T>
-,   typename range_traits<array_range<T>>
-  ::difference_type _n = 1
+, typename range_traits<array_range<T>>::size_type _n = 1
 );
 
 template <typename T>
 array_range<T>
 prev (
   array_range<T>
-,   typename range_traits<array_range<T>>
-  ::difference_type _n = 1
+, typename range_traits<array_range<T>>::size_type _n = 1
 );
 
 template <typename T>
-typename range_traits<array_range<T>>::difference_type
+typename range_traits<array_range<T>>::size_type
 input_position (
   array_range<T> const &
 );
 
 template <typename T>
-typename range_traits<array_range<T>>::difference_type
+typename range_traits<array_range<T>>::size_type
 output_position (
   array_range<T> const &
 );

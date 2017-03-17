@@ -10,48 +10,53 @@
 
 namespace range_layer {
 
-/* next */
+enum class validation_type {
+  // Only a single instance may be transversed.
+  single
+  // All instances transverse at the same time. 
+, synced
+  // All instances maintain there postion indepent of others
+, unsynced
+};
+
 template <typename Range>
 struct range_traits {
 
 /* interface traits */
-/* write, is_writable */
+/* next */
+/* write, write_size, is_write_end */
 static constexpr bool const is_output = Range::is_output;
-/* read, is_readable */
+/* read, read_size, is_read_end */
 static constexpr bool const is_input = Range::is_input;
-/* prev */
+/* prev, is_read_begin, is_write_begin */
 static constexpr bool const
   is_reversable = Range::is_reversable;
 
-using difference_type = typename Range::difference_type;
+static constexpr validation_type const
+  validation = Range::validation;
+
+using size_type = typename Range::size_type;
+static constexpr size_type const zero = Range::zero;
 
 /* data traits */
 struct input {
   static constexpr bool const
     is_contiguous = Range::is_input_contiguous; 
 
+  // if true, the read function performs UB when reading to
+  // the same postion more than once.
   static constexpr bool const
     is_temporary = Range::is_input_temporary;
-
-  static constexpr bool const
-    is_size_known = Range::is_input_size_known;
-
-  static constexpr bool const
-    is_position_known = Range::is_input_position_known;
 };
 
 struct output {
   static constexpr bool const
     is_contiguous = Range::is_output_contiguous; 
 
+  // if true, the write function performs UB when writing to
+  // the same postion more than once.
   static constexpr bool const
     is_temporary = Range::is_output_temporary;
-
-  static constexpr bool const
-    is_size_known = Range::is_output_size_known;
-
-  static constexpr bool const
-    is_position_known = Range::is_output_position_known;
 };
 
 }; /* range traits */

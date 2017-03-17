@@ -1,34 +1,35 @@
 #include <iostream>
 #include <array>
 #include "../include/array_range.hpp"
+#include "../include/algorithm.hpp"
 
 using std::array;
 using range_layer::array_range;
+using range_layer::range_traits;
 
 int main (){
 array<int, 5> arr {{0, 1, 2, 3, 4}};
-array_range<int> arr_rng
-  {arr.data(), arr.data()+arr.size()};
-std::cout << "\nsize is: " << input_size(arr_rng);
+array_range<int> rng {arr.data(), arr.data()+arr.size()};
 
-if (!is_readable(arr_rng)) std::cout << "unable to read";
+auto isize = readable_size(rng);
+std::cout << "\nsize is: " << isize;
+  if (! range_traits<array_range<int>>::max >= isize){
+  std::cout << "unable to read: "
+    << range_traits<array_range<int>>::max;
+  }
 
-int temp = read(arr_rng);
+int temp = read(rng); std::cout << "\ntemp is: " << temp;
+temp = read(rng); std::cout << "\ntemp is: " << temp;
+
+rng = prev (rng);
+
+  if (!is_writable(rng)) std::cout << "unable to write";
+write (rng, 9);
+temp = read(rng);
 std::cout << "\ntemp is: " << temp;
-temp = read(arr_rng);
-std::cout << "\ntemp is: " << temp;
 
-arr_rng = prev (arr_rng);
-
-  if (!is_writable(arr_rng)) std::cout << "unable to write";
-write (arr_rng, 9);
-temp = read(arr_rng);
-std::cout << "\ntemp is: " << temp;
-
-  if (2 > output_size(arr_rng))
-  std::cout << "no room to write";
-arr_rng = prev(arr_rng, 2);
-temp = read(arr_rng);
+//  if (2 > output_size(arr_rng)) std::cout << "no room to write";
+temp = read(prev(rng, 2));
 std::cout << "\ntemp is: " << temp;
 
 return 0;

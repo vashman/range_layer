@@ -8,7 +8,7 @@
 #ifndef RANGE_LAYER_BITS_ARRAY_RANGE_HPP
 #define RANGE_LAYER_BITS_ARRAY_RANGE_HPP
 
-#include <iterator>
+#include <limits>
 
 namespace range_layer {
 
@@ -23,17 +23,15 @@ public:
 
 static constexpr bool const is_output = true;
 static constexpr bool const is_input = true;
+static constexpr bool const is_size_const = true;
+static constexpr bool const is_position_known = true;
 static constexpr bool const is_input_contiguous = true;
 static constexpr bool const is_input_temporary = false;
-static constexpr bool const is_input_size_known = true;
-static constexpr bool const is_input_position_known = true;
 static constexpr bool const is_output_contiguous = true;
 static constexpr bool const is_output_temporary = false;
-static constexpr bool const is_output_size_known = true;
-static constexpr bool const is_output_position_known = true;
 static constexpr bool const is_reversable = true;
-using difference_type
-  = typename std::iterator_traits<T*>::difference_type;
+using size_type = std::size_t;
+static constexpr size_type const end = 0;
 
 array_range (
   T *
@@ -47,18 +45,16 @@ array_range(array_range &&) = default;
 ~array_range() = default;
 
 friend T& read<T> (array_range &);
-friend bool is_readable<T> (array_range const &);
-friend difference_type input_size<T> (array_range const &);
 friend void write<T> (array_range &, T const &);
-friend bool is_writable<T> (array_range const &);
-friend difference_type output_size<T> (array_range const &);
-friend array_range next<T> (array_range, difference_type);
-friend array_range prev<T> (array_range, difference_type);
+friend size_type write_size<T>(array_range const &);
+friend size_type read_size<T>(array_range const &);
+friend array_range next<T> (array_range, size_type);
+friend array_range prev<T> (array_range, size_type);
 friend
-difference_type input_position<T> (array_range const &);
+size_type input_position<T> (array_range const &);
 
 friend
-difference_type output_position<T>(array_range const &);
+size_type output_position<T>(array_range const &);
 
 };
 

@@ -8,8 +8,6 @@
 #ifndef RANGE_LAYER_ARRAY_RANGE_TCC
 #define RANGE_LAYER_ARRAY_RANGE_TCC
 
-#include <iterator> // std::distance
-
 namespace range_layer {
 
 template <typename T>
@@ -20,7 +18,10 @@ array_range<T>::array_range (
 : array (_array)
 , pos {_array}
 , end_pos {_end}
-{}
+{
+  if ((_end - _array) < array_range<T>::end)
+  throw;
+}
 
 template <typename T>
 T&
@@ -39,19 +40,12 @@ return read(_range);
 }
 
 template <typename T>
-bool
-is_readable (
+typename range_traits<array_range<T>>::size_type
+read_size (
   array_range<T> const & _range
 ){
-return _range.pos != _range.end_pos;
-}
-
-template <typename T>
-typename range_traits<array_range<T>>::difference_type
-input_size (
-  array_range<T> const & _range
-){
-return std::distance(_range.array, _range.end_pos);
+return static_cast<range_traits<array_range<T>>::size_type>
+(_range.end_pos - _range.pos);
 }
 
 template <typename T>
@@ -74,26 +68,18 @@ write (_range, _var);
 }
 
 template <typename T>
-bool
-is_writable (
+typename range_traits<array_range<T>>::size_type
+write_size (
   array_range<T> const & _range
 ){
-return _range.pos != _range.end_pos;
-}
-
-template <typename T>
-typename range_traits<array_range<T>>::difference_type
-output_size (
-  array_range<T> const & _range
-){
-return input_size(_range);
+return readable_size(_range);
 }
 
 template <typename T>
 array_range<T>
 next (
   array_range<T> _range
-, typename range_traits<array_range<T>>::difference_type _n
+, typename range_traits<array_range<T>>::size_type _n
 ){
 _range.pos += _n;
 return _range;
@@ -103,22 +89,23 @@ template <typename T>
 array_range<T>
 prev (
   array_range<T> _range
-, typename range_traits<array_range<T>>::difference_type _n
+, typename range_traits<array_range<T>>::size_type _n
 ){
 _range.pos -= _n;
 return _range;
 }
 
 template <typename T>
-typename range_traits<array_range<T>>::difference_type
+typename range_traits<array_range<T>>::size_type
 input_position (
   array_range<T> const & _range
 ){
-std::distance(_range.pos, _range.end_pos);
+return static_cast<range_traits<array_range<T>>::size_type>
+(_range.pos - _range.array);
 }
 
 template <typename T>
-typename range_traits<array_range<T>>::difference_type
+typename range_traits<array_range<T>>::size_type
 output_position (
   array_range<T> const & _range
 ){
