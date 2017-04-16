@@ -5,14 +5,14 @@ Distributed under the Boost Software License, Version 1.0.
        `http://www.boost.org/LICENSE_1_0.txt`)
 
 1 Table of Contents
-============================================================
+=============================================================
 
 2 Introduction
-============================================================
+=============================================================
 
 3 Motivation and Scope
-============================================================
-Reresent the device / container in a more 1 to 1
+=============================================================
+Represent the device / container in a more 1 to 1
 relationship. ie: the range should not try to adapt the
 device / containers access model.
 
@@ -23,68 +23,68 @@ device / containers access model.
 5. adapt when needed, pass through when not
 
 4 Impact on the Standard
-============================================================
+=============================================================
 none, pure extenstion. / Addtional headers
 
 5 Desgin Descions
-============================================================
+=============================================================
 No transversal on construction
-------------------------------------------------------------
+-------------------------------------------------------------
 1. When constructing a range type, no obervable transversal
    should take place.
 2. The ctor should not eat any part of the range.
 
 X Automatic transversal
-X ------------------------------------------------------------
+X -----------------------------------------------------------
 X 1. Reading or Writing to a range should transverse once,
 X    when the operation completes.
 
 X Non-const observation
-X ------------------------------------------------------------
+X -----------------------------------------------------------
 X 1. Observing the class does not gurantee constness and the
 X   object may change.
 
 Locking calls
-------------------------------------------------------------
+-------------------------------------------------------------
 The following function calls may block and can lock;
 1. `read_size`
 2. `write_size`
 
 Seperate input & output postions
-------------------------------------------------------------
+-------------------------------------------------------------
 The postions of intput and output may be differnt at the
 time of construction. Their postions / transversal will be
 synced after that point, but either or may go on when the
 other ends.
 
 Allow move / copy / refrence passing
-------------------------------------------------------------
+-------------------------------------------------------------
 1. The range object can be passed around by moving,
    refrencing or coping to the same API.
 
 Allow move / copy / refrence return
-------------------------------------------------------------
+-------------------------------------------------------------
 1. Reading from a range may return a refrence, move or copy.
 2. Reading will consistently return the same type using the
    same operation.
 
 No size
-------------------------------------------------------------
+-------------------------------------------------------------
 
 Read & Write end / begin may differ
-------------------------------------------------------------
+-------------------------------------------------------------
 1. The `read_size` & `write_size` may differ in size.
 
 No position
-------------------------------------------------------------
+-------------------------------------------------------------
 
 Types
-------------------------------------------------------------
+-------------------------------------------------------------
 1. `range_traits`:
 2. `range_size_type`:
 
 Traits
-------------------------------------------------------------
+-------------------------------------------------------------
 The basic trait type is `static constexpr bool const`.
 1. `is_output`: output interface supported.
 2. `is_input`: input interface supported.
@@ -101,7 +101,7 @@ Duplicate traits for both input and output.
 2. `is_temporary`:
 
 Interface
-------------------------------------------------------------
+-------------------------------------------------------------
 Below `Range` may refer to value `Range` or a pair of
 overloads for `range &&` and `Range&`.
 
@@ -128,7 +128,7 @@ overloads for `range &&` and `Range&`.
 2. `void erase (Range, size_type)`
 
 Invalidation
-------------------------------------------------------------
+-------------------------------------------------------------
 All copies of valid ranges are equal and therefore valid.
 Invalidation occurs for all ranges when:
 1. The pointed to device / contianer is destroyed.
@@ -164,4 +164,4 @@ the range will be valid / invalid under.
    themselves become invalid through regular invalidation.
 
 6 Technical Specifications
-============================================================
+=============================================================

@@ -5,13 +5,12 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_ARRAY_RANGE_HPP
-#define RANGE_LAYER_ARRAY_RANGE_HPP
+#ifndef RANGE_LAYER_ALGORITHM_FWD_HPP
+#define RANGE_LAYER_ALGORITHM_FWD_HPP
 
-#include <cstddef>
-#include "range_traits.hpp"
-#include "bits/array_range_fwd.hpp"
-#include "bits/array_range.hpp"
-#include "bits/array_range.tcc"
+namespace range_layer {
 
+
+
+} /* range layer */
 #endif

@@ -25,19 +25,24 @@ public:
 
 static constexpr bool const is_output = false;
 static constexpr bool const is_input = true;
-static constexpr bool const is_input_contiguous = false;
-static constexpr bool const is_input_temporary = true;
-static constexpr bool const is_input_size_known = false;
-static constexpr bool const is_input_position_known = false;
-static constexpr bool const is_output_contiguous = false;
-static constexpr bool const is_output_temporary = false;
-static constexpr bool const is_output_size_known = false;
-static constexpr bool const is_output_position_known= false;
+static constexpr bool const is_erasable = false;
+static constexpr bool const is_insertable = false;
 static constexpr bool const is_reversable = false;
-using difference_type = std::size_t;
+static constexpr bool const is_io_synced = false;
+static constexpr bool const is_input_temporary = true;
+static constexpr bool const is_output_temporary = false;
+
+static constexpr validation_type const
+  validation = validation_type::single;
+
+static constexpr range_size const
+  input_size_type = range_size::countable;
+
+static constexpr range_size const
+  output_size_type = range_size::countable;
 
 getopt_range (
-  char *const *
+  char * const *
 , std::string
 , int
 );
@@ -49,10 +54,8 @@ getopt_range & operator = (getopt_range const &) = default;
 getopt_range & operator = (getopt_range &&) = default;
 
 friend program_option read (getopt_range);
-friend bool is_readable (getopt_range const);
-friend getopt_range next (getopt_range, difference_type _n);
-friend getopt_iterator begin (getopt_range &);
-friend getopt_iterator end (getopt_range const &);
+friend bool has_readable (getopt_range const);
+friend getopt_range next (getopt_range, int _n);
 
 };
 

@@ -13,7 +13,7 @@
 namespace range_layer {
 
 getopt_range::getopt_range (
-  char *const * _argv
+  char * const * _argv
 , std::string _opts
 , int _argc
 )
@@ -22,32 +22,11 @@ getopt_range::getopt_range (
 , local_argc (_argc)
 , option ()
 , local_argv (_argv)
-// is_readable will not detect an error on first read.
-, rv (-2)
+, rv (-1)
 {}
 
-getopt_iterator
-begin (
-  getopt_range & _range
-){
-return getopt_iterator (
-  _range.local_optind
-, _range.local_argv
-, _range.local_opts
-, _range.local_argc
-, _range.rv
-);
-}
-
-getopt_iterator
-end (
-  getopt_range const & _range
-){
-return getopt_iterator();
-}
-
 bool
-is_readable (
+has_readable (
   getopt_range const _range
 ){
 return (-1 == _range.rv) && (_range.local_argc > 0);
@@ -56,7 +35,7 @@ return (-1 == _range.rv) && (_range.local_argc > 0);
 getopt_range
 next (
   getopt_range _range
-, typename range_traits<getopt_range>::difference_type _n
+, int _n
 ){
 /* set getopt state to local state. */
 int global_optind = optind;
@@ -91,9 +70,8 @@ return _range;
 
 program_option
 read (
-  getopt_range _range
+  getopt_range const & _range
 ){
-next(_range);
 return _range.option;
 }
 

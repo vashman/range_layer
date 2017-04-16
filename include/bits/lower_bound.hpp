@@ -10,123 +10,108 @@
 
 namespace range_layer {
 
-template <
-  typename Range, typename Traits = range_traits<Range> >
+template <typename Range>
 struct lower_bound {
 
-static constexpr bool const is_output = Traits::is_output;
-static constexpr bool const is_input = Traits::is_input;
-static constexpr bool const
-  is_input_contiguous = Traits::input::is_contiguous;
+using trait = range_traits<Range>;
+
+static constexpr bool const is_output = trait::is_output;
+static constexpr bool const is_input = trait::is_input;
+static constexpr bool const is_erasable = trait::is_erasable;
 
 static constexpr bool const
-  is_input_temporary = Traits::input::is_temporary;
+  is_insertable = trait::is_insertable;
 
 static constexpr bool const
-  is_input_size_known = Traits::input::is_size_known;
-
-static constexpr bool const is_input_position_known
-  = Traits::input::is_position_known;
+  is_io_synced = trait::is_io_synced;
 
 static constexpr bool const
-  is_output_contiguous = Traits::output::is_contiguous;
+  is_reversable = trait::is_reversable;
+
+static constexpr validation_type const
+  validation = trait::validation;
 
 static constexpr bool const
-  is_output_temporary = Traits::output::is_temporary;
+  is_input_temporary = trait::input::is_temporary;
+
+static constexpr range_size const
+  input_size_type = trait::input::size_type;
 
 static constexpr bool const
-  is_output_size_known = Traits::output::is_size_known;
+  is_output_temporary = trait::output::is_temporary;
 
-static constexpr bool const is_output_position_known
-  = Traits::output::is_position_known;
-
-static constexpr bool const
-  is_reversable = Traits::is_reversable;
-
-using difference_type = typename Traits::difference_type;
+static constexpr range_size const
+  output_size_type = trait::output::size_type;
 
 Range range;
-difference_type start; // = 1; >= c++14
-difference_type pos; // = 0;
+
+N start; // = 1; if >= c++14
+N pos; // = 0;
 
 }; /* lower bound */
 
-template <typename Range, typename Traits>
+template <typename Range>
 auto
 read (
-  lower_bound<Range, Traits> & _range
-) -> decltype (read(_range.range))
+  lower_bound<Range> & _range
+)
+ -> decltype (read(_range.range))
 {
-++_range.pos;
 return read(_range.range);
 }
 
-template <typename Range, typename T, typename Traits>
+template <typename Range, typename T>
 void
 write (
-  lower_bound<Range, Traits> & _range
+  lower_bound<Range> & _range
 , T const & _var
 ){
-++_range.pos;
 write(_range.range, _var);
 }
 
-template <typename Range, typename Traits>
+template <typename Range>
 auto
 read (
-  lower_bound<Range, Traits> && _range
-) -> decltype (read(_range.range))
+  lower_bound<Range> && _range
+)
+ -> decltype (read(_range.range))
 {
 return read(_range.range);
 }
 
-template <typename Range, typename T, typename Traits>
+template <typename Range, typename T>
 void
 write (
-  lower_bound<Range, Traits> && _range
+  lower_bound<Range> && _range
 , T const & _var
 ){
 write(_range, _var);
 }
 
-template <typename Range, typename Traits>
+template <typename Range>
 bool
-is_readable (
-  lower_bound<Range, Traits> _range
+has_readable (
+  lower_bound<Range> & _range
 ){
-  if (_range.pos < 1) return false;
-return is_readable(_range.range);
+  if (_range.pos 
+auto a = _range.start;
+auto b = read_count(_range.range);
+return !(b<a)?a:b;
 }
 
-template <typename Range, typename Traits>
-typename Traits::difference_type
-input_size (
-  lower_bound<Range, Traits> _range
-){
-return input_size(_range.range);
-}
-
-template <typename Range, typename Traits>
-typename Traits::difference_type
-output_size (
-  lower_bound<Range, Traits> _range
-){
-return output_size(_range.range);
-}
-
-template <typename Range, typename Traits>
-bool
-is_writable (
-  lower_bound<Range, Traits> _range
+template <typename Range>
+auto
+has_writable (
+  lower_bound<Range> & _range
 ){
   if (_range.pos < 1) return false;
 return is_writable(_range.range);
 }
 
-template <typename Range, typename Traits>
-lower_bound<Range, Traits>
+template <typename Range>
+lower_bound<Range>
 next (
-  lower_bound<Range, Traits> _range
+  lower_bound<Range> _range
 , typename Traits::difference_type _n = 1
 ){
 _range.pos += _n;
@@ -146,22 +131,6 @@ _range.pos -= _n;
 
 _range.range = prev(_range.range, _n);
 return _range;
-}
-
-template <typename Range, typename Traits>
-typename Traits::difference_type
-input_position (
-  lower_bound<Range, Traits> _range
-){
-return input_position(_range);
-}
-
-template <typename Range, typename Traits>
-typename Traits::difference_type
-output_position (
-  lower_bound<Range, Traits> _range
-){
-return output_position(_range);
 }
 
 } /* range layer */

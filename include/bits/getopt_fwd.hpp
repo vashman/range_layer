@@ -8,38 +8,25 @@
 #ifndef RANGE_LAYER_GETOPT_FWD_HPP
 #define RANGE_LAYER_GETOPT_FWD_HPP
 
-#include <cstddef>
-
 namespace range_layer {
 
 struct program_option;
-class getopt_iterator;
 class getopt_range;
 
 program_option
 read (
-  getopt_range _range
+  getopt_range
 );
 
 getopt_range
 next (
-  getopt_range _range
-, std::size_t _n = 1
+  getopt_range
+, int _n = 1
 );
 
 bool
-is_readable (
-  getopt_range const _range
-);
-
-getopt_iterator
-end (
-  getopt_range const & _range
-);
-
-getopt_iterator
-begin (
-  getopt_range & _range
+has_readable (
+  getopt_range const
 );
 
 } /* range layer */

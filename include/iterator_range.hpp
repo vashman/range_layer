@@ -13,20 +13,37 @@
 
 namespace range_layer {
 
-template <typename Iter, typename IterEnd = Iter>
-struct iterator_range {
+template <
+  typename Iter
+, typename IterEnd = Iter
+, typename Ca = std::iterator_traits<Iter>::iterator_category
+>
+struct iterator_range;
 
-static constexpr bool const is_output = false;
+
+
+template <typename Iter, typename IterEnd = Iter>
+struct iterator_range
+<Iter, IterEnd, std::forward_iterator_tag> {
+
+static constexpr bool const is_output = true;
 static constexpr bool const is_input = true;
-static constexpr bool const is_input_contiguous = false;
+static constexpr bool const is_reversable = true;
+
+static constexpr bool const is_io_synced = true;
+static constexpr bool const is_erasable = false;
+static constexpr bool const is_insertable = false;
 static constexpr bool const is_input_temporary = true;
-static constexpr bool const is_input_size_known = false;
-static constexpr bool const is_output_contiguous = false;
-static constexpr bool const is_output_temporary = false;
-static constexpr bool const is_output_size_known = false;
-static constexpr bool const is_reversable = false;
-using difference_type
-  = std::iterator_traits<Iter>::difference_type;
+static constexpr bool const is_output_temporary = true;
+
+static constexpr validation_type const
+  validation = validation_type::unsynced;
+
+static constexpr range_size const
+  input_size_type = range_size::countable;
+
+static constexpr range_size const
+  output_size_type = range_size::countable;
 
 Iter iter_begin;
 IterEnd iter_end;
@@ -53,61 +70,33 @@ Iter iter_begin;
 };
 
 template <typename Iter, typename IterEnd>
-Iter
-begin (
-  iterator_range<Iter, IterEnd> & _range
-){
-return _range.iter_begin;
-}
-
-template <typename Iter, typename IterEnd>
-Iter
-end (
-  iterator_range<Iter, IterEnd> & _range
-){
-return _range.iter_end;
-}
-
-template <typename Iter, typename IterEnd>
-Iter
-begin (
-  iterator_range<Iter, IterEnd> const & _range
-){
-return _range.iter_begin;
-}
-
-template <typename Iter, typename IterEnd>
-Iter
-end (
-  iterator_range<Iter, IterEnd> const & _range
-){
-return _range.iter_end;
-}
-
-template <typename Iter, typename IterEnd>
-typename std::iterator_traits<Iter>::value_type
+auto
 read (
   iterator_range<Iter, IterEnd> _range
-){
-return *begin(_range)++;
+)
+-> decltype (*_range.iter_begin)
+{
+return *begin(_range);
 }
 
 template <typename Iter, typename IterEnd, typename T>
 void
 write (
-  iterator_range<Iter, IterEnd> & _range
+  iterator_range<Iter, IterEnd> _range
 , T const & _var
 ){
-*begin(_range)++ = _var;
+*_range.iter_begin = _var;
 }
 
 template <typename Iter, typename IterEnd>
-bool
-is_readable (
+auto
+read_count (
   iterator_range<Iter, IterEnd> const _range
-){
+)
+-> decltype (_range.iter_begin - _range.iter_end)
+{
 // UB if called on incremented iterator.
-return begin(_range) == end(_range);
+return _range.iter_begin - _range.iter_end;
 }
 
 template <typename Iter, typename IterEnd>

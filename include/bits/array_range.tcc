@@ -18,17 +18,14 @@ array_range<T>::array_range (
 : array (_array)
 , pos {_array}
 , end_pos {_end}
-{
-  if ((_end - _array) < array_range<T>::end)
-  throw;
-}
+{}
 
 template <typename T>
 T&
 read (
   array_range<T> & _range
 ){
-return *_range.pos++;
+return *_range.pos;
 }
 
 template <typename T>
@@ -40,12 +37,11 @@ return read(_range);
 }
 
 template <typename T>
-typename range_traits<array_range<T>>::size_type
-read_size (
+bool
+has_readable (
   array_range<T> const & _range
 ){
-return static_cast<range_traits<array_range<T>>::size_type>
-(_range.end_pos - _range.pos);
+return _range.end_pos != _range.pos;
 }
 
 template <typename T>
@@ -55,7 +51,6 @@ write (
 , T const & _var
 ){
 *_range.pos = _var;
-++_range.pos;
 }
 
 template <typename T>
@@ -64,52 +59,53 @@ write (
   array_range<T> && _range
 , T const & _var
 ){
-write (_range, _var);
+write(_range, _var);
 }
 
 template <typename T>
-typename range_traits<array_range<T>>::size_type
-write_size (
+bool
+has_writable (
   array_range<T> const & _range
 ){
-return readable_size(_range);
+return has_readable(_range);
+}
+
+template <typename T>
+void
+advance (
+  array_range<T> & _range
+, std::size_t const _n
+){
+_range.pos += _n;
 }
 
 template <typename T>
 array_range<T>
 next (
   array_range<T> _range
-, typename range_traits<array_range<T>>::size_type _n
+, std::size_t const _n
 ){
 _range.pos += _n;
 return _range;
 }
 
 template <typename T>
+void
+prev_advance (
+  array_range<T> & _range
+, std::size_t const _n
+){
+_range.pos -= _n;
+}
+
+template <typename T>
 array_range<T>
 prev (
   array_range<T> _range
-, typename range_traits<array_range<T>>::size_type _n
+, std::size_t _n
 ){
 _range.pos -= _n;
 return _range;
-}
-
-template <typename T>
-typename range_traits<array_range<T>>::size_type
-input_position (
-  array_range<T> const & _range
-){
-return static_cast<range_traits<array_range<T>>::size_type>
-(_range.pos - _range.array);
-}
-
-template <typename T>
-typename range_traits<array_range<T>>::size_type
-output_position (
-  array_range<T> const & _range
-){
-return input_position(_range);
 }
 
 } /* range layer */

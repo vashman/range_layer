@@ -1,36 +1,40 @@
-#include <iostream>
+//
+
+//          Copyright Sundeep S. Sangha 2015 - 2017.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
+#include <cassert>
 #include <array>
 #include "../include/array_range.hpp"
-#include "../include/algorithm.hpp"
 
 using std::array;
 using range_layer::array_range;
-using range_layer::range_traits;
 
 int main (){
 array<int, 5> arr {{0, 1, 2, 3, 4}};
 array_range<int> rng {arr.data(), arr.data()+arr.size()};
 
-auto isize = readable_size(rng);
-std::cout << "\nsize is: " << isize;
-  if (! range_traits<array_range<int>>::max >= isize){
-  std::cout << "unable to read: "
-    << range_traits<array_range<int>>::max;
-  }
+int temp;
 
-int temp = read(rng); std::cout << "\ntemp is: " << temp;
-temp = read(rng); std::cout << "\ntemp is: " << temp;
+assert(has_readable(rng));
+temp = read(rng);
+rng = next(rng);
+assert(temp == 0);
 
+temp = read(rng);
 rng = prev (rng);
+assert(temp == 1);
 
-  if (!is_writable(rng)) std::cout << "unable to write";
+assert(has_writable(rng));
 write (rng, 9);
 temp = read(rng);
-std::cout << "\ntemp is: " << temp;
+assert(temp == 9);
 
-//  if (2 > output_size(arr_rng)) std::cout << "no room to write";
-temp = read(prev(rng, 2));
-std::cout << "\ntemp is: " << temp;
+assert(has_readable(rng));
+temp = read(next(rng, 2));
+assert(temp == 2);
 
 return 0;
 }

@@ -10,168 +10,284 @@
 
 namespace range_layer {
 
-template <typename Func, typename Range, typename Traits>
+template <typename Func, typename Range>
 auto
 read (
-  output_transform_range<Func, Range, Traits> & _range
+  output_transform_range<Func, Range> & _range
 )
--> decltype (_range.func(read(_range.range)))
+-> decltype (read(_range.range))
 {
-return _range.func(read(_range.range));
+return read(_range.range);
 }
 
-template <typename Func, typename Range, typename Traits>
+template <typename Func, typename Range>
 auto
 read (
-  output_transform_range<Func, Range, Traits> && _range
+  output_transform_range<Func, Range> && _range
 )
 -> decltype (read(_range.range))
 {
 return read(_range);
 }
 
-template <typename Func, typename Range, typename Traits>
+template <typename Func, typename Range>
 bool
-is_readable (
-  output_transform_range<Func, Range, Traits> & _range
+has_readable (
+  output_transform_range<Func, Range> & _range
 ){
-return is_readable(_range.range);
+return has_readable(_range.range);
 }
 
-template <typename Func, typename Range, typename Traits>
+template <typename Func, typename Range>
 bool
-is_readable (
-  output_transform_range<Func, Range, Traits> && _range
+has_readable (
+  output_transform_range<Func, Range> && _range
 ){
-return is_readable(_range.range);
+return has_readable(std::move(_range.range));
 }
 
-template <typename Func, typename Range, typename Traits>
-typename range_traits<Range>::difference_type
-input_size (
-  output_transform_range<Func, Range, Traits> & _range
+template <typename Func, typename Range>
+bool
+prev_has_readable (
+  output_transform_range<Func, Range> & _range
 ){
-return input_size(_range.range);
+return prev_has_readable(_range.range);
 }
 
-template <typename Func, typename Range, typename Traits>
-typename range_traits<Range>::difference_type
-input_size (
-  output_transform_range<Func, Range, Traits> && _range
+template <typename Func, typename Range>
+bool
+prev_has_readable (
+  output_transform_range<Func, Range> && _range
 ){
-return input_size(_range);
+return prev_has_readable(std::move(_range.range));
 }
 
-template
-<typename T, typename Range, typename Traits, typename Func>
+template <typename T, typename Range, typename Func>
 void
 write (
-  output_transform_range<Func, Range, Traits> & _range
+  output_transform_range<Func, Range> & _range
 , T const & _var
 ){
 write(_range.range, _range.func(_var));
 }
 
-template
-<typename T, typename Range, typename Traits, typename Func>
+template <typename T, typename Range, typename Func>
 void
 write (
-  output_transform_range<Func, Range, Traits> && _range
+  output_transform_range<Func, Range> && _range
 , T const & _var
 ){
 write(_range, _var);
 }
 
-template <typename Func, typename Range, typename Traits>
+template <typename Func, typename Range>
 bool
-is_writable (
-  output_transform_range<Func, Range, Traits> & _range
+has_writable (
+  output_transform_range<Func, Range> & _range
 ){
-return is_writable(_range.range);
+return has_writable(_range.range);
 }
 
-template <typename Func, typename Range, typename Traits>
+template <typename Func, typename Range>
 bool
-is_writable (
-  output_transform_range<Func, Range, Traits> && _range
+has_writable (
+  output_transform_range<Func, Range> && _range
 ){
-return is_writable(_range);
+return has_writable(std::move(_range.range));
 }
 
-template <typename Func, typename Range, typename Traits>
-typename Traits::difference_type
-output_size (
-  output_transform_range<Func, Range, Traits> & _range
+template <typename Func, typename Range>
+bool
+prev_has_writable (
+  output_transform_range<Func, Range> & _range
 ){
-return output_size(_range.range);
+return prev_has_writable(_range.range);
 }
 
-template <typename Func, typename Range, typename Traits>
-typename Traits::difference_type
-output_size (
-  output_transform_range<Func, Range, Traits> && _range
+template <typename Func, typename Range>
+bool
+prev_has_writable (
+  output_transform_range<Func, Range> && _range
 ){
-return output_size(_range);
+return prev_has_writable(std::move(_range.range));
 }
 
-template <typename Func, typename Range, typename Traits>
-output_transform_range<Func, Range, Traits>
+template <typename Func, typename Range>
+output_transform_range<Func, Range>
 next (
-  output_transform_range<Func, Range, Traits> & _range
-, typename Traits::difference_type _n
+  output_transform_range<Func, Range> & _range
+){
+_range.range = next(_range.range);
+return _range;
+}
+
+template <typename Func, typename Range>
+output_transform_range<Func, Range>
+next (
+  output_transform_range<Func, Range> && _range
+){
+_range.range = next(_range.range);
+return _range;
+}
+
+template <typename Func, typename Range, typename N>
+output_transform_range<Func, Range>
+next (
+  output_transform_range<Func, Range> & _range
+, N _n
 ){
 _range.range = next(_range.range, _n);
 return _range;
 }
 
-template <typename Func, typename Range, typename Traits>
-output_transform_range<Func, Range, Traits>
+template <typename Func, typename Range, typename N>
+output_transform_range<Func, Range>
 next (
-  output_transform_range<Func, Range, Traits> && _range
-, typename Traits::difference_type _n
+  output_transform_range<Func, Range> && _range
+, N _n
 ){
 _range.range = next(_range.range, _n);
 return _range;
 }
 
-template <typename Func, typename Range, typename Traits>
-output_transform_range<Func, Range, Traits>
+template <typename Func, typename Range>
+void
+advance (
+  output_transform_range<Func, Range> & _range
+){
+advance(_range.range);
+}
+
+template <typename Func, typename Range, typename N>
+void
+advance (
+  output_transform_range<Func, Range> & _range
+, N _n
+){
+advance(_range.range, _n);
+}
+
+template <typename Func, typename Range>
+void
+prev_advance (
+  output_transform_range<Func, Range> & _range
+){
+prev_advance(_range.range);
+}
+
+template <typename Func, typename Range, typename N>
+void
+prev_advance (
+  output_transform_range<Func, Range> & _range
+, N _n
+){
+prev_advance(_range.range, _n);
+}
+
+template <typename Func, typename Range>
+output_transform_range<Func, Range>
 prev (
-  output_transform_range<Func, Range, Traits> & _range
-, typename Traits::difference_type _n
+  output_transform_range<Func, Range> & _range
+){
+_range.range = prev(_range.range);
+return _range;
+}
+
+template <typename Func, typename Range>
+output_transform_range<Func, Range>
+prev (
+  output_transform_range<Func, Range> && _range
+){
+_range.range = prev(_range.range);
+return _range;
+}
+
+template <typename Func, typename Range, typename N>
+output_transform_range<Func, Range>
+prev (
+  output_transform_range<Func, Range> & _range
+, N _n
 ){
 _range.range = prev(_range.range, _n);
 return _range;
 }
 
-template <typename Func, typename Range, typename Traits>
-output_transform_range<Func, Range, Traits>
+template <typename Func, typename Range, typename N>
+output_transform_range<Func, Range>
 prev (
-  output_transform_range<Func, Range, Traits> && _range
-, typename Traits::difference_type _n
+  output_transform_range<Func, Range> && _range
+, N _n
 ){
 _range.range = prev(_range.range, _n);
 return _range;
 }
 
-template <typename Func, typename Range, typename Traits>
-  typename range_traits
-  <output_transform_range<Func, Range, Traits>>
-::difference_type
-input_position (
- output_transform_range<Func, Range, Traits> & _range
+template <typename Func, typename Range>
+Range
+erase (
+  output_transform_range<Func, Range> & _range
 ){
-return input_position(_range);
+return erase(_range.range);
 }
 
-template <typename Func, typename Range, typename Traits>
-  typename range_traits
-  <output_transform_range<Func, Range, Traits>>
-::difference_type
-output_position (
- output_transform_range<Func, Range, Traits> & _range
+template <typename Func, typename Range>
+Range
+erase (
+  output_transform_range<Func, Range> && _range
 ){
-return output_position(_range);
+return erase(_range.range);
+}
+
+template <typename Func, typename Range>
+Range
+insert (
+  output_transform_range<Func, Range> & _range
+){
+return insert(_range.range);
+}
+
+template <typename Func, typename Range>
+Range
+insert (
+  output_transform_range<Func, Range> && _range
+){
+return insert(_range.range);
+}
+
+template <typename Func, typename Range, typename N>
+Range
+expand (
+  output_transform_range<Func, Range> & _range
+, N _n
+){
+return expand(_range.range, _n);
+}
+
+template <typename Func, typename Range, typename N>
+Range
+shrink (
+  output_transform_range<Func, Range> & _range
+, N _n
+){
+return shrink(_range.range, _n);
+}
+
+template <typename Func, typename Range, typename N>
+Range
+expand (
+  output_transform_range<Func, Range> && _range
+, N _n
+){
+return expand(_range.range, _n);
+}
+
+template <typename Func, typename Range, typename N>
+Range
+shrink (
+  output_transform_range<Func, Range> && _range
+, N _n
+){
+return shrink(_range.range, _n);
 }
 
 } /* range layer */

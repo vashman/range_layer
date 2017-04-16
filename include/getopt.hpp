@@ -10,7 +10,6 @@
 
 #include "bits/getopt_fwd.hpp"
 #include "bits/program_option.hpp"
-#include "bits/getopt_iterator.hpp"
 #include "range_traits.hpp"
 #include "bits/getopt_range.hpp"
 

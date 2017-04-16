@@ -26,8 +26,8 @@ read (
 );
 
 template <typename T>
-typename range_traits<array_range<T>>::size_type
-read_size (
+bool
+has_readable (
   array_range<T> const &
 );
 
@@ -46,8 +46,8 @@ write (
 );
 
 template <typename T>
-typename range_traits<array_range<T>>::size_type
-write_size (
+bool
+has_writable (
   array_range<T> const &
 );
 
@@ -55,26 +55,28 @@ template <typename T>
 array_range<T>
 next (
   array_range<T>
-, typename range_traits<array_range<T>>::size_type _n = 1
+, std::size_t const _n = 1
 );
 
 template <typename T>
 array_range<T>
 prev (
   array_range<T>
-, typename range_traits<array_range<T>>::size_type _n = 1
+, std::size_t const _n = 1
 );
 
 template <typename T>
-typename range_traits<array_range<T>>::size_type
-input_position (
-  array_range<T> const &
+void
+prev_advance (
+  array_range<T> &
+, std::size_t const _n = 1
 );
 
 template <typename T>
-typename range_traits<array_range<T>>::size_type
-output_position (
-  array_range<T> const &
+void
+advance (
+  array_range<T> &
+, std::size_t const _n = 1
 );
 
 } /* range layer */

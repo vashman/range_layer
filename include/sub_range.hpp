@@ -9,47 +9,21 @@
 #define RANGE_LAYER_SUB_RANGE_HPP
 
 #include "range_traits.hpp"
-#include "bits/lower_bound.hpp"
-#include "bits/upper_bound.hpp"
 
-/*
-template <
-  typename Range, typename Traits = range_traits<Range> >
+template <typename Range, typename N = std::size_t>
 class sub_range {
 
-public:
-
 Range range;
-std::size_t start;
-std::size_t finish;
-std::size_t next_jump;
-std::size_t prev_jump;
-std::size_t pos;
+N pos;
+N last;
 
 public:
 
-static constexpr bool const is_output = Traits::is_output;
-static constexpr bool const is_input = Traits::is_input;
-static constexpr bool const
-  is_input_contiguous = Traits::input::is_contiguous;
-static constexpr bool const
-  is_input_temporary = Traits::input::is_temporary;
-static constexpr bool const
-  is_input_size_known = Traits::input::is_size_known;
-static constexpr bool const
-  is_output_contiguous = Traits::output::is_contiguous;
-static constexpr bool const
-  is_output_temporary = Traits::output::is_temporary;
-static constexpr bool const
-  is_output_size_known = Traits::output::is_size_known;
-static constexpr bool const
-  is_reversable = Traits::is_reversable;
-using difference_type = typename Traits::difference_type;
 
 sub_range (
   Range
-, std::size_t
-, std::size_t _finish = 0
+, N _start
+, N _finish = 0
 );
 
 sub_range (sub_range const &) = default;
@@ -58,36 +32,23 @@ sub_range (sub_range &&) = default;
 sub_range& operator = (sub_range &&) = default;
 ~sub_range() = default;
 
-void jump();
-
 };
 
-template <typename Range, typename Traits>
-void
-sub_range<Range, Traits>::jump (
-){
-this->range = next(this->range, this->next_jump);
-this->next_jump = 0;
-}
-
-template <typename Range, typename Traits>
-sub_range<Range, Traits>::sub_range (
+template <typename Range, typename N>
+sub_range<Range, N>::sub_range (
   Range _range
-, std::size_t _start
-, std::size_t _finish
+, N _start
+, N _finish
 )
 : range {_range}
-, start {_start}
-, finish {_finish}
-, next_jump {_start}
-, prev_jump {0}
-, pos {_start}
+, pos {0}
+, last {_finish}
 {}
 
-template <typename Range, typename Traits>
+template <typename Range, typename N>
 auto
 read (
-  sub_range<Range, Traits> & _range
+  sub_range<Range, N> & _range
 ) -> decltype (read(_range.range))
 {
 _range.jump();
@@ -95,10 +56,10 @@ _range.jump();
 return read(_range.range);
 }
 
-template <typename Range, typename T, typename Traits>
+template <typename Range, typename T, typename N>
 void
 write (
-  sub_range<Range, Traits> & _range
+  sub_range<Range, N> & _range
 , T const & _var
 ){
 _range.jump();
@@ -106,28 +67,28 @@ _range.jump();
 write(_range.range, _var);
 }
 
-template <typename Range, typename Traits>
+template <typename Range, typename N>
 auto
 read (
-  sub_range<Range, Traits> && _range
+  sub_range<Range, N> && _range
 ) -> decltype (read(_range.range))
 {
 return read(_range.range);
 }
 
-template <typename Range, typename T, typename Traits>
+template <typename Range, typename T, typename N>
 void
 write (
-  sub_range<Range, Traits> && _range
+  sub_range<Range, N> && _range
 , T const & _var
 ){
 write(_range, _var);
 }
 
-template <typename Range, typename Traits>
+template <typename Range, typename N>
 bool
 is_readable (
-  sub_range<Range, Traits> _range
+  sub_range<Range, N> _range
 ){
 _range.jump();
   if ((_range.pos > _range.finish) && _range.finish != 0)
@@ -135,37 +96,37 @@ _range.jump();
 return is_readable(_range.range);
 }
 
-template <typename Range, typename Traits>
-typename Traits::difference_type
+template <typename Range, typename N>
+typename N::difference_type
 input_size (
-  sub_range<Range, Traits> _range
+  sub_range<Range, N> _range
 ){
 return input_size(_range.range);
 }
 
-template <typename Range, typename Traits>
-typename Traits::difference_type
+template <typename Range, typename N>
+typename N::difference_type
 output_size (
-  sub_range<Range, Traits> _range
+  sub_range<Range, N> _range
 ){
 return output_size(_range.range);
 }
 
-template <typename Range, typename Traits>
+template <typename Range, typename N>
 bool
 is_writable (
-  sub_range<Range, Traits> _range
+  sub_range<Range, N> _range
 ){
 _range.jump();
   if (_range.pos < _range.start) return false;
 return is_writable(_range.range);
 }
 
-template <typename Range, typename Traits>
-sub_range<Range, Traits>
+template <typename Range, typename N>
+sub_range<Range, N>
 next (
-  sub_range<Range, Traits> _range
-, typename Traits::difference_type _n = 1
+  sub_range<Range, N> _range
+, typename N::difference_type _n = 1
 ){
 _range.next_jump += _n;
 _range.pos += _range.next_jump;
@@ -178,11 +139,11 @@ _range.next_jump = 0;
 return _range;
 }
 
-template <typename Range, typename Traits>
-sub_range<Range, Traits>
+template <typename Range, typename N>
+sub_range<Range, N>
 prev (
-  sub_range<Range, Traits> _range
-, typename Traits::difference_type _n = 1
+  sub_range<Range, N> _range
+, typename N::difference_type _n = 1
 ){
 _range.jump();
 _range.prev_jump += _n;

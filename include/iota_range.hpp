@@ -18,48 +18,36 @@ struct iota_range {
 
 static constexpr bool const is_output = false;
 static constexpr bool const is_input = true;
-static constexpr bool const is_input_contiguous = false;
-static constexpr bool const is_input_temporary = true;
-static constexpr bool const is_input_size_known = true;
-static constexpr bool const is_input_position_known = true;
-static constexpr bool const is_output_contiguous = false;
-static constexpr bool const is_output_temporary = false;
-static constexpr bool const is_output_size_known = false;
-static constexpr bool const is_output_position_known = true;
+static constexpr bool const is_io_synced = true;
 static constexpr bool const is_reversable = true;
-using difference_type = T;
+static constexpr bool const is_erasable = false;
+static constexpr bool const is_insertable = false;
+static constexpr bool const is_input_temporary = true;
+static constexpr bool const is_output_temporary = true;
 
-// must have ++, --
+static constexpr validation_type const
+  validation = validation_type::unsynced;
+
+static constexpr range_size const
+  input_size_type = range_size::countable;
+
+static constexpr range_size const
+  output_size_type = range_size::countable;
+
 T count;
 
 };
 
 template <typename T>
-typename range_traits<iota_range<T>>::difference_type
-input_position (
-  iota_range<T> const & _range
-){
-return _range.count;
-}
-
-template <typename T>
-typename range_traits<iota_range<T>>::difference_type
-output_position (
-  iota_range<T> const & _range
-){
-return _range.count;
-}
-
-template <typename T>
-T
+T&
 read (
   iota_range<T> & _range
 ){
-return _range.count++;
+return _range.count;
 }
 
 template <typename T>
-T
+T&
 read (
   iota_range<T> && _range
 ){
@@ -68,20 +56,25 @@ return read(_range);
 
 template <typename T>
 bool
-is_readable (
+has_readable (
   iota_range<T> const & _range
 ){
-return !(
-   (std::numeric_limits<T>::max() == _range.count)
-|| (std::numeric_limits<T>::min() == _range.count)
-);
+return (std::numeric_limits<T>::max() != _range.count);
+}
+
+template <typename T>
+bool
+prev_has_readable (
+  iota_range<T> const & _range
+){
+return (_range.count != std::numeric_limits<T>::min());
 }
 
 template <typename T>
 iota_range<T>
 prev (
   iota_range<T> _range
-, typename range_traits<iota_range<T>>::difference_type _n = 1
+, std::size_t _n = 1
 ){
 _range.count -= _n;
 return _range;
@@ -91,18 +84,19 @@ template <typename T>
 iota_range<T>
 next (
   iota_range<T> _range
-, typename range_traits<iota_range<T>>::difference_type _n = 1
+, std::size_t _n = 1
 ){
 _range.count += _n;
 return _range;
 }
 
 template <typename T>
-typename range_traits<iota_range<T>>::difference_type
-input_size (
-  iota_range<T> const & _range
+void
+advance (
+  iota_range<T> & _range
+, std::size_t _n = 1
 ){
-return std::numeric_limits<T>::max() - _range.count;
+_range.count += _n;
 }
 
 } /* range layer */
