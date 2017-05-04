@@ -11,12 +11,17 @@
 namespace range_layer {
 
 template <typename Func, typename Range>
-struct output_transform_range {
+class output_transform_range {
 
 using trait = range_traits<Range>;
+Range range;
+Func func;
+
+public:
 
 static constexpr bool const is_output = true;
 static constexpr bool const is_input = trait::is_input;
+static constexpr bool const is_linear = trait::is_linear;
 static constexpr bool const is_erasable = trait::is_erasable;
 
 static constexpr bool const
@@ -43,10 +48,92 @@ static constexpr bool const
 static constexpr range_size const
   output_size_type = trait::output::size_type;
 
-Range range;
-Func func;
+output_transform_range (
+  Range _range
+, Func _func
+)
+: range {_range}
+, func (_func)
+{}
 
-};
+output_transform_range (output_transform_range const &) = default;
+output_transform_range (output_transform_range &&) = default;
+
+output_transform_range &
+operator = (output_transform_range &&) = default;
+
+output_transform_range &
+operator = (output_transform_range const &) = default;
+
+~output_transform_range () = default;
+
+template <typename U = Range>
+auto
+operator * () -> decltype(*this->range){
+return *this->range;
+}
+
+output_transform_range &
+operator ++ (){
+++this->range;
+return *this;
+}
+
+template <typename U = Range>
+output_transform_range &
+operator -- (){
+--this->range;
+return *this;
+}
+
+template <typename T>
+void
+operator = (T const & _var){
+this->range = this->func(_var);
+}
+
+template <typename N>
+output_transform_range &
+operator += (
+  N _n
+){
+this->range += _n;
+return *this;
+}
+
+template <typename N>
+output_transform_range &
+operator -= (
+  N _n
+){
+this->range -= _n;
+return *this;
+}
+
+template <typename U = Range>
+bool
+operator == (
+  sentinel::readable const & _sen
+) const {
+return this->range == _sen;
+}
+
+bool
+operator == (
+  sentinel::writable const & _sen
+) const {
+return this->range == _sen;
+}
+
+template <typename T>
+bool
+operator == (
+  T const & _sen
+) const {
+return this->range == _sen;
+}
+
+}; /* output transform range */
 
 } /* range layer */
 #endif

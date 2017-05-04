@@ -11,12 +11,17 @@
 namespace range_layer {
 
 template <typename Func, typename Range>
-struct input_transform_range {
+class input_transform_range {
 
 using trait = range_traits<Range>;
+Range range;
+Func func;
+
+public:
 
 static constexpr bool const is_output = trait::is_output;
 static constexpr bool const is_input = true;
+static constexpr bool const is_linear = trait::is_linear;
 static constexpr bool const is_erasable = trait::is_erasable;
 
 static constexpr bool const
@@ -43,10 +48,87 @@ static constexpr bool const
 static constexpr range_size const
   output_size_type = trait::output::size_type;
 
-Range range;
-Func func;
+input_transform_range (
+  Range _range
+, Func _func
+)
+: range {_range}
+, func (_func)
+{}
 
-};
+input_transform_range (input_transform_range const &) = default;
+input_transform_range (input_transform_range &&) = default;
+
+input_transform_range &
+operator = (input_transform_range &&) = default;
+
+input_transform_range &
+operator = (input_transform_range const &) = default;
+
+~input_transform_range () = default;
+
+auto
+operator * () -> decltype(this->func(*this->range));
+
+input_transform_range &
+operator ++ (){
+++this->range;
+return *this;
+}
+
+template <typename U = Range>
+input_transform_range &
+operator -- (){
+--this->range;
+return *this;
+}
+
+template <typename T>
+void
+operator = (T const &);
+
+template <typename N>
+input_transform_range &
+operator += (
+  N _n
+){
+this->range += _n;
+return *this;
+}
+
+template <typename N>
+input_transform_range &
+operator -= (
+  N _n
+){
+this->range -= _n;
+return *this;
+}
+
+bool
+operator == (
+  sentinel::readable const & _sen
+) const {
+return this->range == _sen;
+}
+
+template <typename U = Range>
+bool
+operator == (
+  sentinel::writable const & _sen
+) const {
+return this->range == _sen;
+}
+
+template <typename T>
+bool
+operator == (
+  T const & _sen
+) const {
+return this->range == _sen;
+}
+
+}; /* input transform range */
 
 } /* range layer */
 #endif

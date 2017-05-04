@@ -8,6 +8,7 @@
 #include <string>
 #include <array>
 #include <iostream>
+#include "../include/range.hpp"
 #include "../include/transform_range.hpp"
 #include "../include/iota_range.hpp"
 #include "../include/array_range.hpp"
@@ -24,6 +25,7 @@ int main (){
 
 auto range = make_input_transform_range (
   iota_range<char>{'a'}
+
 , [](char _c){
   string temp("\nchar is: ");
   return temp += _c;

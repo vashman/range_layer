@@ -10,15 +10,12 @@
 
 namespace range_layer {
 
-namespace execution_policy {
-class sequenced {};
-class parallel {};
-class parallel_unsequenced {};
+namespace sentinel {
 
-template <typename Policy> class gpu {};
-template <typename Policy> class cpu {};
-template <typename Policy> class remote {};
-}
+class readable {};
+class writable {};
+
+} /* sentinel */
 
 enum class validation_type {
   // Only a single instance may be transversed.
@@ -31,35 +28,37 @@ enum class validation_type {
 
 enum class range_size {
   finite // count <= size_type
-, countable // count -> {N1, N2, N3...}
-, uncountable // count > or < size_type
+, countable // count > size_type {N1, N2, N3...}
+, uncountable // count unknown to size_type; 0, 1, infinity
 };
 
 template <typename Range>
 struct range_traits {
 
 /* interface traits */
-/* next */
-/* write, has_writable, write_size */
+/* ++ (advance, next) */
+/* if true; = (write) */
 static constexpr bool const is_output = Range::is_output;
-/* read, has_readable. read_size */
+/* if true; * (read) */
 static constexpr bool const is_input = Range::is_input;
-/* erase, shrink */
+/* if false;  += N, -=N (advance N, next N, prev N) */
+static constexpr bool const is_linear = Range::is_linear;
+/* if true; erase, shrink */
 static constexpr bool const is_erasable
   = Range::is_erasable;
 
-/* insert, expand */
+/* if true; insert, expand */
 static constexpr bool const
   is_insertable = Range::is_insertable;
 
-/* prev, prev_has_readable, prev_has_writable */
+/* if true; -- (prev, advance_prev) */
 static constexpr bool const
   is_reversable = Range::is_reversable;
 
 static constexpr validation_type const
   validation = Range::validation;
 
-/* true = read and write are mutually exclusive */
+/* if true; read and write are mutually exclusive */
 static constexpr bool const
   is_io_synced = Range::is_io_synced;
 
@@ -85,6 +84,16 @@ struct output {
   static constexpr bool const
     is_temporary = Range::is_output_temporary;
 };
+
+/* if true; T& range[n] */
+static constexpr bool const is_subscriptable
+  = is_reversable
+ && is_input
+ && is_output
+ && is_io_synced
+ && (is_linear == false)
+ && (input::size_type == range_size::finite)
+ && (output::size_type == range_size::finite);
 
 }; /* range traits */
 

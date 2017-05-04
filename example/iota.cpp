@@ -6,6 +6,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <cassert>
+#include "../include/range.hpp"
 #include "../include/iota_range.hpp"
 
 using range_layer::iota_range;
@@ -22,7 +23,7 @@ assert(temp == 65);
 temp = read(rng);
 assert(temp = 66);
 
-rng = next(rng, 100);
+rng = next(100, rng);
 temp = read(rng);
 assert(temp == 166);
 

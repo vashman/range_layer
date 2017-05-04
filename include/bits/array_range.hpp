@@ -21,6 +21,7 @@ public:
 
 static constexpr bool const is_output = true;
 static constexpr bool const is_input = true;
+static constexpr bool const is_linear = false;
 static constexpr bool const is_io_synced = true;
 static constexpr bool const is_reversable = true;
 static constexpr bool const is_erasable = false;
@@ -47,16 +48,118 @@ array_range& operator = (array_range &&) = default;
 array_range (array_range &&) = default;
 ~array_range () = default;
 
-friend T& read<T> (array_range &);
-friend void write<T> (array_range &, T const &);
-friend bool has_writable<T>(array_range const &);
-friend bool has_readable<T>(array_range const &);
-friend array_range next<T> (array_range, std::size_t const);
-friend array_range prev<T> (array_range, std::size_t const);
-friend void advance (array_range, std::size_t const);
-friend void prev_advance (array_range, std::size_t const);
+const T&
+operator * (
+){
+return *this->pos;
+}
+
+void operator = (
+  T const & _var
+){
+*this->pos = _var;
+}
+
+array_range &
+operator ++ (
+){
+++this->pos;
+return *this;
+}
+
+array_range &
+operator += (
+  std::size_t const _n
+){
+this->pos += _n;
+return *this;
+}
+
+array_range &
+operator -= (
+  std::size_t const _n
+){
+this->pos -= _n;
+return *this;
+}
+
+array_range &
+operator -- (
+){
+--this->pos;
+return *this;
+}
+
+T&
+operator [](
+  int _n
+){
+return this->pos[_n];
+}
+
+bool
+operator == (
+  sentinel::readable const &
+) const;
+
+bool
+operator == (
+  T const &
+) const;
 
 };
+
+template <typename T>
+bool
+array_range<T>::operator == (
+  sentinel::readable const & _rhs
+) const {
+return this->pos != this->end_pos;
+}
+
+template <typename T>
+bool
+operator != (
+  array_range<T> const & _lhs
+, sentinel::readable const & _rhs
+){
+return !(_lhs == _rhs);
+}
+
+template <typename T>
+bool
+operator == (
+  array_range<T> const & _lhs
+, sentinel::writable const & _rhs
+){
+return _lhs == sentinel::readable{};
+}
+
+template <typename T>
+bool
+operator != (
+  array_range<T> const & _lhs
+, sentinel::writable const & _rhs
+){
+return !(_lhs == _rhs);
+}
+
+template <typename T>
+bool
+array_range<T>::operator == (
+  T const & _rhs
+) const {
+return this->pos != &_rhs;
+}
+
+template <typename T>
+bool
+operator != (
+  array_range<T> const & _lhs
+, T const & _rhs
+){
+return !(_lhs == _rhs);
+}
 
 } /* range layer */
 #endif

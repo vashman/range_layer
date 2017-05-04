@@ -8,6 +8,7 @@
 #include <cassert>
 #include <array>
 #include "../include/array_range.hpp"
+#include "../include/range.hpp"
 
 using std::array;
 using range_layer::array_range;
@@ -33,7 +34,8 @@ temp = read(rng);
 assert(temp == 9);
 
 assert(has_readable(rng));
-temp = read(next(rng, 2));
+auto r = next(2, rng);
+temp = read(r);
 assert(temp == 2);
 
 return 0;

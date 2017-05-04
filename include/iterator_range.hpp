@@ -16,19 +16,79 @@ namespace range_layer {
 template <
   typename Iter
 , typename IterEnd = Iter
-, typename Ca = std::iterator_traits<Iter>::iterator_category
+, typename Cat =std::iterator_traits<Iter>::iterator_category
 >
 struct iterator_range;
 
-
-
+// Input Iterator
 template <typename Iter, typename IterEnd = Iter>
 struct iterator_range
-<Iter, IterEnd, std::forward_iterator_tag> {
+<Iter, IterEnd, std::input_iterator_tag> {
 
 static constexpr bool const is_output = true;
 static constexpr bool const is_input = true;
-static constexpr bool const is_reversable = true;
+static constexpr bool const is_reversable = false;
+
+static constexpr bool const is_io_synced = true;
+static constexpr bool const is_erasable = false;
+static constexpr bool const is_insertable = false;
+static constexpr bool const is_input_temporary = true;
+static constexpr bool const is_output_temporary = true;
+
+static constexpr validation_type const
+  validation = validation_type::single;
+
+static constexpr range_size const
+  input_size_type = range_size::countable;
+
+static constexpr range_size const
+  output_size_type = range_size::countable;
+
+Iter iter_begin;
+IterEnd iter_end;
+
+std::iterator_traits<Iter>::reference
+operator * (
+){
+return *this->iter_begin;
+}
+
+template <typename T>
+void
+operator = (
+  T const & _var
+){
+*this->iter_begin = _var;
+}
+
+iterator_range &
+operator ++ (
+){
+++this->iter_begin;
+return *this;
+}
+
+iterator_range &
+operator ++ (
+  int
+){
+this->iter_begin++;
+return *this;
+}
+
+};
+
+template <typename Iter, typename IterEnd = Iter>
+struct iterator_range
+<Iter, IterEnd, std::forward_iterator_tag>
+: public
+  iterator_range<Iter, IterEnd, std::input_iterator_tag>
+{
+
+static constexpr bool const is_output = true;
+static constexpr bool const is_input = true;
+static constexpr bool const is_reversable = false;
+static constexpr bool const is_linear = true;
 
 static constexpr bool const is_io_synced = true;
 static constexpr bool const is_erasable = false;
@@ -45,8 +105,94 @@ static constexpr range_size const
 static constexpr range_size const
   output_size_type = range_size::countable;
 
-Iter iter_begin;
-IterEnd iter_end;
+};
+
+template <typename Iter, typename IterEnd = Iter>
+struct iterator_range
+<Iter, IterEnd, std::bidirectional_iterator_tag>
+: public
+  iterator_range<Iter, IterEnd, std::forward_iterator_tag>
+{
+
+static constexpr bool const is_output = true;
+static constexpr bool const is_input = true;
+static constexpr bool const is_reversable = true;
+static constexpr bool const is_linear = true;
+
+static constexpr bool const is_io_synced = true;
+static constexpr bool const is_erasable = false;
+static constexpr bool const is_insertable = false;
+static constexpr bool const is_input_temporary = true;
+static constexpr bool const is_output_temporary = true;
+
+static constexpr validation_type const
+  validation = validation_type::unsynced;
+
+static constexpr range_size const
+  input_size_type = range_size::countable;
+
+static constexpr range_size const
+  output_size_type = range_size::countable;
+
+iterator_range &
+operator -- (
+){
+--this->iter_begin;
+return *this;
+}
+
+};
+
+template <typename Iter, typename IterEnd = Iter>
+struct iterator_range
+<Iter, IterEnd, std::random_iterator_tag>
+: public
+  iterator_range
+  <Iter, IterEnd, std::bidirectional_iterator_tag>
+{
+
+static constexpr bool const is_output = true;
+static constexpr bool const is_input = true;
+static constexpr bool const is_reversable = true;
+static constexpr bool const is_linear = false;
+
+static constexpr bool const is_io_synced = true;
+static constexpr bool const is_erasable = false;
+static constexpr bool const is_insertable = false;
+static constexpr bool const is_input_temporary = false;
+static constexpr bool const is_output_temporary = false;
+
+static constexpr validation_type const
+  validation = validation_type::unsynced;
+
+static constexpr range_size const
+  input_size_type = range_size::countable;
+
+static constexpr range_size const
+  output_size_type = range_size::countable;
+
+iterator_range &
+operator += (
+  std::iterator_traits<Iter>::difference_type const & _n
+){
+this->iter_begin += _n;
+return *this;
+}
+
+iterator_range &
+operator -= (
+  std::iterator_traits<Iter>::difference_type const & _n
+){
+this->iter_begin -= _n;
+return *this;
+}
+
+std::iterator_traits<Iter>::reference
+operator [](
+  int _n
+){
+return this->iter_begin[_n];
+}
 
 };
 
@@ -55,88 +201,157 @@ struct iterator_range<Iter, void> {
 
 static constexpr bool const is_output = true;
 static constexpr bool const is_input = false;
-static constexpr bool const is_input_contiguous = false;
-static constexpr bool const is_input_temporary = false;
-static constexpr bool const is_input_size_known = false;
-static constexpr bool const is_output_contiguous = false;
-static constexpr bool const is_output_temporary = true;
-static constexpr bool const is_output_size_known = false;
 static constexpr bool const is_reversable = false;
-using difference_type
-  = std::iterator_traits<Iter>::difference_type;
+static constexpr bool const is_linear = true;
+
+static constexpr bool const is_io_synced = false;
+static constexpr bool const is_erasable = false;
+static constexpr bool const is_insertable = false;
+static constexpr bool const is_input_temporary = true;
+static constexpr bool const is_output_temporary = true;
+
+static constexpr validation_type const
+  validation = validation_type::unsynced;
+
+static constexpr range_size const
+  input_size_type = range_size::countable;
+
+static constexpr range_size const
+  output_size_type = range_size::countable;
 
 Iter iter_begin;
 
+void
+operator = (
+  std::iterator_traits<Iter>::value_type _var
+){
+*this->iter_begin = _var;
+}
+
+iterator_range &
+operator ++ (
+){
+++this->iter_begin;
+}
+
 };
 
-template <typename Iter, typename IterEnd>
-auto
-read (
-  iterator_range<Iter, IterEnd> _range
-)
--> decltype (*_range.iter_begin)
-{
-return *begin(_range);
-}
-
-template <typename Iter, typename IterEnd, typename T>
-void
-write (
-  iterator_range<Iter, IterEnd> _range
-, T const & _var
-){
-*_range.iter_begin = _var;
-}
-
-template <typename Iter, typename IterEnd>
-auto
-read_count (
-  iterator_range<Iter, IterEnd> const _range
-)
--> decltype (_range.iter_begin - _range.iter_end)
-{
-// UB if called on incremented iterator.
-return _range.iter_begin - _range.iter_end;
-}
-
-template <typename Iter, typename IterEnd>
+template
+  <typename Iter, typename End, typename Cat, typename T>
 bool
-is_writable (
-  iterator_range<Iter, IterEnd> const _range
+operator == (
+  iterator_range<Iter, End, Cat> const & _range
+, T const & _sentinel
 ){
-// UB if called on incremented iterator. ie next (range);
-return begin(_range) != end(_range);
+return _range.iter_begin == _sentinel;
 }
 
-template <typename Iter>
+template
+  <typename Iter, typename End, typename Cat, typename T>
 bool
-is_writable (
-  iterator_range<Iter, void> const _range
+operator != (
+  iterator_range<Iter, End, Cat> const & _range
+, T const & _sentinel
+){
+return _range.iter_begin != _sentinel;
+}
+
+template <typename Iter, typename IterEnd, typename Cat>
+bool
+operator == (
+  iterator_range<Iter, IterEnd, Cat> const & _range
+, sentinel::readable const & _sentinel
+){
+return _range.iter_begin == _range.iter_end;
+}
+
+template <typename Iter, typename IterEnd, typename Cat>
+bool
+operator != (
+  iterator_range<Iter, IterEnd, Cat> const & _range
+, sentinel::readable const & _sentinel
+){
+return _range.iter_begin != _range.iter_end;
+}
+
+template <typename Iter, typename IterEnd, typename Cat>
+bool
+operator == (
+  iterator_range<Iter, IterEnd, Cat> const & _range
+, sentinel::writable const & _sentinel
+){
+return _range.iter_begin == _range.iter_end;
+}
+
+template <typename Iter, typename IterEnd, typename Cat>
+bool
+operator != (
+  iterator_range<Iter, IterEnd, Cat> const & _range
+, sentinel::writable const & _sentinel
+){
+return _range.iter_begin != _range.iter_end;
+}
+
+template <typename Iter, typename T>
+bool
+operator == (
+  iterator_range<Iter, void, std::output_iterator_tag>
+  const & _range
+, T const & _sentinel
+){
+return true;
+}
+
+template <typename Iter, typename T>
+bool
+operator != (
+  iterator_range<Iter, void, std::output_iterator_tag>
+  const & _range
+, T const & _sentinel
 ){
 return false;
 }
 
-template <typename Iter, typename IterEnd>
-iterator_range<Iter, IterEnd>
-next (
-  iterator_range<Iter, IterEnd> _range
-,   typename range_traits<iterator_range<Iter, IterEnd>
-  ::difference_type _n = 1
+template <typename Iter>
+bool
+operator == (
+  iterator_range<Iter, void, std::output_iterator_tag>
+  const & _range
+, sentinel::readable const & _sentinel
 ){
-  while (0 != _n--) ++_range.iter_begin;
-return _range;
+return true;
 }
 
-template <typename Iter, typename IterEnd>
-iterator_range<Iter, IterEnd>
-prev (
-  iterator_range<Iter, IterEnd> _range
-,   typename range_traits<iterator_range<Iter, IterEnd>
-  ::difference_type _n = 1
+template <typename Iter>
+bool
+operator != (
+  iterator_range<Iter, void, std::output_iterator_tag>
+  const & _range
+, sentinel::readable const & _sentinel
 ){
-  while (0 != _n--) --_range.iter_begin;
-return _range;
+return false;
+}
+
+template <typename Iter>
+bool
+operator == (
+  iterator_range<Iter, void, std::output_iterator_tag>
+  const & _range
+, sentinel::writable const & _sentinel
+){
+return true;
+}
+
+template <typename Iter>
+bool
+operator != (
+  iterator_range<Iter, void, std::output_iterator_tag>
+  const & _range
+, sentinel::writable const & _sentinel
+){
+return false;
 }
 
 } /* range layer */
 #endif
+

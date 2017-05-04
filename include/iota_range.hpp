@@ -14,10 +14,16 @@
 namespace range_layer {
 
 template <typename T>
-struct iota_range {
+class iota_range {
+
+T count;
+mutable bool end;
+
+public:
 
 static constexpr bool const is_output = false;
 static constexpr bool const is_input = true;
+static constexpr bool const is_linear = false;
 static constexpr bool const is_io_synced = true;
 static constexpr bool const is_reversable = true;
 static constexpr bool const is_erasable = false;
@@ -34,69 +40,112 @@ static constexpr range_size const
 static constexpr range_size const
   output_size_type = range_size::countable;
 
-T count;
+iota_range (
+  T const & _var
+) : count {_var}, end {false}
+{}
+
+iota_range (iota_range const &) = default;
+iota_range (iota_range &&) = default;
+iota_range & operator = (iota_range const &) = default;
+iota_range & operator = (iota_range &&) = default;
+~iota_range() = default;
+
+T& operator * ();
+void operator = (T const &);
+iota_range& operator ++ ();
+iota_range& operator -- ();
+iota_range& operator += (T const &);
+iota_range& operator -= (T const &);
+bool operator == (sentinel::readable const &) const;
+bool operator == (T const &) const;
 
 };
 
 template <typename T>
-T&
-read (
-  iota_range<T> & _range
-){
-return _range.count;
-}
-
-template <typename T>
-T&
-read (
-  iota_range<T> && _range
-){
-return read(_range);
+bool
+iota_range<T>::operator == (
+  sentinel::readable const & _sentinel
+) const {
+  if (this->end == false){
+    if((std::numeric_limits<T>::max() == this->count)
+    || (std::numeric_limits<T>::min() == this->count)){
+    this->end = true;
+    return false; // if the end was just reached, the range
+                  // can still be used at its current postion.
+    }
+  }
+return !this->end;
 }
 
 template <typename T>
 bool
-has_readable (
-  iota_range<T> const & _range
-){
-return (std::numeric_limits<T>::max() != _range.count);
+iota_range<T>::operator == (
+  T const & _sentinel
+) const {
+return this->count == _sentinel;
 }
 
 template <typename T>
 bool
-prev_has_readable (
+operator != (
   iota_range<T> const & _range
+, T const & _sentinel
 ){
-return (_range.count != std::numeric_limits<T>::min());
+return !(_range == _sentinel);
 }
 
 template <typename T>
-iota_range<T>
-prev (
-  iota_range<T> _range
-, std::size_t _n = 1
+iota_range<T> &
+iota_range<T>::operator ++ (
 ){
-_range.count -= _n;
-return _range;
+this->end = true;
+++this->count;
+return *this;
 }
 
 template <typename T>
-iota_range<T>
-next (
-  iota_range<T> _range
-, std::size_t _n = 1
+iota_range<T> &
+iota_range<T>::operator -- (
 ){
-_range.count += _n;
-return _range;
+this->end = true;
+--this->count;
+return *this;
+}
+
+template <typename T>
+T&
+iota_range<T>::operator * (
+){
+return this->count;
 }
 
 template <typename T>
 void
-advance (
-  iota_range<T> & _range
-, std::size_t _n = 1
+iota_range<T>::operator = (
+  T const & _var
 ){
-_range.count += _n;
+this->count = _var;
+}
+
+template <typename T>
+iota_range<T>&
+iota_range<T>::operator += (
+  T const & _n
+){
+this->end = true;
+this->count += _n;
+return *this;
+}
+
+template <typename T>
+iota_range<T>&
+iota_range<T>::operator -= (
+  T const & _n
+){
+this->end = true;
+this->count -= _n;
+return *this;
 }
 
 } /* range layer */

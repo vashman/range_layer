@@ -40,12 +40,64 @@ vector_range & operator = (vector_range const &) = default;
 vector_range & operator = (vector_range &&) = default;
 ~vector_range() = default;
 
-//private:
+private:
 
 std::vector<T> * vec;
 std::size_t pos;
 
-};
+const T& operator * (
+){
+return *this->vec[this->pos-1];
+}
+
+void
+operator = (
+  T const & _var
+){
+*this->vec[this->pos-1] = _var;
+}
+
+vector_range&
+operator ++ (
+){
+++this->pos;
+}
+
+vector_range&
+operator -- (
+){
+--this->pos;
+}
+
+vector_range&
+operator += (
+  std::size_t const _n
+){
+this->pos += _n;
+}
+
+vector_range&
+operator -= (
+  std::size_t const _n
+){
+this->pos -= _n;
+}
+
+bool
+operator == (
+  sentinal::readable const _sen
+){
+return this->pos <= this->vec->size();
+}
+
+bool
+operator == (
+  vector_range const & _lhs
+){
+return this->pos = _lhs.pos;
+}
+
+}; /* vector range */
 
 template <typename T>
 vector_range<T>::vector_range (
@@ -54,119 +106,6 @@ vector_range<T>::vector_range (
 : vec {&_vec}
 , pos {1}
 {}
-
-template <typename T>
-T&
-read (
-  vector_range<T> const & _range
-){
-return *_range.vec[_range.pos-1];
-}
-
-template <typename T>
-void
-write (
-  vector_range<T> & _range
-, T const & _var
-){
-*_range.vec[_range.pos-1] = _var;
-}
-
-template <typename T>
-vector_range<T>
-next (
-  vector_range<T> _range
-, std::size_t const _n = 1
-){
-_range.pos += _n;
-return _range;
-}
-
-template <typename T>
-vector_range<T>
-prev (
-  vector_range<T> _range
-, std::size_t const _n = 1
-){
-_range.pos -= _n;
-return _range;
-}
-
-template <typename T>
-void
-advance (
-  vector_range<T> & _range
-, std::size_t const _n = 1
-){
-_range.pos += _n;
-return _range;
-}
-
-template <typename T>
-void
-prev_advance (
-  vector_range<T> & _range
-, std::size_t const _n = 1
-){
-_range.pos -= _n;
-return _range;
-}
-
-template <typename T>
-bool
-has_writeable (
-  vector_range<T> const & _range
-){
-return _range.pos <= _range.vec->size();
-}
-
-template <typename T>
-bool
-has_readable (
-  vector_range<T> const & _range
-){
-return has_writeable(_range);
-}
-
-template <typename T>
-vector_range<T>
-erase (
-  vector_range<T> _range
-){
-_range.vec->erase(_range.vec->begin() + (_range.pos-1));
-return _range;
-}
-
-template <typename T>
-vector_range<T>
-insert (
-  vector_range<T> _range
-, T const & _var
-){
-_range.vec->insert(
-  (_range.vec->begin() + _range.pos-1), _var );
-return _range;
-}
-
-template <typename T>
-vector_range<T>
-expand (
-  vector_range<T> _range
-, std::size_t const _n
-){
-_range.vec->resize(_range.vec->size() + _n);
-return _range;
-}
-
-template <typename T>
-vector_range<T>
-shrink (
-  vector_range<T> _range
-, std::size_t const _n
-){
-_range.vec->resize(_range.vec->size() - _n);
-return _range;
-}
 
 } /* range layer */
 #endif

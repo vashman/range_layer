@@ -23,12 +23,15 @@ fill (
 check::is_ouput<Range>{};
 
   while (has_writeable(_range)){
-  write (_range, _var);
+  write(_range, _var);
   advance(_range);
   }
 return _range;
 }
 
+/*
+  fill n
+*/
 template <typename Range, typename T, typename N>
 Range
 fill (
@@ -40,8 +43,8 @@ fill (
 check::is_ouput<Range>{};
 
   while (has_writeable(_range) && (0 != _n)){
-  write (_range, _var);
-  _range = next(_range);
+  write(_range, _var);
+  advance(_range);
   --_n;
   }
 return _range;
@@ -59,11 +62,33 @@ check::is_ouput<Range>{};
 
   while (has_writable(_range)){
   write(_range, _gen());
-  _range = next(_range);
+  advance(_range);
   }
 return _range;
 }
 
+/* generate n */
+template<typename Range, typename Generator, typename N>
+Range
+generate_n (
+  execution_policy::sequenced
+, Range _range
+, N _n
+, Generator _gen
+){
+check::is_ouput<Range>{};
+
+  while (has_writable(_range) && (0 != _n)){
+  write(_range, _gen());
+  advance(_range);
+  --_n;
+  }
+return _range;
+}
+
+/*
+  copy
+*/
 template <typename IRange, typename ORange>
 ORange
 copy (
@@ -74,18 +99,19 @@ copy (
 check::is_input<IRange>{};
 check::is_ouput<ORange>{};
 
-  while (has_writable() && has_readable()){
+  while (has_writable(_output) && has_readable(_input)){
   write(_output, read(_input));
-  advance(_output);
-  advance(_input);
+  advance(_output, _input);
   }
-
 return _output;
 }
 
+/*
+  copy if
+*/
 template <typename IRange, typename ORange, typename Pred>
 ORange
-copy (
+copy_if (
   execution_policy::sequenced
 , IRange _input
 , ORange _output
@@ -94,16 +120,17 @@ copy (
 check::is_input<IRange>{};
 check::is_ouput<ORange>{};
 
-  while (has_writable() && had_readable()){
+  while (has_writable(_output) && had_readable(_input)){
   auto temp = read(_input);
     if (_pred(temp)) write(_output, temp);
-  advance(_output);
-  advance(_input);
+  advance(_output, _input);
   }
-
 return _output;
 }
 
+/*
+  copy n
+*/
 template <typename IRange, typename ORange, typename N>
 ORange
 copy_n (
@@ -115,13 +142,15 @@ copy_n (
 check::is_input<IRange>{};
 check::is_output<ORange>{};
 
-  while (has_writable() && had_readable() && (_n > 0)){
+  while (
+     has_writable(_output)
+  && had_readable(_input)
+  && (_n > 0)
+  ){
   write(_output, read(_input));
-  advance(_output);
-  advance(_input);
+  advance(_output, _input);
   --_n;
   }
-
 return _output;
 }
 

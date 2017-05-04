@@ -19,11 +19,16 @@ struct output_transform_range;
 template <typename Range, typename Func>
 output_transform_range<Func, Range>
 make_output_transform_range (
-  Range _range
-, Func _func
-){
-return output_transform_range<Func, Range>{_range, _func};
-}
+  Range
+, Func
+);
+
+template <typename Range, typename Func>
+input_transform_range<Func, Range>
+make_input_transform_range (
+  Range
+, Func
+);
 
 } /* range layer */
 #endif

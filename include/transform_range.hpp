@@ -8,7 +8,7 @@
 #ifndef RANGE_LAYER_TRANSFORM_RANGE_HPP
 #define RANGE_LAYER_TRANSFORM_RANGE_HPP
 
-#include "range_traits.hpp"
+#include "range.hpp"
 #include "bits/transform_range_fwd.hpp"
 #include "bits/input_transform_range.hpp"
 #include "bits/input_transform_range.tcc"
