@@ -5,8 +5,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_ALGO_WRITE_TCC
-#define RANGE_LAYER_ALGO_WRITE_TCC
+#ifndef RANGE_LAYER_GENERATE_RANGE_TCC
+#define RANGE_LAYER_GENERATE_RANGE_TCC
 
 #include "range_traits.hpp"
 
