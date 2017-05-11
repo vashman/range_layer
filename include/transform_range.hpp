@@ -10,9 +10,12 @@
 
 #include "range.hpp"
 #include "bits/transform_range_fwd.hpp"
+#include "bits/transform_range.hpp"
+#include "bits/transform_range.tcc"
 #include "bits/input_transform_range.hpp"
 #include "bits/input_transform_range.tcc"
 #include "bits/output_transform_range.hpp"
 #include "bits/output_transform_range.tcc"
 
 #endif
+

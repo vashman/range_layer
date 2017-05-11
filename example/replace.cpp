@@ -13,12 +13,14 @@
 
 using range_layer::iota_range;
 using range_layer::array_range;
-using range_layer::make_input_replace_range;
-using range_layer::make_output_replace_range;
+using range_layer::input_replace_range;
+using range_layer::input_replace_if_range;
+using range_layer::output_replace_range;
+using range_layer::output_replace_if_range;
 
 int main (){
 
-auto rng = make_input_replace_range (
+auto rng = input_replace_range (
   iota_range<int> {2}
 , 4
 , 999
@@ -32,7 +34,7 @@ assert (read(rng) == 999);
 
 int arr [5] = {10, 11, 12, 13, 14};
 
-auto rng2 = make_output_replace_range (
+auto rng2 = output_replace_range (
   array_range<int> {arr, arr+5}
 , 888
 , 999
@@ -44,6 +46,18 @@ assert (read(rng2) == 11);
 advance_prev(rng2);
 write (rng2, 888);
 assert (read(rng2) == 999);
+
+auto rng3 = output_replace_if_range (
+  array_range<int> {arr, arr+5}
+, [](int _value){return (_value%2)==0;}
+, 999
+);
+
+write (rng3, 43);
+assert (read(rng3) == 43);
+advance(rng3);
+write (rng3, 2);
+assert (read(rng3) == 999);
 
 return 0;
 }

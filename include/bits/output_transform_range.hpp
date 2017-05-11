@@ -9,6 +9,7 @@
 #define RANGE_LAYER_OUTPUT_TRANSFORM_RANGE_HPP
 
 namespace range_layer {
+namespace bits {
 
 template <typename Func, typename Range>
 class output_transform_range {
@@ -135,6 +136,6 @@ return this->range == _sen;
 
 }; /* output transform range */
 
-} /* range layer */
+} /* bits */ } /* range layer */
 #endif
 

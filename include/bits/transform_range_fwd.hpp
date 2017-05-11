@@ -10,22 +10,35 @@
 
 namespace range_layer {
 
+namespace bits {
 template <typename Func, typename Range>
 struct input_transform_range;
 
 template <typename Func, typename Range>
 struct output_transform_range;
 
+template <typename Func, typename Range>
+struct transform_range;
+
+} /* bits */
+
 template <typename Range, typename Func>
-output_transform_range<Func, Range>
-make_output_transform_range (
+bits::output_transform_range<Func, Range>
+output_transform_range (
   Range
 , Func
 );
 
 template <typename Range, typename Func>
-input_transform_range<Func, Range>
-make_input_transform_range (
+bits::input_transform_range<Func, Range>
+input_transform_range (
+  Range
+, Func
+);
+
+template <typename Range, typename Func>
+bits::transform_range<Func, Range>
+transform_range (
   Range
 , Func
 );

@@ -11,12 +11,13 @@
 namespace range_layer {
 
 template <typename Range, typename Func>
-output_transform_range<Func, Range>
-make_output_transform_range (
+bits::output_transform_range<Func, Range>
+output_transform_range (
   Range _range
 , Func _func
 ){
-return output_transform_range<Func, Range>{_range, _func};
+return bits::output_transform_range<Func, Range>
+  {_range, _func};
 }
 
 } /* range layer */

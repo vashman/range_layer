@@ -5,25 +5,24 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#include <cassert>
 #include <string>
 #include <array>
-#include <iostream>
 #include "../include/range.hpp"
 #include "../include/transform_range.hpp"
 #include "../include/iota_range.hpp"
 #include "../include/array_range.hpp"
 
 using std::string;
-using std::cout;
 using std::array;
 using range_layer::iota_range;
 using range_layer::array_range;
-using range_layer::make_input_transform_range;
-using range_layer::make_output_transform_range;
+using range_layer::input_transform_range;
+using range_layer::output_transform_range;
 
 int main (){
 
-auto range = make_input_transform_range (
+auto range = input_transform_range (
   iota_range<char>{'a'}
 
 , [](char _c){
@@ -33,21 +32,21 @@ auto range = make_input_transform_range (
 );
 
 while (has_readable(range)){
-cout << read(range);
+assert((read(range)).compare("a"));
 range = next(range);
 }
 
-array<char, 5> arr {{'r', 't' , '1', '2', 'k'}};
+array<char, 5> arr {{'5', 'b' , 'c', 'd', 'e'}};
 
-auto range2 = make_output_transform_range (
+auto range2 = output_transform_range (
   array_range<char> {arr.data(), arr.data()+arr.size()}
 , [](string _str){return _str[0];}
 );
 
-string ss {"rt17k"};
+string ss {"FGHKI"};
   while (has_writable(range2)){
   write (range2, ss);
-  cout << read(range2);
+  assert(read(range2) == ss[0]);
   range2 = next(range2);
   ss.erase(0,1);
   }

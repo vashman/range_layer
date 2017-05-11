@@ -5,23 +5,23 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_INPUT_TRANSFORM_RANGE_HPP
-#define RANGE_LAYER_INPUT_TRANSFORM_RANGE_HPP
+#ifndef RANGE_LAYER_REVERSE_RANGE_HPP
+#define RANGE_LAYER_REVERSE_RANGE_HPP
+
+#include "range.hpp"
 
 namespace range_layer {
 namespace bits {
+template <typename Range>
+class reverse_range {
 
-template <typename Func, typename Range>
-class input_transform_range {
-
-using trait = range_traits<Range>;
 Range range;
-Func func;
+using trait = range_traits<Range>;
 
 public:
 
 static constexpr bool const is_output = trait::is_output;
-static constexpr bool const is_input = true;
+static constexpr bool const is_input = trait::is_input;
 static constexpr bool const is_linear = trait::is_linear;
 static constexpr bool const is_erasable = trait::is_erasable;
 
@@ -33,6 +33,7 @@ static constexpr bool const
 
 static constexpr bool const
   is_reversable = trait::is_reversable;
+static_assert(trait::is_reversable, "Cannot reverse range");
 
 static constexpr validation_type const
   validation = trait::validation;
@@ -49,60 +50,62 @@ static constexpr bool const
 static constexpr range_size const
   output_size_type = trait::output::size_type;
 
-input_transform_range (
+reverse_range (
   Range _range
-, Func _func
 )
 : range {_range}
-, func (_func)
 {}
 
-input_transform_range (input_transform_range const &) = default;
-input_transform_range (input_transform_range &&) = default;
+reverse_range (reverse_range const &) = default;
+reverse_range (reverse_range &&) = default;
 
-input_transform_range &
-operator = (input_transform_range &&) = default;
+reverse_range &
+operator = (reverse_range &&) = default;
 
-input_transform_range &
-operator = (input_transform_range const &) = default;
+reverse_range &
+operator = (reverse_range const &) = default;
 
-~input_transform_range () = default;
+~reverse_range () = default;
 
 auto
-operator * () -> decltype(this->func(*this->range));
+operator * () -> decltype(*this->range){
+return *this->range;
+}
 
-input_transform_range &
+reverse_range &
 operator ++ (){
-++this->range;
+--this->range;
 return *this;
 }
 
 template <typename U = Range>
-input_transform_range &
+reverse_range &
 operator -- (){
---this->range;
+++this->range;
 return *this;
 }
 
 template <typename T>
 void
-operator = (T const &);
+operator = (T const & _var){
+this->range = _var;
+}
 
 template <typename N>
-input_transform_range &
+reverse_range &
 operator += (
   N _n
 ){
-this->range += _n;
+this->range -= _n;
 return *this;
 }
 
 template <typename N>
-input_transform_range &
+reverse_range &
 operator -= (
   N _n
 ){
-this->range -= _n;
+this->range += _n;
 return *this;
 }
 
@@ -129,8 +132,17 @@ operator == (
 return this->range == _sen;
 }
 
-}; /* input transform range */
+};
+} /* bits */
 
-} /* bits */ } /* range layer */
+template <typename Range>
+bits::reverse_range<Range>
+reverse_range (
+  Range _range
+){
+return bits::reverse_range<Range>{_range};
+}
+
+} /* range layer */
 #endif
 

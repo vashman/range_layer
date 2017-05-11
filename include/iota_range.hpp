@@ -17,7 +17,6 @@ template <typename T>
 class iota_range {
 
 T count;
-mutable bool end;
 
 public:
 
@@ -42,7 +41,8 @@ static constexpr range_size const
 
 iota_range (
   T const & _var
-) : count {_var}, end {false}
+)
+: count {_var}
 {}
 
 iota_range (iota_range const &) = default;
@@ -67,15 +67,10 @@ bool
 iota_range<T>::operator == (
   sentinel::readable const & _sentinel
 ) const {
-  if (this->end == false){
-    if((std::numeric_limits<T>::max() == this->count)
-    || (std::numeric_limits<T>::min() == this->count)){
-    this->end = true;
-    return false; // if the end was just reached, the range
-                  // can still be used at its current postion.
-    }
-  }
-return !this->end;
+return !(
+  (std::numeric_limits<T>::max() == this->count)
+|| (std::numeric_limits<T>::min() == this->count)
+);
 }
 
 template <typename T>
@@ -99,7 +94,6 @@ template <typename T>
 iota_range<T> &
 iota_range<T>::operator ++ (
 ){
-this->end = true;
 ++this->count;
 return *this;
 }
@@ -108,7 +102,6 @@ template <typename T>
 iota_range<T> &
 iota_range<T>::operator -- (
 ){
-this->end = true;
 --this->count;
 return *this;
 }
@@ -133,7 +126,6 @@ iota_range<T>&
 iota_range<T>::operator += (
   T const & _n
 ){
-this->end = true;
 this->count += _n;
 return *this;
 }
@@ -143,7 +135,6 @@ iota_range<T>&
 iota_range<T>::operator -= (
   T const & _n
 ){
-this->end = true;
 this->count -= _n;
 return *this;
 }

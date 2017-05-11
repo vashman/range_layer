@@ -5,14 +5,14 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_INPUT_TRANSFORM_RANGE_HPP
-#define RANGE_LAYER_INPUT_TRANSFORM_RANGE_HPP
+#ifndef RANGE_LAYER_BITS_TRANSFORM_RANGE_HPP
+#define RANGE_LAYER_BITS_TRANSFORM_RANGE_HPP
 
 namespace range_layer {
 namespace bits {
 
 template <typename Func, typename Range>
-class input_transform_range {
+class transform_range {
 
 using trait = range_traits<Range>;
 Range range;
@@ -21,7 +21,7 @@ Func func;
 public:
 
 static constexpr bool const is_output = trait::is_output;
-static constexpr bool const is_input = true;
+static constexpr bool const is_input = trait::is_input;
 static constexpr bool const is_linear = trait::is_linear;
 static constexpr bool const is_erasable = trait::is_erasable;
 
@@ -49,7 +49,7 @@ static constexpr bool const
 static constexpr range_size const
   output_size_type = trait::output::size_type;
 
-input_transform_range (
+transform_range (
   Range _range
 , Func _func
 )
@@ -57,28 +57,28 @@ input_transform_range (
 , func (_func)
 {}
 
-input_transform_range (input_transform_range const &) = default;
-input_transform_range (input_transform_range &&) = default;
+transform_range (transform_range const &) = default;
+transform_range (transform_range &&) = default;
 
-input_transform_range &
-operator = (input_transform_range &&) = default;
+transform_range &
+operator = (transform_range &&) = default;
 
-input_transform_range &
-operator = (input_transform_range const &) = default;
+transform_range &
+operator = (transform_range const &) = default;
 
-~input_transform_range () = default;
+~transform_range () = default;
 
 auto
 operator * () -> decltype(this->func(*this->range));
 
-input_transform_range &
+transform_range &
 operator ++ (){
 ++this->range;
 return *this;
 }
 
 template <typename U = Range>
-input_transform_range &
+transform_range &
 operator -- (){
 --this->range;
 return *this;
@@ -89,7 +89,7 @@ void
 operator = (T const &);
 
 template <typename N>
-input_transform_range &
+transform_range &
 operator += (
   N _n
 ){
@@ -98,7 +98,7 @@ return *this;
 }
 
 template <typename N>
-input_transform_range &
+transform_range &
 operator -= (
   N _n
 ){
@@ -129,7 +129,7 @@ operator == (
 return this->range == _sen;
 }
 
-}; /* input transform range */
+}; /* transform range */
 
 } /* bits */ } /* range layer */
 #endif
