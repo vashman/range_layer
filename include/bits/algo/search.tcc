@@ -5,36 +5,45 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_ALGO_READ_HPP
-#define RANGE_LAYER_ALGO_READ_HPP
+#ifndef RANGE_LAYER_ALGO_SEARCH_TCC
+#define RANGE_LAYER_ALGO_SEARCH_TCC
 
 namespace range_layer {
 
 template <typename Range, typename Pred>
-bool
-all_of (
+Range
+find_if (
   execution_policy::sequenced
 , Range _range
 , Pred _pred
-);
+){
+  while (has_readable(_range))
+    if (_pred(read(_range))) break;
+return _range;
+}
 
 template <typename Range, typename Pred>
-bool
-none_of (
+Range
+find_if_not (
   execution_policy::sequenced
 , Range _range
 , Pred _pred
-);
+){
+  while (has_readable(_range))
+    if (! _pred(read(_range))) break;
+return _range;
+}
 
-template <typename Range, typename Pred>
-bool
-any_of (
-  execution_policy::sequenced
+template <typename Range, typename T, typename Policy>
+Range
+find (
+  Policy _policy
 , Range _range
-, Pred _pred
-);
+, T const & _value
+){
+return find_if (
+  _policy, _range, [=](auto _v){return _v == _value});
+}
 
 } /* range layer */
 #endif
-#include "read.tcc"
-

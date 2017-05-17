@@ -25,7 +25,7 @@ template <typename Policy> class remote {};
 #include "bits/algo/read.hpp"
 #include "bits/algo/write.hpp"
 //#include "bits/algo/sort.hpp"
-//#include "bits/algo/search.hpp"
+#include "bits/algo/search.hpp"
 //#include "bits/algo/hash.hpp"
 
 #endif
