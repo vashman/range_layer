@@ -16,12 +16,13 @@ namespace range_layer {
 template <
   typename Iter
 , typename IterEnd = Iter
-, typename Cat =std::iterator_traits<Iter>::iterator_category
+, typename Cat
+    = typename std::iterator_traits<Iter>::iterator_category
 >
 struct iterator_range;
 
 // Input Iterator
-template <typename Iter, typename IterEnd = Iter>
+template <typename Iter, typename IterEnd>
 struct iterator_range
 <Iter, IterEnd, std::input_iterator_tag> {
 
@@ -47,7 +48,7 @@ static constexpr range_size const
 Iter iter_begin;
 IterEnd iter_end;
 
-std::iterator_traits<Iter>::reference
+typename std::iterator_traits<Iter>::reference
 operator * (
 ){
 return *this->iter_begin;
@@ -78,7 +79,7 @@ return *this;
 
 };
 
-template <typename Iter, typename IterEnd = Iter>
+template <typename Iter, typename IterEnd>
 struct iterator_range
 <Iter, IterEnd, std::forward_iterator_tag>
 : public
@@ -107,7 +108,7 @@ static constexpr range_size const
 
 };
 
-template <typename Iter, typename IterEnd = Iter>
+template <typename Iter, typename IterEnd>
 struct iterator_range
 <Iter, IterEnd, std::bidirectional_iterator_tag>
 : public
@@ -143,9 +144,9 @@ return *this;
 
 };
 
-template <typename Iter, typename IterEnd = Iter>
+template <typename Iter, typename IterEnd>
 struct iterator_range
-<Iter, IterEnd, std::random_iterator_tag>
+<Iter, IterEnd, std::random_access_iterator_tag>
 : public
   iterator_range
   <Iter, IterEnd, std::bidirectional_iterator_tag>
@@ -173,7 +174,8 @@ static constexpr range_size const
 
 iterator_range &
 operator += (
-  std::iterator_traits<Iter>::difference_type const & _n
+  typename std::iterator_traits<Iter>::difference_type
+  const & _n
 ){
 this->iter_begin += _n;
 return *this;
@@ -181,13 +183,14 @@ return *this;
 
 iterator_range &
 operator -= (
-  std::iterator_traits<Iter>::difference_type const & _n
+  typename std::iterator_traits<Iter>::difference_type
+  const & _n
 ){
 this->iter_begin -= _n;
 return *this;
 }
 
-std::iterator_traits<Iter>::reference
+typename std::iterator_traits<Iter>::reference
 operator [](
   int _n
 ){
@@ -221,9 +224,10 @@ static constexpr range_size const
 
 Iter iter_begin;
 
+template <typename T>
 void
 operator = (
-  std::iterator_traits<Iter>::value_type _var
+  T _var
 ){
 *this->iter_begin = _var;
 }
@@ -350,6 +354,23 @@ operator != (
 , sentinel::writable const & _sentinel
 ){
 return false;
+}
+
+template <typename Iter, typename IterEnd>
+iterator_range<Iter,IterEnd>
+make_iterator_range (
+  Iter _begin
+, IterEnd _end
+){
+return iterator_range<Iter,IterEnd>{_begin, _end};
+}
+
+template <typename Iter>
+iterator_range<Iter,void>
+make_iterator_range (
+  Iter _begin
+){
+return iterator_range<Iter,void>{_begin};
 }
 
 } /* range layer */
