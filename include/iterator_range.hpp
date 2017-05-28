@@ -236,6 +236,7 @@ iterator_range &
 operator ++ (
 ){
 ++this->iter_begin;
+return *this;
 }
 
 };
