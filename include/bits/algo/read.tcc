@@ -67,8 +67,8 @@ count_if (
 ){
 std::size_t n = 0;
   while (has_readable(_range))
-    if (_pred(read(_range))) ++_n;
-return _n;
+    if (_pred(read(_range))) ++n;
+return n;
 }
 
 template <typename Range, typename T, typename Policy>
@@ -78,8 +78,24 @@ count (
 , Range _range
 , T _value
 ){
+using type = decltype(read(_range));
+
 return count_if (
-  _policy, _range, [=](auto _var){return _var == _value});
+  _policy, _range, [=](type _var){return _var == _value;});
+}
+
+template <typename Range, typename Operation>
+Range
+for_each (
+  execution_policy::sequenced
+, Range _range
+, Operation _op
+){
+  while (has_readable(_range)){
+  _op(read(_range));
+  advance(_range);
+  }
+return _range;
 }
 
 } /* range layer */

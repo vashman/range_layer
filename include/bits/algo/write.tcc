@@ -20,7 +20,7 @@ fill (
 , Range _range
 , T const & _var
 ){
-check::is_ouput<Range>{};
+check::is_output<Range>{};
 
   while (has_writeable(_range)){
   write(_range, _var);
@@ -40,7 +40,7 @@ fill (
 , T const & _var
 , N _n
 ){
-check::is_ouput<Range>{};
+check::is_output<Range>{};
 
   while (has_writeable(_range) && (0 != _n)){
   write(_range, _var);
@@ -58,7 +58,7 @@ generate (
 , Range _range
 , Generator _gen
 ){
-check::is_ouput<Range>{};
+check::is_output<Range>{};
 
   while (has_writable(_range)){
   write(_range, _gen());
@@ -76,7 +76,7 @@ generate_n (
 , N _n
 , Generator _gen
 ){
-check::is_ouput<Range>{};
+check::is_output<Range>{};
 
   while (has_writable(_range) && (0 != _n)){
   write(_range, _gen());
@@ -96,8 +96,8 @@ copy (
 , IRange _input
 , ORange _output
 ){
-check::is_input<IRange>{};
-check::is_ouput<ORange>{};
+static_assert (range_traits<IRange>::is_input, "Not input range.");
+static_assert (range_traits<ORange>::is_output, "Not output range.");
 
   while (has_writable(_output) && has_readable(_input)){
   write(_output, read(_input));
@@ -117,13 +117,35 @@ copy_if (
 , ORange _output
 , Pred _pred
 ){
-check::is_input<IRange>{};
-check::is_ouput<ORange>{};
+static_assert (range_traits<IRange>::is_input, "Not input range.");
+static_assert (range_traits<ORange>::is_output, "Not output range.");
 
   while (has_writable(_output) && had_readable(_input)){
   auto temp = read(_input);
     if (_pred(temp)) write(_output, temp);
   advance(_output, _input);
+  }
+return _output;
+}
+
+/*
+  copy
+*/
+template <typename IRange, typename ORange>
+ORange
+write (
+  execution_policy::sequenced
+, IRange _input
+, ORange _output
+){
+static_assert (range_traits<IRange>::is_input, "Not input range.");
+static_assert (range_traits<ORange>::is_output, "Not output range.");
+
+using range_layer::advance;
+
+  while (has_writable(_output) && has_readable(_input)){
+  write(_output, read(_input));
+  range_layer::advance(_output, _input);
   }
 return _output;
 }
@@ -139,8 +161,8 @@ copy_n (
 , ORange _output
 , N _n
 ){
-check::is_input<IRange>{};
-check::is_output<ORange>{};
+static_assert (range_traits<IRange>::is_input, "Not input range.");
+static_assert (range_traits<ORange>::is_output, "Not output range.");
 
   while (
      has_writable(_output)

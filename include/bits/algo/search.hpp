@@ -18,7 +18,7 @@ find (
 , T const
 );
 
-template <typename Range, typename pred>
+template <typename Range, typename Pred>
 Range
 find_if (
   execution_policy::sequenced

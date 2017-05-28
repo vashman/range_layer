@@ -41,8 +41,10 @@ find (
 , Range _range
 , T const & _value
 ){
+using type = decltype(read(_range));
+
 return find_if (
-  _policy, _range, [=](auto _v){return _v == _value});
+  _policy, _range, [=](type _v){return _v == _value;});
 }
 
 } /* range layer */
