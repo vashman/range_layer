@@ -1,46 +1,48 @@
-#include <iostream>
+//
+
+//          Copyright Sundeep S. Sangha 2015 - 2017.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
+#include <cassert>
 #include <array>
 #include "../include/sub_range.hpp"
 #include "../include/array_range.hpp"
+#include "../include/range.hpp"
+#include "../include/algorithm.hpp"
 
 using std::array;
 using range_layer::array_range;
-using range_layer::lower_bound;
-using range_layer::upper_bound;
+using range_layer::sub_range_n;
 
 int main (){
+range_layer::execution_policy::sequenced seq{};
 array<int, 7> arr {{0, 1, 2, 3, 4, 5, 6}};
 
-upper_bound <lower_bound<array_range<int>>> arr_rng {
-lower_bound<array_range<int>> {
+auto arr_rng = sub_range_n (
   next(array_range<int> {arr.data(), arr.data()+arr.size()})
-, 1
-, 1
-}
 , 3
-, 0
-};
+);
 
-std::cout << "\nsize is: " << input_size(arr_rng);
-if (!is_readable(arr_rng)) std::cout << "unable to read";
-
-int temp = read(arr_rng);
-std::cout << "\ntemp is: " << temp;
-temp = read(arr_rng);
-std::cout << "\ntemp is: " << temp;
+assert(has_readable(arr_rng));
+assert(read(arr_rng) == 1);
+advance(arr_rng);
+assert(read(arr_rng) == 2);
 
 arr_rng = prev (arr_rng);
 
-  if (!is_writable(arr_rng)) std::cout << "unable to write";
+assert(has_writable(arr_rng));
 write (arr_rng, 9);
-temp = read(arr_rng);
-std::cout << "\ntemp is: " << temp;
+assert(read(arr_rng) == 9);
+advance(arr_rng);
 
-  if (2 > output_size(arr_rng))
-  std::cout << "no room to write";
-arr_rng = prev(arr_rng, 2);
-temp = read(arr_rng);
-std::cout << "\ntemp is: " << temp;
+int temp = 2;
+for_each (
+  seq
+, arr_rng
+, [=](int _var){assert(_var == temp++);}
+);
 
 return 0;
 }

@@ -10,151 +10,158 @@
 
 #include "range_traits.hpp"
 
-template <typename Range, typename N = std::size_t>
-class sub_range {
+namespace range_layer {
+namespace bits {
+
+template <typename Range, typename S = std::size_t>
+class sub_range_n {
 
 Range range;
-N pos;
-N last;
+S pos;
+S count;
+using trait = range_traits<Range>;
+
+bool
+is_end () const {
+return (this->pos > this->count) || (this->pos == 0);
+}
 
 public:
 
+static constexpr bool const is_output = trait::is_output;
+static constexpr bool const is_input = trait::is_input;
+static constexpr bool const is_linear = trait::is_linear;
+static constexpr bool const is_erasable = trait::is_erasable;
 
-sub_range (
-  Range
-, N _start
-, N _finish = 0
-);
+static constexpr bool const
+  is_insertable = trait::is_insertable;
 
-sub_range (sub_range const &) = default;
-sub_range& operator = (sub_range const &) = default;
-sub_range (sub_range &&) = default;
-sub_range& operator = (sub_range &&) = default;
-~sub_range() = default;
+static constexpr bool const
+  is_io_synced = trait::is_io_synced;
 
-};
+static constexpr bool const
+  is_reversable = trait::is_reversable;
 
-template <typename Range, typename N>
-sub_range<Range, N>::sub_range (
+static constexpr validation_type const
+  validation = trait::validation;
+
+static constexpr bool const
+  is_input_temporary = trait::input::is_temporary;
+
+static constexpr range_size const
+  input_size_type = range_size::finite;
+
+static constexpr bool const
+  is_output_temporary = trait::output::is_temporary;
+
+static constexpr range_size const
+  output_size_type = range_size::finite;
+
+sub_range_n (
   Range _range
-, N _start
-, N _finish
+, S _count
 )
 : range {_range}
-, pos {0}
-, last {_finish}
+, pos {1}
+, count {_count}
 {}
 
-template <typename Range, typename N>
+sub_range_n (sub_range_n const &) = default;
+sub_range_n& operator = (sub_range_n const &) = default;
+sub_range_n (sub_range_n &&) = default;
+sub_range_n& operator = (sub_range_n &&) = default;
+~sub_range_n() = default;
+
+template <typename U = Range>
 auto
-read (
-  sub_range<Range, N> & _range
-) -> decltype (read(_range.range))
-{
-_range.jump();
-++_range.pos;
-return read(_range.range);
+operator * () -> decltype(*this->range){
+return *this->range;
 }
 
-template <typename Range, typename T, typename N>
+template <typename U = Range>
+sub_range_n &
+operator ++ (){
+++this->pos;
+++this->range;
+return *this;
+}
+
+template <typename U = Range>
+sub_range_n &
+operator -- (){
+--this->pos;
+--this->range;
+return *this;
+}
+
+template <typename T>
 void
-write (
-  sub_range<Range, N> & _range
-, T const & _var
+operator = (T const & _var){
+this->range = _var;
+}
+
+template <typename N>
+sub_range_n &
+operator += (
+  N _n
 ){
-_range.jump();
-++_range.pos;
-write(_range.range, _var);
+this->pos += _n;
+this->range += _n;
+return *this;
 }
 
-template <typename Range, typename N>
-auto
-read (
-  sub_range<Range, N> && _range
-) -> decltype (read(_range.range))
-{
-return read(_range.range);
-}
-
-template <typename Range, typename T, typename N>
-void
-write (
-  sub_range<Range, N> && _range
-, T const & _var
+template <typename N>
+sub_range_n &
+operator -= (
+  N _n
 ){
-write(_range, _var);
+this->pos -= _n;
+this->range -= _n;
+return *this;
 }
 
-template <typename Range, typename N>
 bool
-is_readable (
-  sub_range<Range, N> _range
-){
-_range.jump();
-  if ((_range.pos > _range.finish) && _range.finish != 0)
-  return false;
-return is_readable(_range.range);
+operator == (
+  sentinel::readable const & _sen
+) const {
+return this->range == _sen && !this->is_end();
 }
 
-template <typename Range, typename N>
-typename N::difference_type
-input_size (
-  sub_range<Range, N> _range
-){
-return input_size(_range.range);
-}
-
-template <typename Range, typename N>
-typename N::difference_type
-output_size (
-  sub_range<Range, N> _range
-){
-return output_size(_range.range);
-}
-
-template <typename Range, typename N>
+template <typename U = Range>
 bool
-is_writable (
-  sub_range<Range, N> _range
-){
-_range.jump();
-  if (_range.pos < _range.start) return false;
-return is_writable(_range.range);
+operator == (
+  sentinel::writable const & _sen
+) const {
+return this->range == _sen && !this->is_end();
 }
 
-template <typename Range, typename N>
-sub_range<Range, N>
-next (
-  sub_range<Range, N> _range
-, typename N::difference_type _n = 1
-){
-_range.next_jump += _n;
-_range.pos += _range.next_jump;
-  if ((_range.pos >= _range.finish) && _range.finish != 0){
-  _range.pos = _range.finish + 1; // set past the end
-  _range.next_jump = _range.finish; // set jump to the end
-  }
-_range.range = next(_range.range, _range.next_jump);
-_range.next_jump = 0;
-return _range;
+template <typename T>
+bool
+operator == (
+  T const & _sen
+) const {
+return this->range == _sen && !this->is_end();
 }
 
+}; /* sub_range_n*/
+} /* bits */
+
 template <typename Range, typename N>
-sub_range<Range, N>
-prev (
-  sub_range<Range, N> _range
-, typename N::difference_type _n = 1
+bits::sub_range_n<Range, N>
+sub_range_n (
+  Range _range
+, N _n
 ){
-_range.jump();
-_range.prev_jump += _n;
-_range.pos -= _range.prev_jump;
-  if (_range.pos <= _range.start){
-  _range.pos = _range.start - 1;
-  _range.prev_jump = _range.finish;
-  }
-_range.range = prev(_range.range, _range.prev_jump);
-_range.prev_jump = 0;
-return _range;
+return bits::sub_range_n<Range, N>{_range, _n};
+}
+
+/*template <typename Range, typename Sentinal>
+bits::sub_range<Range>
+sub_range (
+  Range _range
+, Sentinal _sentinal
+){
+return bits::sub_range<Range>{_range, _sentinal};
 }*/
 
 } /* range layer */
