@@ -22,7 +22,7 @@ fill (
 ){
 static_assert (range_traits<Range>::is_output, "Not output range.");
 
-  while (has_writeable(_range)){
+  while (has_writable(_range)){
   write(_range, _var);
   advance(_range);
   }
@@ -42,7 +42,7 @@ fill (
 ){
 static_assert (range_traits<Range>::is_output, "Not output range.");
 
-  while (has_writeable(_range) && (0 != _n)){
+  while (has_writable(_range) && (0 != _n)){
   write(_range, _var);
   advance(_range);
   --_n;

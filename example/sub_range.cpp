@@ -41,7 +41,7 @@ int temp = 2;
 for_each (
   seq
 , arr_rng
-, [=](int _var){assert(_var == temp++);}
+, [&](int _var){assert(_var == temp++);}
 );
 
 return 0;

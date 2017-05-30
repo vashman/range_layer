@@ -17,7 +17,7 @@ int main (){
 vector<int> vec{10};
 vector_range<int> range{vec};
 
-fill(range_layer::execution_policy::sequenced, range, 99);
+fill(range_layer::execution_policy::sequenced{}, range, 99);
 
 return 0;
 }

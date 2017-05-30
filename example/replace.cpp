@@ -47,7 +47,7 @@ advance_prev(rng2);
 write (rng2, 888);
 assert (read(rng2) == 999);
 
-auto rng3 = output_replace_if_range (
+/*auto rng3 = output_replace_if_range (
   array_range<int> {arr, arr+5}
 , [](int _value){return (_value%2)==0;}
 , 999
@@ -57,7 +57,7 @@ write (rng3, 43);
 assert (read(rng3) == 43);
 advance(rng3);
 write (rng3, 2);
-assert (read(rng3) == 999);
+assert (read(rng3) == 999);*/
 
 return 0;
 }

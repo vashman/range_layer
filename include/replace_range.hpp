@@ -28,36 +28,75 @@ return _value;
 
 };
 
+template <typename Pred, typename T>
+struct replace_if_func {
+
+T new_value;
+Pred pred;
+
+T operator ()(T const & _value){
+  if (this->pred(_value)) return this->new_value;
+return _value;
+}
+
+};
+
 } /* bits */
 
 template <typename Range, typename T>
-using input_replace_range
-  = input_transform_range<bits::replace_func<T>, Range>;
-
-template <typename Range, typename T>
-using output_replace_range
-  = output_transform_range<bits::replace_func<T>, Range>;
-
-template <typename Range, typename T>
-input_replace_range<Range, T>
-make_input_replace_range (
+auto
+input_replace_range (
   Range _range
 , T _old_value
 , T _new_value
-){
-return input_replace_range<Range,T>
-  {_range, bits::replace_func<T>{_old_value, _new_value}};
+)
+-> decltype (input_transform_range
+  (_range, bits::replace_func<T>{_old_value, _new_value}))
+{
+return input_transform_range
+  (_range, bits::replace_func<T>{_old_value, _new_value});
 }
 
 template <typename Range, typename T>
-output_replace_range<Range, T>
-make_output_replace_range (
+auto
+output_replace_range (
   Range _range
 , T _old_value
 , T _new_value
-){
-return output_replace_range<Range,T>
-  {_range, bits::replace_func<T>{_old_value, _new_value}};
+)
+-> decltype (output_transform_range (
+  _range, bits::replace_func<T>{_old_value, _new_value}))
+{
+return output_transform_range (
+  _range, bits::replace_func<T>{_old_value, _new_value});
+}
+
+template <typename Range, typename T, typename Pred>
+auto
+input_replace_if_range (
+  Range _range
+, Pred _pred
+, T _new_value
+)
+-> decltype (input_transform_range
+  (_range, bits::replace_if_func<T,Pred>{_new_value, _pred}))
+{
+return input_transform_range
+  (_range, bits::replace_if_func<T,Pred>{_new_value, _pred});
+}
+
+template <typename Range, typename T, typename Pred>
+auto
+output_replace_if_range (
+  Range _range
+, Pred _pred
+, T _new_value
+)
+-> decltype (output_transform_range (
+  _range, bits::replace_if_func<T,Pred>{_new_value, _pred}))
+{
+return output_transform_range (
+  _range, bits::replace_if_func<T, Pred>{_new_value, _pred});
 }
 
 } /* range layer */
