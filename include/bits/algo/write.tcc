@@ -20,7 +20,7 @@ fill (
 , Range _range
 , T const & _var
 ){
-check::is_output<Range>{};
+static_assert (range_traits<Range>::is_output, "Not output range.");
 
   while (has_writeable(_range)){
   write(_range, _var);
@@ -40,7 +40,7 @@ fill (
 , T const & _var
 , N _n
 ){
-check::is_output<Range>{};
+static_assert (range_traits<Range>::is_output, "Not output range.");
 
   while (has_writeable(_range) && (0 != _n)){
   write(_range, _var);
@@ -58,7 +58,7 @@ generate (
 , Range _range
 , Generator _gen
 ){
-check::is_output<Range>{};
+static_assert (range_traits<Range>::is_output, "Not output range.");
 
   while (has_writable(_range)){
   write(_range, _gen());
@@ -76,7 +76,7 @@ generate_n (
 , N _n
 , Generator _gen
 ){
-check::is_output<Range>{};
+static_assert (range_traits<Range>::is_output, "Not output range.");
 
   while (has_writable(_range) && (0 != _n)){
   write(_range, _gen());
