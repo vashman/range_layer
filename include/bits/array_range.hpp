@@ -67,17 +67,19 @@ operator ++ (
 return *this;
 }
 
+template <typename N>
 array_range &
 operator += (
-  std::size_t const _n
+  N const _n
 ){
 this->pos += _n;
 return *this;
 }
 
+template <typename N>
 array_range &
 operator -= (
-  std::size_t const _n
+  N const _n
 ){
 this->pos -= _n;
 return *this;
