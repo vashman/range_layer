@@ -26,53 +26,46 @@ getopt_range::getopt_range (
 {}
 
 bool
-has_readable (
-  getopt_range const _range
-){
-return (-1 == _range.rv) && (_range.local_argc > 0);
+getopt_range::operator == (
+  sentinel::readable const _sen
+) const {
+return (-1 == this->rv) && (this->local_argc > 0);
 }
 
-getopt_range
-next (
-  getopt_range _range
-, int _n
-){
+getopt_range &
+getopt_range::operator ++ (){
 /* set getopt state to local state. */
 int global_optind = optind;
-optind = _range.local_optind;
+optind = this->local_optind;
 
-  do {
-    _range.rv =  getopt (
-    _range.local_argc
-  , _range.local_argv
-  , _range.local_opts.c_str() );
-  --_n;
-  } while (0 != _n);
+this->rv =  getopt (
+  this->local_argc
+, this->local_argv
+, this->local_opts.c_str()
+);
 
-  if (-1 != _range.rv){
+  if (-1 != this->rv){
   // if a '?' character, then an error is found.
-  _range.option.get_option() = static_cast<char>(_range.rv);
+  this->option.get_option() = static_cast<char>(this->rv);
     if (
-       '?' != static_cast<char>(_range.rv)
-    && ':' != static_cast<char>(_range.rv)
+       '?' != static_cast<char>(this->rv)
+    && ':' != static_cast<char>(this->rv)
     && optarg != NULL
     ){
-    _range.option.get_arg() = optarg;
+    this->option.get_arg() = optarg;
     }
   }
   
 /* restore get opt state */
-_range.local_optind = optind;
+this->local_optind = optind;
 optind = global_optind;
 
-return _range;
+return *this;
 }
 
-program_option
-read (
-  getopt_range const & _range
-){
-return _range.option;
+program_option &
+getopt_range::operator * (){
+return this->option;
 }
 
 } /* range layer */

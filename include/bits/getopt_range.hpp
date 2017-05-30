@@ -25,6 +25,7 @@ public:
 
 static constexpr bool const is_output = false;
 static constexpr bool const is_input = true;
+static constexpr bool const is_linear = true;
 static constexpr bool const is_erasable = false;
 static constexpr bool const is_insertable = false;
 static constexpr bool const is_reversable = false;
@@ -53,9 +54,9 @@ getopt_range (getopt_range &&) = default;
 getopt_range & operator = (getopt_range const &) = default;
 getopt_range & operator = (getopt_range &&) = default;
 
-friend program_option read (getopt_range);
-friend bool has_readable (getopt_range const);
-friend getopt_range next (getopt_range, int _n);
+program_option & operator * ();
+getopt_range & operator ++ ();
+bool operator == (sentinel::readable const) const;
 
 };
 
