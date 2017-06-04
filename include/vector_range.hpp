@@ -5,15 +5,27 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef RANGE_LAYER_VECTOR_RANGE_HPP
+#define RANGE_LAYER_VECTOR_RANGE_HPP
+
 #include <vector>
+#include "range_traits.hpp"
 
 namespace range_layer {
 
 template <typename T>
 struct vector_range {
 
+private:
+
+std::vector<T> * vec;
+std::size_t pos;
+
+public:
+
 static constexpr bool const is_output = true;
 static constexpr bool const is_input = true;
+static constexpr bool const is_linear = false;
 static constexpr bool const is_io_synced = true;
 static constexpr bool const is_reversable = true;
 static constexpr bool const is_erasable = true;
@@ -31,7 +43,7 @@ static constexpr range_size const
   output_size_type = range_size::finite;
 
 vector_range (
-  vector<T> &
+  std::vector<T> &
 );
 
 vector_range (vector_range const &) = default;
@@ -39,11 +51,6 @@ vector_range (vector_range &&) = default;
 vector_range & operator = (vector_range const &) = default;
 vector_range & operator = (vector_range &&) = default;
 ~vector_range() = default;
-
-private:
-
-std::vector<T> * vec;
-std::size_t pos;
 
 const T& operator * (
 ){
@@ -54,7 +61,7 @@ void
 operator = (
   T const & _var
 ){
-*this->vec[this->pos-1] = _var;
+(*(this->vec))[this->pos-1] = _var;
 }
 
 vector_range&
@@ -85,14 +92,21 @@ this->pos -= _n;
 
 bool
 operator == (
-  sentinal::readable const _sen
-){
+  sentinel::readable const _sen
+) const {
 return this->pos <= this->vec->size();
 }
 
 bool
 operator == (
-  vector_range const & _lhs
+  sentinel::writable const _sen
+) const {
+return *this == sentinel::readable{};
+}
+
+bool
+operator == (
+  vector_range const & _lhs //?
 ){
 return this->pos = _lhs.pos;
 }
@@ -101,7 +115,7 @@ return this->pos = _lhs.pos;
 
 template <typename T>
 vector_range<T>::vector_range (
-  vector<T> & _vec
+  std::vector<T> & _vec
 )
 : vec {&_vec}
 , pos {1}

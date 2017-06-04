@@ -203,4 +203,9 @@ return
 
 } /* range layer */
 #endif
+#include "remove_range.hpp"
+#include "replace_range.hpp"
+#include "transform_range.hpp"
+#include "reverse_range.hpp"
+#inlcude "sub_range.hpp"
 

@@ -50,43 +50,6 @@ N pos; // = 0;
 
 }; /* lower bound */
 
-template <typename Range>
-auto
-read (
-  lower_bound<Range> & _range
-)
- -> decltype (read(_range.range))
-{
-return read(_range.range);
-}
-
-template <typename Range, typename T>
-void
-write (
-  lower_bound<Range> & _range
-, T const & _var
-){
-write(_range.range, _var);
-}
-
-template <typename Range>
-auto
-read (
-  lower_bound<Range> && _range
-)
- -> decltype (read(_range.range))
-{
-return read(_range.range);
-}
-
-template <typename Range, typename T>
-void
-write (
-  lower_bound<Range> && _range
-, T const & _var
-){
-write(_range, _var);
-}
 
 template <typename Range>
 bool
@@ -106,31 +69,6 @@ has_writable (
 ){
   if (_range.pos < 1) return false;
 return is_writable(_range.range);
-}
-
-template <typename Range>
-lower_bound<Range>
-next (
-  lower_bound<Range> _range
-, typename Traits::difference_type _n = 1
-){
-_range.pos += _n;
-_range.range = next(_range.range, _n);
-return _range;
-}
-
-template <typename Range, typename Traits>
-lower_bound<Range, Traits>
-prev (
-  lower_bound<Range, Traits> _range
-, typename Traits::difference_type _n = 1
-){
-_range.pos -= _n;
-  if (_range.pos < _range.start)
-  _range.pos = _range.start - 1; // set past the start
-
-_range.range = prev(_range.range, _n);
-return _range;
 }
 
 } /* range layer */

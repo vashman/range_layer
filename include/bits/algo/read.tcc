@@ -46,6 +46,30 @@ any_of (
 return false;
 }
 
+template <typename Range, typename T>
+bool
+any_is (
+  execution_policy::sequenced
+, Range _range
+, T const _value
+){
+  while (is_readable(_range))
+    if (_value == read(_range)) return true;
+return false;
+}
+
+template <typename Range, typename T>
+bool
+any_is_not (
+  execution_policy::sequenced
+, Range _range
+, T const _value
+){
+  while (is_readable(_range))
+    if (_value != read(_range)) return true;
+return false;
+}
+
 template <typename Range1, typename Range2>
 bool
 equal (

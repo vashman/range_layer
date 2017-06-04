@@ -59,6 +59,7 @@ static constexpr range_size const
 
 remove_range (
   Range _range
+, Pred _pred
 )
 : range {_range}
 , pred {_pred}
@@ -86,6 +87,7 @@ remove_range &
 operator ++ (){
   while (this->range == sentinel::readable{}){
   this->temp = *this->range;
+    if (! this->pred(this->temp)) break;
   ++this->range;
   }
 return *this;
@@ -113,7 +115,7 @@ remove_range &
 operator += (
   N _n
 ){
-  while ((0!= _n) && (this->range == sentinel::readable{})){
+  while ((0 != _n) && (this->range == sentinel::readable{})){
   this->temp = *this->range;
     if (! this->pred(this->temp)) --n;
   ++this->range;
@@ -126,7 +128,7 @@ remove_range &
 operator -= (
   N _n
 ){
-  while ((0!= _n) && (this->range == sentinel::readable{})){
+  while ((0 != _n) && (this->range == sentinel::readable{})){
   this->temp = *this->range;
     if (! this->pred(this->temp)) --n;
   --this->range;
@@ -158,14 +160,41 @@ return this->range == _sen;
 }
 
 };
+
+template <typename T>
+struct remove_pred {
+
+T value;
+
+template <typename U>
+bool
+operator () (
+  U _lhs
+) const {
+return this->value == _lhs;
+}
+
+};
+
 } /* bits */
 
-template <typename Range>
-bits::remove_range<Range>
+template <typename Range, typename Pred>
+bits::remove_range<Range, Pred>
+remove_if_range (
+  Range _range
+, Pred _pred
+){
+return bits::remove_range<Range, Pred>{_range, _pred};
+}
+
+template <typename Range, typename T>
+bits::remove_range<Range, bits::remove_pred<T>>
 remove_range (
   Range _range
+, T _value
 ){
-return bits::remove_range<Range>{_range};
+return bits::remove_range<Range, bits::remove_pred<T>>
+{_range, bits::remove_pred<T>{_value}};
 }
 
 } /* range layer */
