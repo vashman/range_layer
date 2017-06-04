@@ -117,7 +117,7 @@ operator += (
 ){
   while ((0 != _n) && (this->range == sentinel::readable{})){
   this->temp = *this->range;
-    if (! this->pred(this->temp)) --n;
+    if (! this->pred(this->temp)) --_n;
   ++this->range;
   }
 return *this;
@@ -130,7 +130,7 @@ operator -= (
 ){
   while ((0 != _n) && (this->range == sentinel::readable{})){
   this->temp = *this->range;
-    if (! this->pred(this->temp)) --n;
+    if (! this->pred(this->temp)) --_n;
   --this->range;
   }
 return *this;
