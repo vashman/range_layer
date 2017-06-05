@@ -18,13 +18,8 @@ class remove_range {
 
 Range range;
 Pred pred;
-decltype (*range) temp;
+typename std::remove_reference<decltype (*range)>::type temp;
 using trait = range_traits<Range>;
-
-template <typename N>
-void
-sync_fwd (N _n){
-}
 
 public:
 
@@ -63,7 +58,7 @@ remove_range (
 )
 : range {_range}
 , pred {_pred}
-, temp {}
+, temp ()
 {}
 
 remove_range (remove_range const &) = default;
@@ -79,7 +74,7 @@ operator = (remove_range const &) = default;
 
 auto
 operator * () -> decltype(*this->range){
-return *this->temp;
+return this->temp;
 }
 
 template <typename U = Range>
@@ -106,7 +101,9 @@ return *this;
 
 template <typename T>
 void
-operator = (T const & _var){
+operator = (
+  T const & _var
+){
 this->range = _var;
 }
 

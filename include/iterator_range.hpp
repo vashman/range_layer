@@ -77,6 +77,19 @@ this->iter_begin++;
 return *this;
 }
 
+iterator_range (
+  Iter _iter
+, IterEnd _end
+)
+: iter_begin {_iter}
+, iter_end {_end}
+{}
+
+iterator_range (iterator_range const &) = default;
+iterator_range (iterator_range &&) = default;
+iterator_range & operator = (iterator_range const &) = default;
+iterator_range & operator = (iterator_range &&) = default;
+
 };
 
 template <typename Iter, typename IterEnd>
@@ -105,6 +118,27 @@ static constexpr range_size const
 
 static constexpr range_size const
   output_size_type = range_size::countable;
+
+iterator_range (
+  Iter _iter
+, IterEnd _end
+)
+: iterator_range<Iter, IterEnd, std::input_iterator_tag>
+  {_iter, _end}
+{}
+
+template <typename T>
+void
+operator = (
+  T const & _var
+){
+*this->iter_begin = _var;
+}
+
+iterator_range (iterator_range const &) = default;
+iterator_range (iterator_range &&) = default;
+iterator_range & operator = (iterator_range const &) = default;
+iterator_range & operator = (iterator_range &&) = default;
 
 };
 
@@ -141,6 +175,27 @@ operator -- (
 --this->iter_begin;
 return *this;
 }
+
+template <typename T>
+void
+operator = (
+  T const & _var
+){
+*this->iter_begin = _var;
+}
+
+iterator_range (
+  Iter _iter
+, IterEnd _end
+)
+: iterator_range<Iter, IterEnd, std::forward_iterator_tag>
+  {_iter, _end}
+{}
+
+iterator_range (iterator_range const &) = default;
+iterator_range (iterator_range &&) = default;
+iterator_range & operator = (iterator_range const &) = default;
+iterator_range & operator = (iterator_range &&) = default;
 
 };
 
@@ -196,6 +251,27 @@ operator [](
 ){
 return this->iter_begin[_n];
 }
+
+template <typename T>
+void
+operator = (
+  T const & _var
+){
+*this->iter_begin = _var;
+}
+
+iterator_range (
+  Iter _iter
+, IterEnd _end
+)
+: iterator_range<Iter, IterEnd, std::bidirectional_iterator_tag>
+  {_iter, _end}
+{}
+
+iterator_range (iterator_range const &) = default;
+iterator_range (iterator_range &&) = default;
+iterator_range & operator = (iterator_range const &) = default;
+iterator_range & operator = (iterator_range &&) = default;
 
 };
 
@@ -363,7 +439,7 @@ make_iterator_range (
   Iter _begin
 , IterEnd _end
 ){
-return iterator_range<Iter,IterEnd>{_begin, _end};
+return iterator_range<Iter,IterEnd>(_begin, _end);
 }
 
 template <typename Iter>
