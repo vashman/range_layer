@@ -61,7 +61,7 @@ remove_range (
 , temp ()
 {
   if (this->range == sentinel::readable{})
-  this->temp = *this->range;
+  this->operator ++();
 }
 
 remove_range (remove_range const &) = default;
