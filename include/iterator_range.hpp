@@ -343,7 +343,7 @@ operator == (
   iterator_range<Iter, IterEnd, Cat> const & _range
 , sentinel::readable const & _sentinel
 ){
-return _range.iter_begin == _range.iter_end;
+return _range.iter_begin != _range.iter_end;
 }
 
 template <typename Iter, typename IterEnd, typename Cat>
@@ -352,7 +352,7 @@ operator != (
   iterator_range<Iter, IterEnd, Cat> const & _range
 , sentinel::readable const & _sentinel
 ){
-return _range.iter_begin != _range.iter_end;
+return !(_range == _sentinel);
 }
 
 template <typename Iter, typename IterEnd, typename Cat>
@@ -361,7 +361,7 @@ operator == (
   iterator_range<Iter, IterEnd, Cat> const & _range
 , sentinel::writable const & _sentinel
 ){
-return _range.iter_begin == _range.iter_end;
+return _range.iter_begin != _range.iter_end;
 }
 
 template <typename Iter, typename IterEnd, typename Cat>
@@ -370,7 +370,7 @@ operator != (
   iterator_range<Iter, IterEnd, Cat> const & _range
 , sentinel::writable const & _sentinel
 ){
-return _range.iter_begin != _range.iter_end;
+return !(_range == _sentinel);
 }
 
 template <typename Iter, typename T>
