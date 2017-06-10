@@ -60,8 +60,11 @@ remove_range (
 , pred {_pred}
 , temp ()
 {
-  if (this->range == sentinel::readable{})
-  this->operator ++();
+  while (this->range == sentinel::readable{}){
+  this->temp = *this->range;
+    if (! this->pred(this->temp)) break;
+  ++this->range;
+  }
 }
 
 remove_range (remove_range const &) = default;
