@@ -59,17 +59,15 @@ remove_range (
 : range {_range}
 , pred {_pred}
 , temp ()
-{}
+{
+  if (this->range == sentinel::readable{})
+  this->temp = *this->range;
+}
 
 remove_range (remove_range const &) = default;
 remove_range (remove_range &&) = default;
-
-remove_range &
-operator = (remove_range &&) = default;
-
-remove_range &
-operator = (remove_range const &) = default;
-
+remove_range & operator = (remove_range &&) = default;
+remove_range & operator = (remove_range const &) = default;
 ~remove_range () = default;
 
 auto
@@ -80,6 +78,7 @@ return this->temp;
 template <typename U = Range>
 remove_range &
 operator ++ (){
+++this->range;
   while (this->range == sentinel::readable{}){
   this->temp = *this->range;
     if (! this->pred(this->temp)) break;
@@ -91,6 +90,7 @@ return *this;
 template <typename U = Range>
 remove_range &
 operator -- (){
+--this->range;
   while (this->range == sentinel::readable{}){
   this->temp = *this->range;
     if (! this->pred(this->temp)) break;
@@ -112,6 +112,7 @@ remove_range &
 operator += (
   N _n
 ){
+++this->range;
   while ((0 != _n) && (this->range == sentinel::readable{})){
   this->temp = *this->range;
     if (! this->pred(this->temp)) --_n;
@@ -125,6 +126,7 @@ remove_range &
 operator -= (
   N _n
 ){
+--this->range;
   while ((0 != _n) && (this->range == sentinel::readable{})){
   this->temp = *this->range;
     if (! this->pred(this->temp)) --_n;
