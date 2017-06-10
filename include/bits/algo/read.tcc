@@ -17,7 +17,7 @@ all_of (
 , Range _range
 , Pred _pred
 ){
-  while (is_readable(_range))
+  while (has_readable(_range))
     if (! _pred(read(_range))) return false;
 return true;
 }
@@ -29,7 +29,7 @@ none_of (
 , Range _range
 , Pred _pred
 ){
-  while (is_readable(_range))
+  while (has_readable(_range))
     if (_pred(read(_range))) return false;
 return true;
 }
@@ -41,7 +41,7 @@ any_of (
 , Range _range
 , Pred _pred
 ){
-  while (is_readable(_range))
+  while (has_readable(_range))
     if (_pred(read(_range))) return true;
 return false;
 }
@@ -53,7 +53,7 @@ any_is (
 , Range _range
 , T const _value
 ){
-  while (is_readable(_range))
+  while (has_readable(_range))
     if (_value == read(_range)) return true;
 return false;
 }
@@ -65,7 +65,7 @@ any_is_not (
 , Range _range
 , T const _value
 ){
-  while (is_readable(_range))
+  while (has_readable(_range))
     if (_value != read(_range)) return true;
 return false;
 }
