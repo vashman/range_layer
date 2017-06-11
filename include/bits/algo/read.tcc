@@ -17,7 +17,7 @@ all_of (
 , Range _range
 , Pred _pred
 ){
-  while (has_readable(_range))
+  for (; has_readable(_range); advance(_range))
     if (! _pred(read(_range))) return false;
 return true;
 }
@@ -29,7 +29,7 @@ none_of (
 , Range _range
 , Pred _pred
 ){
-  while (has_readable(_range))
+  for (; has_readable(_range); advance(_range))
     if (_pred(read(_range))) return false;
 return true;
 }
@@ -41,7 +41,7 @@ any_of (
 , Range _range
 , Pred _pred
 ){
-  while (has_readable(_range))
+  for (; has_readable(_range); advance(_range))
     if (_pred(read(_range))) return true;
 return false;
 }
@@ -53,7 +53,7 @@ any_is (
 , Range _range
 , T const _value
 ){
-  while (has_readable(_range))
+  for (; has_readable(_range); advance(_range))
     if (_value == read(_range)) return true;
 return false;
 }
@@ -65,7 +65,7 @@ any_is_not (
 , Range _range
 , T const _value
 ){
-  while (has_readable(_range))
+  for (; has_readable(_range); advance(_range))
     if (_value != read(_range)) return true;
 return false;
 }
@@ -77,7 +77,10 @@ equal (
 , Range1 _range1
 , Range2 _range2
 ){
-  while (has_readable(_range1) && has_readable(_range2))
+  for (
+  ; has_readable(_range1) && has_readable(_range2)
+  ; advance(_range1, _range2)
+  )
     if (read(_range1) != read(_range2)) return false;
 return true;
 }
