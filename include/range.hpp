@@ -56,7 +56,7 @@ namespace bits {
 
 template <typename Range, typename N
 , typename std::enable_if
-  <range_traits<Range>::is_linear, int>::value = 0
+  <range_traits<Range>::is_linear, int>::type = 0
 >
 void
 advance_n (
@@ -151,7 +151,7 @@ Range
 prev (
   Range _range
 ){
-advance_prev(_range);
+reverse(_range);
 return _range;
 }
 
@@ -161,7 +161,7 @@ prev (
   N _n
 , Range _range
 ){
-advance_prev_n(_n, _range);
+reverse_n(_n, _range);
 return _range;
 }
 

@@ -8,6 +8,8 @@
 #ifndef RANGE_LAYER_RANGE_TRAITS_HPP
 #define RANGE_LAYER_RANGE_TRAITS_HPP
 
+#include "bits/is_detected.hpp"
+
 namespace range_layer {
 
 namespace sentinel {
@@ -35,25 +37,89 @@ enum class range_size {
 template <typename Range>
 struct range_traits {
 
+/*
+  Tuple for multiple types, but must support io for the
+  group / tuple as well.
+*/
+using read_type = typename Range::read_type;
+using write_type = typename Range::write_type;
+
+template<class T>
+using copy_assign_t
+  = decltype(std::declval<T&>() = std::declval<const T&>());
+
+template<class T>
+using move_assign_t
+  = decltype(std::declval<T&>() = std::declval<T&&>());
+
+template <typename T>
+using read_t = decltype(std::declval<T&>().operator *());
+
+template <typename T>
+using advance_t = decltype(std::declval<T&>().operator ++());
+
+template <typename T>
+using reverse_t = decltype(std::declval<T&>().operator --());
+
+template <typename T>
+using subscript_t = decltype (
+  std::declval<T&>().operator [](std::declval<int>()) );
+
+template <typename T>
+using write_t = decltype (
+  std::declval<T&>().operator =(std::declval<write_type>()));
+
+template <typename T>
+using linear_fwd_t = decltype (
+  std::declval<T&>().operator +=(std::declval<int>()) );
+
+template <typename T>
+using linear_bck_t = decltype (
+  std::declval<T&>().operator -=(std::declval<int>()) );
+
+template <typename T>
+using expand_t = decltype (
+  std::declval<T&>().expand(std::declval<int>()) );
+
+template <typename T>
+using shrink_t = decltype (
+  std::declval<T&>().shrink(std::declval<int>()) );
+
+static_assert (
+  bits::is_detected<advance_t, Range>::value
+, "Range's must be advanceable (++)." );
+
+static_assert (
+  bits::is_detected<copy_assign_t, Range>::value
+, "Ranges's must be copy assignable.");
+
+static_assert (
+  bits::is_detected<move_assign_t, Range>::value
+, "Ranges's must be move assignable.");
+
 /* interface traits */
-/* ++ (advance, next) */
-/* if true; = (write) */
-static constexpr bool const is_output = Range::is_output;
-/* if true; * (read) */
-static constexpr bool const is_input = Range::is_input;
-/* if false;  += N, -=N (advance N, next N, prev N) */
-static constexpr bool const is_linear = Range::is_linear;
+static constexpr bool const is_output
+  = bits::is_detected<write_t, Range>::value;
+
+static constexpr bool const is_input
+  = bits::is_detected<read_t, Range>::value;
+
+static constexpr bool const is_reversable
+  = bits::is_detected<reverse_t, Range>::value;
+
+static constexpr bool const is_linear
+   = !( bits::is_detected<linear_fwd_t, Range>::value
+  && (( bits::is_detected<linear_bck_t, Range>::value
+      && is_reversable )
+    || ! is_reversable ) );
+
 /* if true; erase, shrink */
 static constexpr bool const is_erasable
-  = Range::is_erasable;
+  = bits::is_detected<shrink_t, Range>::value;
 
 /* if true; insert, expand */
-static constexpr bool const
-  is_insertable = Range::is_insertable;
-
-/* if true; -- (prev, advance_prev) */
-static constexpr bool const
-  is_reversable = Range::is_reversable;
+static constexpr bool const is_insertable
+  = bits::is_detected<expand_t, Range>::value;
 
 static constexpr validation_type const
   validation = Range::validation;
@@ -94,6 +160,11 @@ static constexpr bool const is_subscriptable
   && (is_linear == false)
   && (input::size_type == range_size::finite)
   && (output::size_type == range_size::finite);
+
+static_assert (
+     is_subscriptable
+  == bits::is_detected<subscript_t, Range>::value
+, "The range has to be sub scriptable or not.");
 
 }; /* range traits */
 

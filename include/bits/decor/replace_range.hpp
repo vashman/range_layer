@@ -24,7 +24,7 @@ T operator ()(T const & _value){
 return _value;
 }
 
-};
+}; /* replace func */
 
 template <typename Pred, typename T>
 struct replace_if_func {
@@ -37,13 +37,7 @@ T operator ()(T const & _value){
 return _value;
 }
 
-Range
-disable (
-) const {
-return this->range;
-}
-
-}; /* replace range */
+}; /* replace if func */
 
 } /* bits */ } /* range layer */
 #endif

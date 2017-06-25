@@ -17,17 +17,13 @@ class generate_range {
 
 Gen gen;
 bool flag;
-using type = decltype(gen());
 
 public:
 
-static constexpr bool const is_output = false;
-static constexpr bool const is_input = true;
-static constexpr bool const is_linear = true;
+using read_type = decltype(gen());
+using write_type = void;
+
 static constexpr bool const is_io_synced = true;
-static constexpr bool const is_reversable = false;
-static constexpr bool const is_erasable = false;
-static constexpr bool const is_insertable = false;
 static constexpr bool const is_input_temporary = true;
 static constexpr bool const is_output_temporary = true;
 
@@ -53,7 +49,7 @@ generate_range (generate_range &&) = default;
 generate_range & operator = (generate_range &&) = default;
 generate_range & operator = (generate_range const &) = default;
 
-type
+read_type
 operator * (
 ){
 this->flag = false;
@@ -69,7 +65,7 @@ return *this;
 }
 
 bool operator == (sentinel::readable const &) const;
-bool operator == (type const &) const {
+bool operator == (read_type const &) const {
 return true;
 }
 

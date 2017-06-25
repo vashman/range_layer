@@ -21,19 +21,11 @@ using trait = range_traits<Range>;
 
 public:
 
-static constexpr bool const is_output = trait::is_output;
-static constexpr bool const is_input = trait::is_input;
-static constexpr bool const is_linear = trait::is_linear;
-static constexpr bool const is_erasable = trait::is_erasable;
-
-static constexpr bool const
-  is_insertable = trait::is_insertable;
+using read_type = typename trait::read_type;
+using write_type = typename trait::write_type;
 
 static constexpr bool const
   is_io_synced = trait::is_io_synced;
-
-static constexpr bool const
-  is_reversable = trait::is_reversable;
 
 static constexpr validation_type const
   validation = trait::validation;
@@ -159,7 +151,13 @@ operator == (
 return this->range == _sen;
 }
 
-};
+Range
+disable (
+) const {
+return this->range;
+}
+
+}; /* remove range */
 
 template <typename T>
 struct remove_pred {
@@ -174,13 +172,7 @@ operator () (
 return this->value == _lhs;
 }
 
-Range
-disable (
-) const {
-return this->range;
-}
-
-}; /* remove range */
+}; /* remove pred */
 
 } /* bits */ } /* range layer */
 #endif

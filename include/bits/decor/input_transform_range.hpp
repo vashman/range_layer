@@ -20,19 +20,11 @@ Func func;
 
 public:
 
-static constexpr bool const is_output = trait::is_output;
-static constexpr bool const is_input = true;
-static constexpr bool const is_linear = trait::is_linear;
-static constexpr bool const is_erasable = trait::is_erasable;
-
-static constexpr bool const
-  is_insertable = trait::is_insertable;
+using read_type = typename trait::read_type;
+using write_type = typename trait::write_type;
 
 static constexpr bool const
   is_io_synced = trait::is_io_synced;
-
-static constexpr bool const
-  is_reversable = trait::is_reversable;
 
 static constexpr validation_type const
   validation = trait::validation;

@@ -19,13 +19,10 @@ T * end_pos;
 
 public:
 
-static constexpr bool const is_output = true;
-static constexpr bool const is_input = true;
-static constexpr bool const is_linear = false;
+using read_type = T;
+using write_type = read_type;
+
 static constexpr bool const is_io_synced = true;
-static constexpr bool const is_reversable = true;
-static constexpr bool const is_erasable = false;
-static constexpr bool const is_insertable = false;
 static constexpr bool const is_input_temporary = false;
 static constexpr bool const is_output_temporary = false;
 static constexpr validation_type const

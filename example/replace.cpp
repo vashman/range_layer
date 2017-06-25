@@ -42,7 +42,7 @@ auto rng2 = output_replace_range (
 assert (read(rng2) == 10);
 advance(rng2);
 assert (read(rng2) == 11);
-advance_prev(rng2);
+reverse(rng2);
 write (rng2, 888);
 assert (read(rng2) == 999);
 

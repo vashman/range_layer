@@ -23,12 +23,9 @@ int rv;
 
 public:
 
-static constexpr bool const is_output = false;
-static constexpr bool const is_input = true;
-static constexpr bool const is_linear = true;
-static constexpr bool const is_erasable = false;
-static constexpr bool const is_insertable = false;
-static constexpr bool const is_reversable = false;
+using read_type = char;
+using write_type = void;
+
 static constexpr bool const is_io_synced = false;
 static constexpr bool const is_input_temporary = true;
 static constexpr bool const is_output_temporary = false;

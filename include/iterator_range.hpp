@@ -26,13 +26,11 @@ template <typename Iter, typename IterEnd>
 struct iterator_range
 <Iter, IterEnd, std::input_iterator_tag> {
 
-static constexpr bool const is_output = true;
-static constexpr bool const is_input = true;
-static constexpr bool const is_reversable = false;
+using read_type
+  = typename std::iterator_traits<Iter>::value_type;
+using write_type = read_type;
 
 static constexpr bool const is_io_synced = true;
-static constexpr bool const is_erasable = false;
-static constexpr bool const is_insertable = false;
 static constexpr bool const is_input_temporary = true;
 static constexpr bool const is_output_temporary = true;
 
@@ -99,14 +97,11 @@ struct iterator_range
   iterator_range<Iter, IterEnd, std::input_iterator_tag>
 {
 
-static constexpr bool const is_output = true;
-static constexpr bool const is_input = true;
-static constexpr bool const is_reversable = false;
-static constexpr bool const is_linear = true;
+using read_type
+  = typename std::iterator_traits<Iter>::value_type;
+using write_type = read_type;
 
 static constexpr bool const is_io_synced = true;
-static constexpr bool const is_erasable = false;
-static constexpr bool const is_insertable = false;
 static constexpr bool const is_input_temporary = true;
 static constexpr bool const is_output_temporary = true;
 
@@ -149,14 +144,11 @@ struct iterator_range
   iterator_range<Iter, IterEnd, std::forward_iterator_tag>
 {
 
-static constexpr bool const is_output = true;
-static constexpr bool const is_input = true;
-static constexpr bool const is_reversable = true;
-static constexpr bool const is_linear = true;
+using read_type
+  = typename std::iterator_traits<Iter>::value_type;
+using write_type = read_type;
 
 static constexpr bool const is_io_synced = true;
-static constexpr bool const is_erasable = false;
-static constexpr bool const is_insertable = false;
 static constexpr bool const is_input_temporary = true;
 static constexpr bool const is_output_temporary = true;
 
@@ -176,14 +168,6 @@ operator -- (
 return *this;
 }
 
-template <typename T>
-void
-operator = (
-  T const & _var
-){
-*this->iter_begin = _var;
-}
-
 iterator_range (
   Iter _iter
 , IterEnd _end
@@ -197,7 +181,7 @@ iterator_range (iterator_range &&) = default;
 iterator_range & operator = (iterator_range const &) = default;
 iterator_range & operator = (iterator_range &&) = default;
 
-};
+}; /* bidirectional iterator range */
 
 template <typename Iter, typename IterEnd>
 struct iterator_range
@@ -207,14 +191,11 @@ struct iterator_range
   <Iter, IterEnd, std::bidirectional_iterator_tag>
 {
 
-static constexpr bool const is_output = true;
-static constexpr bool const is_input = true;
-static constexpr bool const is_reversable = true;
-static constexpr bool const is_linear = false;
+using read_type
+  = typename std::iterator_traits<Iter>::value_type;
+using write_type = read_type;
 
 static constexpr bool const is_io_synced = true;
-static constexpr bool const is_erasable = false;
-static constexpr bool const is_insertable = false;
 static constexpr bool const is_input_temporary = false;
 static constexpr bool const is_output_temporary = false;
 
@@ -226,6 +207,14 @@ static constexpr range_size const
 
 static constexpr range_size const
   output_size_type = range_size::countable;
+
+template <typename T>
+void
+operator = (
+  T const & _var
+){
+*this->iter_begin = _var;
+}
 
 iterator_range &
 operator += (
@@ -252,14 +241,6 @@ operator [](
 return this->iter_begin[_n];
 }
 
-template <typename T>
-void
-operator = (
-  T const & _var
-){
-*this->iter_begin = _var;
-}
-
 iterator_range (
   Iter _iter
 , IterEnd _end
@@ -273,19 +254,17 @@ iterator_range (iterator_range &&) = default;
 iterator_range & operator = (iterator_range const &) = default;
 iterator_range & operator = (iterator_range &&) = default;
 
-};
+}; /* randome access iterator range */
 
 template <typename Iter>
 struct iterator_range<Iter, void> {
 
-static constexpr bool const is_output = true;
-static constexpr bool const is_input = false;
-static constexpr bool const is_reversable = false;
-static constexpr bool const is_linear = true;
+using read_type = void;
+// The iterator may have a void type.
+using write_type
+  = typename std::iterator_traits<Iter>::value_type *;
 
 static constexpr bool const is_io_synced = false;
-static constexpr bool const is_erasable = false;
-static constexpr bool const is_insertable = false;
 static constexpr bool const is_input_temporary = true;
 static constexpr bool const is_output_temporary = true;
 
@@ -315,7 +294,7 @@ operator ++ (
 return *this;
 }
 
-};
+}; /* output iterator range */
 
 template
   <typename Iter, typename End, typename Cat, typename T>
