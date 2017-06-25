@@ -174,7 +174,13 @@ operator () (
 return this->value == _lhs;
 }
 
-};
+Range
+disable (
+) const {
+return this->range;
+}
+
+}; /* remove range */
 
 } /* bits */ } /* range layer */
 #endif

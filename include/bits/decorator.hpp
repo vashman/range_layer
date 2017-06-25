@@ -68,7 +68,8 @@ struct is_decorator <bits::sub_range<Range, S>> {
 
 template <
   typename Range
-, typename std::enable_if<is_decorator<Range>::value>::type >
+, typename
+  std::enable_if<is_decorator<Range>::value, int>::type >
 auto
 disable_decorator (
   Range _range
@@ -79,7 +80,8 @@ return disable_decorator(_range.disable());
 
 template <
   typename Range
-, typename std::enable_if<!is_decorator<Range>::value>::type>
+, typename
+  std::enable_if<! is_decorator<Range>::value, int>::type >
 Range
 disable_decorator (
   Range _range

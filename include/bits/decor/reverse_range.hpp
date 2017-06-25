@@ -131,7 +131,14 @@ operator == (
 return this->range == _sen;
 }
 
+Range
+disable (
+) const {
+return this->range;
+}
+
 };
+
 } /* bits */ } /* range layer */
 #endif
 

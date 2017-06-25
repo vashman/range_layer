@@ -63,15 +63,17 @@ struct is_decorator;
 
 template <
   typename Range
-, typename std::enable_if<is_decorator<Range>::value>::type >
+, typename
+  std::enable_if<is_decorator<Range>::value, int>::type = 0 >
 auto
 disable_decorator (
   Range _range
-) -> decltype (disable_decorator(_range));
+) -> decltype (disable_decorator(_range.disable()));
 
 template <
   typename Range
-, typename std::enable_if<!is_decorator<Range>::value>::type>
+, typename
+  std::enable_if<!is_decorator<Range>::value, int>::type = 0>
 Range
 disable_decorator (
   Range

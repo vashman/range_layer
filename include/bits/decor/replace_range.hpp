@@ -37,7 +37,13 @@ T operator ()(T const & _value){
 return _value;
 }
 
-};
+Range
+disable (
+) const {
+return this->range;
+}
+
+}; /* replace range */
 
 } /* bits */ } /* range layer */
 #endif

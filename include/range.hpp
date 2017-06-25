@@ -44,7 +44,7 @@ void* list[] = {0, (static_cast<void*>(&(++_ranges)))...};
 
 template <typename Range, typename... Ranges>
 void
-advance_prev (
+reverse (
   Range & _range
 , Ranges &... _ranges
 ){
@@ -84,7 +84,7 @@ template <typename Range, typename N
   <range_traits<Range>::is_linear, int>::type = 0
 >
 void
-advance_prev_n (
+reverse_n (
   N const _n
 , Range & _range
 ){
@@ -97,7 +97,7 @@ template <typename Range, typename N
   <! range_traits<Range>::is_linear, int>::type = 0
 >
 void
-advance_prev_n (
+reverse_n (
   N const _n
 , Range & _range
 ){
@@ -118,13 +118,13 @@ void* list[] = {0, (bits::advance_n(_n, _ranges), 0)...};
 
 template <typename N, typename Range, typename... Ranges>
 void
-advance_prev_n (
+reverse_n (
   N const _n
 , Range & _range
 , Ranges &... _ranges
 ){
-bits::advance_prev_n(_n, _range);
-void* list[] = {0, (bits::advance_prev_n(_n, _ranges),0)...};
+bits::reverse_n(_n, _range);
+void* list[] = {0, (bits::reverse_n(_n, _ranges),0)...};
 }
 
 template <typename Range>

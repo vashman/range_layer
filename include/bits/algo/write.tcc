@@ -24,7 +24,7 @@ static_assert (range_traits<Range>::is_output, "Not output range.");
 
   while (has_writable(_range)){
   write(_range, _var);
-  advance(_range);
+  range_layer::advance(_range);
   }
 return _range;
 }
@@ -44,7 +44,7 @@ static_assert (range_traits<Range>::is_output, "Not output range.");
 
   while (has_writable(_range) && (0 != _n)){
   write(_range, _var);
-  advance(_range);
+  range_layer::advance(_range);
   --_n;
   }
 return _range;
@@ -62,7 +62,7 @@ static_assert (range_traits<Range>::is_output, "Not output range.");
 
   while (has_writable(_range)){
   write(_range, _gen());
-  advance(_range);
+  range_layer::advance(_range);
   }
 return _range;
 }
@@ -80,7 +80,7 @@ static_assert (range_traits<Range>::is_output, "Not output range.");
 
   while (has_writable(_range) && (0 != _n)){
   write(_range, _gen());
-  advance(_range);
+  range_layer::advance(_range);
   --_n;
   }
 return _range;
@@ -101,7 +101,7 @@ static_assert (range_traits<ORange>::is_output, "Not output range.");
 
   while (has_writable(_output) && has_readable(_input)){
   write(_output, read(_input));
-  advance(_output, _input);
+  range_layer::advance(_output, _input);
   }
 return _output;
 }
@@ -123,7 +123,7 @@ static_assert (range_traits<ORange>::is_output, "Not output range.");
   while (has_writable(_output) && had_readable(_input)){
   auto temp = read(_input);
     if (_pred(temp)) write(_output, temp);
-  advance(_output, _input);
+  range_layer::advance(_output, _input);
   }
 return _output;
 }
