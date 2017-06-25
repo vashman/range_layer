@@ -87,13 +87,13 @@ struct output {
 
 /* if true; T& range[n] */
 static constexpr bool const is_subscriptable
-  = is_reversable
- && is_input
- && is_output
- && is_io_synced
- && (is_linear == false)
- && (input::size_type == range_size::finite)
- && (output::size_type == range_size::finite);
+   = is_reversable
+  && is_input
+  && is_output
+  && is_io_synced
+  && (is_linear == false)
+  && (input::size_type == range_size::finite)
+  && (output::size_type == range_size::finite);
 
 }; /* range traits */
 

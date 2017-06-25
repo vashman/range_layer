@@ -203,9 +203,4 @@ return
 
 } /* range layer */
 #endif
-#include "remove_range.hpp"
-#include "replace_range.hpp"
-#include "transform_range.hpp"
-#include "reverse_range.hpp"
-#include "sub_range.hpp"
-
+#include "bits/decorator.hpp"
