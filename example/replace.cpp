@@ -8,7 +8,6 @@
 #include <cassert>
 #include "../include/iota_range.hpp"
 #include "../include/array_range.hpp"
-#include "../include/replace_range.hpp"
 #include "../include/range.hpp"
 
 using range_layer::iota_range;

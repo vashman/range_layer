@@ -10,7 +10,6 @@
 #include <limits>
 #include "../include/range.hpp"
 #include "../include/iota_range.hpp"
-#include "../include/reverse_range.hpp"
 
 using std::numeric_limits;
 using range_layer::iota_range;
