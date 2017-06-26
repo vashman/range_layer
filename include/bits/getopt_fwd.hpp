@@ -13,21 +13,5 @@ namespace range_layer {
 struct program_option;
 class getopt_range;
 
-program_option
-read (
-  getopt_range
-);
-
-getopt_range
-next (
-  getopt_range
-, int _n = 1
-);
-
-bool
-has_readable (
-  getopt_range const
-);
-
 } /* range layer */
 #endif

@@ -23,13 +23,10 @@ std::size_t pos;
 
 public:
 
-static constexpr bool const is_output = true;
-static constexpr bool const is_input = true;
-static constexpr bool const is_linear = false;
+using read_type = T;
+using write_type = read_type;
+
 static constexpr bool const is_io_synced = true;
-static constexpr bool const is_reversable = true;
-static constexpr bool const is_erasable = true;
-static constexpr bool const is_insertable = true;
 static constexpr bool const is_input_temporary = false;
 static constexpr bool const is_output_temporary = false;
 
@@ -52,8 +49,8 @@ vector_range & operator = (vector_range const &) = default;
 vector_range & operator = (vector_range &&) = default;
 ~vector_range() = default;
 
-const T& operator * (
-){
+const T&
+operator * (){
 return *this->vec[this->pos-1];
 }
 
@@ -64,30 +61,34 @@ operator = (
 (*(this->vec))[this->pos-1] = _var;
 }
 
-vector_range&
+vector_range &
 operator ++ (
 ){
 ++this->pos;
+return *this;
 }
 
-vector_range&
+vector_range &
 operator -- (
 ){
 --this->pos;
+return *this;
 }
 
-vector_range&
+vector_range &
 operator += (
   std::size_t const _n
 ){
 this->pos += _n;
+return *this;
 }
 
-vector_range&
+vector_range &
 operator -= (
   std::size_t const _n
 ){
 this->pos -= _n;
+return *this;
 }
 
 bool

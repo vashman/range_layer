@@ -19,15 +19,26 @@ using range_layer::array_range;
 using range_layer::input_transform_range;
 using range_layer::output_transform_range;
 
+char
+func1 (string _str);
+
+string
+func2 (char _c);
+
+char
+func1 (string _str){return _str[0];}
+
+string
+func2 (char _c){
+string temp("\nchar is: ");
+return temp += _c;
+}
+
 int main (){
 
 auto range = input_transform_range (
   iota_range<char>{'a'}
-
-, [](char _c){
-  string temp("\nchar is: ");
-  return temp += _c;
-  }
+, func2
 );
 
 while (has_readable(range)){
@@ -39,7 +50,7 @@ array<char, 5> arr {{'5', 'b' , 'c', 'd', 'e'}};
 
 auto range2 = output_transform_range (
   array_range<char> {arr.data(), arr.data()+arr.size()}
-, [](string _str){return _str[0];}
+, func1
 );
 
 string ss {"FGHKI"};

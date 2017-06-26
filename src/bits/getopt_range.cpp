@@ -38,7 +38,7 @@ getopt_range::operator ++ (){
 int global_optind = optind;
 optind = this->local_optind;
 
-this->rv =  getopt (
+this->rv = getopt (
   this->local_argc
 , this->local_argv
 , this->local_opts.c_str()

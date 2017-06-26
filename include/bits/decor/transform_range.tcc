@@ -11,14 +11,14 @@
 namespace range_layer {
 namespace bits {
 
-template <typename Func, typename Range>
+/*template <typename Func, typename Range>
 auto
 transform_range<Func, Range>::operator * (
 )
 -> decltype (this->func(*this->range))
 {
 return this->func(*this->range);
-}
+}*/
 
 template <typename Func, typename Range>
 template <typename T>

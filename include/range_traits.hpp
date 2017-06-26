@@ -56,6 +56,12 @@ template <typename T>
 using read_t = decltype(std::declval<T&>().operator *());
 
 template <typename T>
+using read_sen_t = decltype (
+     std::declval<T&>()
+  == std::declval<const sentinel::readable>()
+);
+
+template <typename T>
 using advance_t = decltype(std::declval<T&>().operator ++());
 
 template <typename T>
@@ -68,6 +74,12 @@ using subscript_t = decltype (
 template <typename T>
 using write_t = decltype (
   std::declval<T&>().operator =(std::declval<write_type>()));
+
+template <typename T>
+using write_sen_t = decltype (
+     std::declval<T&>()
+  == std::declval<const sentinel::writable>()
+);
 
 template <typename T>
 using linear_fwd_t = decltype (
@@ -99,10 +111,12 @@ static_assert (
 
 /* interface traits */
 static constexpr bool const is_output
-  = bits::is_detected<write_t, Range>::value;
+   = bits::is_detected<write_t, Range>::value
+  && bits::is_detected<write_sen_t, Range>::value;
 
 static constexpr bool const is_input
-  = bits::is_detected<read_t, Range>::value;
+   = bits::is_detected<read_t, Range>::value
+  && bits::is_detected<read_sen_t, Range>::value;
 
 static constexpr bool const is_reversable
   = bits::is_detected<reverse_t, Range>::value;
@@ -159,12 +173,8 @@ static constexpr bool const is_subscriptable
   && is_io_synced
   && (is_linear == false)
   && (input::size_type == range_size::finite)
-  && (output::size_type == range_size::finite);
-
-static_assert (
-     is_subscriptable
-  == bits::is_detected<subscript_t, Range>::value
-, "The range has to be sub scriptable or not.");
+  && (output::size_type == range_size::finite)
+  && bits::is_detected<subscript_t, Range>::value;
 
 }; /* range traits */
 

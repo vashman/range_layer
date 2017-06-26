@@ -61,7 +61,10 @@ operator = (transform_range const &) = default;
 ~transform_range () = default;
 
 auto
-operator * () -> decltype(this->func(*this->range));
+operator * (
+) -> decltype(this->func(*this->range)) {
+return this->func(*this->range);
+}
 
 transform_range &
 operator ++ (){
