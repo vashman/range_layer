@@ -19,6 +19,7 @@ void operator=(nonesuch const&) = delete;
 };
 
 namespace detail {
+
 template <
   typename Default
 , typename AlwaysVoid
@@ -43,6 +44,13 @@ struct detector<Default, void_t<Op<Args...>>, Op, Args...> {
 template <template<class...> class Op, class... Args>
 using is_detected = typename
   detail::detector<nonesuch, void, Op, Args...>::value_t;
+
+template <
+  class Default
+, template <typename...> class Op
+, typename... Args >
+using detected_or
+  = detail::detector<Default, void, Op, Args...>;
 
 } /* bits */ } /* range layer */
 #endif

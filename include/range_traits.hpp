@@ -19,6 +19,19 @@ class writable {};
 
 } /* sentinel */
 
+template <template <typename...> class Tuple, typename... Ts>
+struct type_list {
+
+using tuple_type = Tuple<Ts...>;
+
+type_list () = delete;
+type_list (type_list const &) = delete;
+type_list (type_list &&) = delete;
+type_list & operator = (type_list const &) = delete;
+type_list & operator = (type_list &&) = delete;
+
+}; /* type list */
+
 enum class validation_type {
   // Only a single instance may be transversed.
   single
@@ -41,8 +54,17 @@ struct range_traits {
   Tuple for multiple types, but must support io for the
   group / tuple as well.
 */
-using read_type = typename Range::read_type;
-using write_type = typename Range::write_type;
+template <typename T>
+using rtype = typename T::read_type;
+
+template <typename T>
+using wtype = typename T::write_type;
+
+using read_type
+  = typename bits::detected_or<void, rtype, Range>::type;
+
+using write_type
+  = typename bits::detected_or<void, wtype, Range>::type;
 
 template<class T>
 using copy_assign_t

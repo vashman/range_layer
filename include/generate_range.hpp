@@ -21,7 +21,6 @@ bool flag;
 public:
 
 using read_type = decltype(gen());
-using write_type = void;
 
 static constexpr bool const is_io_synced = true;
 static constexpr bool const is_input_temporary = true;
