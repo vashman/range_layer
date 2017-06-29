@@ -56,6 +56,24 @@ class disable_advance;
 template <typename Range>
 class disable_non_linear;
 
+template <typename Range>
+class erase_range;
+
+template <typename Range>
+class erase_if_range;
+
+template <typename Range>
+class insert_if_range;
+
+template <typename Range>
+class insert_range;
+
+template <typename Range>
+class shuffle_range;
+
+template <typename LhsRange, typename RhsRange>
+class join_range;
+
 } /* bits */
 
 template <typename Range>
