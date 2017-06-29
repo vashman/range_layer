@@ -14,32 +14,31 @@ namespace bits {
 template <typename Func, typename Range>
 class transform_range {
 
-using trait = range_traits<Range>;
 Range range;
 Func func;
 
 public:
 
-using read_type = typename trait::read_type;
-using write_type = typename trait::write_type;
+using read_type = typename range_trait::read_type<Range>::type;
+using write_type = typename range_trait::write_type<Range>::type;
 
 static constexpr bool const
-  is_io_synced = trait::is_io_synced;
+  is_io_synced = range_trait::is_io_synced<Range>::value;
 
 static constexpr validation_type const
-  validation = trait::validation;
+  validation = range_trait::validation<Range>::value;
 
 static constexpr bool const
-  is_input_temporary = trait::input::is_temporary;
+  is_input_temporary = range_trait::input::is_temporary<Range>::value;
 
 static constexpr range_size const
-  input_size_type = trait::input::size_type;
+  input_size_type = range_trait::input::size_type<Range>::value;
 
 static constexpr bool const
-  is_output_temporary = trait::output::is_temporary;
+  is_output_temporary = range_trait::output::is_temporary<Range>::value;
 
 static constexpr range_size const
-  output_size_type = trait::output::size_type;
+  output_size_type = range_trait::output::size_type<Range>::value;
 
 transform_range (
   Range _range

@@ -25,8 +25,8 @@ using write_type = read_type;
 static constexpr bool const is_io_synced = true;
 static constexpr bool const is_input_temporary = false;
 static constexpr bool const is_output_temporary = false;
-static constexpr validation_type const
-  validation = validation_type::unsynced;
+static constexpr validation_type const validation
+  = validation_type::unsynced;
 
 static constexpr range_size const
   input_size_type = range_size::finite;

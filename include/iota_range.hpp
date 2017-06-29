@@ -21,7 +21,7 @@ T count;
 public:
 
 using read_type = T;
-using write_type = read_type;
+//using write_type = read_type;
 
 static constexpr bool const is_io_synced = true;
 static constexpr bool const is_input_temporary = true;
@@ -49,7 +49,7 @@ iota_range & operator = (iota_range &&) = default;
 ~iota_range() = default;
 
 T& operator * ();
-void operator = (T const &);
+//void operator = (T const &);
 iota_range& operator ++ ();
 iota_range& operator -- ();
 iota_range& operator += (T const &);
@@ -110,13 +110,13 @@ iota_range<T>::operator * (
 return this->count;
 }
 
-template <typename T>
+/*template <typename T>
 void
 iota_range<T>::operator = (
   T const & _var
 ){
 this->count = _var;
-}
+}*/
 
 template <typename T>
 iota_range<T>&

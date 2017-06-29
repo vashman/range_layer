@@ -47,24 +47,17 @@ enum class range_size {
 , uncountable // count unknown to size_type; 0, 1, infinity
 };
 
-template <typename Range>
-struct range_traits {
+namespace bits {
+namespace trait_bits {
 
-/*
-  Tuple for multiple types, but must support io for the
-  group / tuple as well.
-*/
 template <typename T>
 using rtype = typename T::read_type;
 
 template <typename T>
+using diff_type = typename T::difference_type;
+
+template <typename T>
 using wtype = typename T::write_type;
-
-using read_type
-  = typename bits::detected_or<void, rtype, Range>::type;
-
-using write_type
-  = typename bits::detected_or<void, wtype, Range>::type;
 
 template<class T>
 using copy_assign_t
@@ -78,12 +71,6 @@ template <typename T>
 using read_t = decltype(std::declval<T&>().operator *());
 
 template <typename T>
-using read_sen_t = decltype (
-     std::declval<T&>()
-  == std::declval<const sentinel::readable>()
-);
-
-template <typename T>
 using advance_t = decltype(std::declval<T&>().operator ++());
 
 template <typename T>
@@ -94,13 +81,19 @@ using subscript_t = decltype (
   std::declval<T&>().operator [](std::declval<int>()) );
 
 template <typename T>
+using read_sen_t = decltype (
+     std::declval<T&>()
+  == std::declval<const sentinel::readable>()
+);
+
+template <typename T>
 using write_t = decltype (
-  std::declval<T&>().operator =(std::declval<write_type>()));
+  std::declval<T&>().operator =(std::declval<int>()));
 
 template <typename T>
 using write_sen_t = decltype (
-     std::declval<T&>()
-  == std::declval<const sentinel::writable>()
+   std::declval<T&>()
+== std::declval<const sentinel::writable>()
 );
 
 template <typename T>
@@ -119,86 +112,133 @@ template <typename T>
 using shrink_t = decltype (
   std::declval<T&>().shrink(std::declval<int>()) );
 
-static_assert (
-  bits::is_detected<advance_t, Range>::value
-, "Range's must be advanceable (++)." );
+} /* trait bits */ } /* bits */
 
-static_assert (
-  bits::is_detected<copy_assign_t, Range>::value
-, "Ranges's must be copy assignable.");
+namespace range_trait {
 
-static_assert (
-  bits::is_detected<move_assign_t, Range>::value
-, "Ranges's must be move assignable.");
+template <typename Range>
+struct is_range {
 
-/* interface traits */
-static constexpr bool const is_output
-   = bits::is_detected<write_t, Range>::value
-  && bits::is_detected<write_sen_t, Range>::value;
+static constexpr bool const value
+   = bits::is_detected<bits::trait_bits::advance_t, Range>::value
+  && bits::is_detected<bits::trait_bits::copy_assign_t, Range>::value
+  && bits::is_detected<bits::trait_bits::move_assign_t, Range>::value;
+};
 
-static constexpr bool const is_input
-   = bits::is_detected<read_t, Range>::value
-  && bits::is_detected<read_sen_t, Range>::value;
+template <typename Range>
+struct read_type {
+using type
+  = typename bits::detected_or<void, bits::trait_bits::rtype, Range>::type;
+};
 
-static constexpr bool const is_reversable
-  = bits::is_detected<reverse_t, Range>::value;
+template <typename Range>
+struct write_type {
+using type = typename bits::detected_or<void, bits::trait_bits::wtype, Range>::type;
+};
 
-static constexpr bool const is_linear
-   = !( bits::is_detected<linear_fwd_t, Range>::value
-  && (( bits::is_detected<linear_bck_t, Range>::value
-      && is_reversable )
-    || ! is_reversable ) );
+template <typename Range>
+struct is_output {
+static constexpr bool const value
+   = bits::is_detected<bits::trait_bits::write_t, Range>::value
+  && bits::is_detected<bits::trait_bits::write_sen_t, Range>::value;
+};
+
+template <typename Range>
+struct is_input {
+static constexpr bool const value
+   = bits::is_detected<bits::trait_bits::read_t, Range>::value
+  && bits::is_detected<bits::trait_bits::read_sen_t, Range>::value;
+};
+
+template <typename Range>
+struct is_reversable {
+static constexpr bool const value
+  = bits::is_detected<bits::trait_bits::reverse_t, Range>::value;
+};
+
+template <typename Range>
+struct is_linear {
+static constexpr bool const value
+   = !( bits::is_detected<bits::trait_bits::linear_fwd_t, Range>::value
+  && (( bits::is_detected<bits::trait_bits::linear_bck_t, Range>::value
+      && is_reversable<Range>::value )
+    || ! is_reversable<Range>::value ) );
+};
 
 /* if true; erase, shrink */
-static constexpr bool const is_erasable
-  = bits::is_detected<shrink_t, Range>::value;
+template <typename Range>
+struct is_erasable {
+static constexpr bool const value
+  = bits::is_detected<bits::trait_bits::shrink_t, Range>::value;
+};
 
 /* if true; insert, expand */
-static constexpr bool const is_insertable
-  = bits::is_detected<expand_t, Range>::value;
+template <typename Range>
+struct is_insertable {
+static constexpr bool const value
+  = bits::is_detected<bits::trait_bits::expand_t, Range>::value;
+};
 
-static constexpr validation_type const
-  validation = Range::validation;
+template <typename Range>
+struct validation {
+static constexpr validation_type const value = Range::validation;
+};
 
 /* if true; read and write are mutually exclusive */
-static constexpr bool const
-  is_io_synced = Range::is_io_synced;
-
-/* data traits */
-struct input {
-  /* input_size */
-  static constexpr range_size const
-    size_type = Range::input_size_type;
-
-  // if true, the read function performs UB when reading to
-  // the same postion more than once.
-  static constexpr bool const
-    is_temporary = Range::is_input_temporary;
+template <typename Range>
+struct is_io_synced {
+static constexpr bool const value = Range::is_io_synced;
 };
 
-struct output {
-  /* output_size */
-  static constexpr range_size const
-    size_type = Range::output_size_type;
+namespace input {
 
-  // if true, the write function performs UB when writing to
-  // the same postion more than once.
-  static constexpr bool const
-    is_temporary = Range::is_output_temporary;
+/* input_size */
+template <typename Range>
+struct size_type {
+static constexpr range_size const value = Range::input_size_type;
 };
+
+// if true, the read function performs UB when reading to
+// the same postion more than once.
+template <typename Range>
+struct is_temporary {
+static constexpr bool const value = Range::is_input_temporary;
+};
+
+} /* input */
+
+namespace output {
+
+/* output_size */
+template <typename Range>
+struct size_type {
+static constexpr range_size const value = Range::output_size_type;
+};
+
+// if true, the write function performs UB when writing to
+// the same postion more than once.
+template <typename Range>
+struct is_temporary {
+static constexpr bool value = Range::is_output_temporary;
+};
+
+} /* output */
 
 /* if true; T& range[n] */
-static constexpr bool const is_subscriptable
-   = is_reversable
-  && is_input
-  && is_output
-  && is_io_synced
-  && (is_linear == false)
-  && (input::size_type == range_size::finite)
-  && (output::size_type == range_size::finite)
-  && bits::is_detected<subscript_t, Range>::value;
+template <typename Range>
+struct is_subscriptable {
+static constexpr bool const value
+   = is_reversable<Range>::value
+  && is_input<Range>::value
+  && is_output<Range>::value
+  && is_io_synced<Range>::value
+  && (is_linear<Range>::value == false)
+  && (input::size_type<Range>::value == range_size::finite)
+  && (output::size_type<Range>::value == range_size::finite)
+  && bits::is_detected<bits::trait_bits::subscript_t, Range>::value;
+};
 
-}; /* range traits */
+} /* range  trait */
 
 } /* range layer */
 #endif

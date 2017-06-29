@@ -54,10 +54,11 @@ void* list[] = {0, (static_cast<void*>(&(--_ranges)))...};
 
 namespace bits {
 
-template <typename Range, typename N
+template <
+  typename Range
+, typename N
 , typename std::enable_if
-  <range_traits<Range>::is_linear, int>::type = 0
->
+  <range_trait::is_linear<Range>::value, int>::type = 0 >
 void
 advance_n (
   N const _n
@@ -67,10 +68,11 @@ N count = _n;
 while (0 != count--) ++_range;
 }
 
-template <typename Range, typename N
+template <
+  typename Range
+, typename N
 , typename std::enable_if
-  <! range_traits<Range>::is_linear, int>::type = 0
->
+  <! range_trait::is_linear<Range>::value, int>::type = 0 >
 void
 advance_n (
   N const _n
@@ -79,10 +81,11 @@ advance_n (
 _range += _n;
 }
 
-template <typename Range, typename N
+template <
+  typename Range
+, typename N
 , typename std::enable_if
-  <range_traits<Range>::is_linear, int>::type = 0
->
+  <range_trait::is_linear<Range>::value, int>::type = 0 >
 void
 reverse_n (
   N const _n
@@ -92,10 +95,11 @@ N count = _n;
 while (0 != count--) --_range;
 }
 
-template <typename Range, typename N
+template <
+  typename Range
+, typename N
 , typename std::enable_if
-  <! range_traits<Range>::is_linear, int>::type = 0
->
+  <! range_trait::is_linear<Range>::value, int>::type = 0 >
 void
 reverse_n (
   N const _n

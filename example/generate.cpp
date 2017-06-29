@@ -22,8 +22,12 @@ int main (){
 
 auto rng = make_generate_range (gen());
 
+assert (has_readable(rng));
 assert (read(rng) == 1);
-rng = next(rng);
+
+rng = next(2, rng);
+
+assert (has_readable(rng));
 assert (read(rng) == 2);
 
 return 0;
