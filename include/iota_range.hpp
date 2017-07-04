@@ -14,7 +14,12 @@
 
 namespace range_layer {
 
-template <typename T>
+template <
+  typename T
+, typename Size
+    = typename std
+    ::remove_cv<typename std::make_unsigned<T>::type>::type
+>
 class iota_range {
 
 T count;
@@ -22,11 +27,12 @@ T count;
 public:
 
 using read_type = T;
+
 using size_type
   = typename std
     ::remove_cv<typename std::make_unsigned<T>::type>::type;
 
-static constexpr size_type max_size
+static constexpr Size max_size
   = std::numeric_limits<size_type>::max();
 
 iota_range (
@@ -50,17 +56,17 @@ bool operator == (sentinel::readable const &) const;
 bool operator == (T const &) const;
 iota_range & save();
 
-};
+}; /* iota range */
 
-template <typename T>
-iota_range<T> &
-iota_range<T>::save(){
+template <typename T, typename Size>
+iota_range<T, Size> &
+iota_range<T, Size>::save(){
 return *this;
 }
 
-template <typename T>
+template <typename T, typename Size>
 bool
-iota_range<T>::operator == (
+iota_range<T, Size>::operator == (
   sentinel::readable const & _sentinel
 ) const {
 return !(
@@ -69,58 +75,58 @@ return !(
 );
 }
 
-template <typename T>
+template <typename T, typename Size>
 bool
-iota_range<T>::operator == (
+iota_range<T, Size>::operator == (
   T const & _sentinel
 ) const {
 return this->count == _sentinel;
 }
 
-template <typename T>
+template <typename T, typename Size>
 bool
 operator != (
-  iota_range<T> const & _range
+  iota_range<T, Size> const & _range
 , T const & _sentinel
 ){
 return !(_range == _sentinel);
 }
 
-template <typename T>
-iota_range<T> &
-iota_range<T>::operator ++ (
+template <typename T, typename Size>
+iota_range<T, Size> &
+iota_range<T, Size>::operator ++ (
 ){
 ++this->count;
 return *this;
 }
 
-template <typename T>
-iota_range<T> &
-iota_range<T>::operator -- (
+template <typename T, typename Size>
+iota_range<T, Size> &
+iota_range<T, Size>::operator -- (
 ){
 --this->count;
 return *this;
 }
 
-template <typename T>
+template <typename T, typename Size>
 T const &
-iota_range<T>::operator * (
+iota_range<T, Size>::operator * (
 ){
 return this->count;
 }
 
-template <typename T>
-iota_range<T>&
-iota_range<T>::operator += (
+template <typename T, typename Size>
+iota_range<T, Size> &
+iota_range<T, Size>::operator += (
   T const & _n
 ){
 this->count += _n;
 return *this;
 }
 
-template <typename T>
-iota_range<T>&
-iota_range<T>::operator -= (
+template <typename T, typename Size>
+iota_range<T, Size> &
+iota_range<T, Size>::operator -= (
   T const & _n
 ){
 this->count -= _n;
