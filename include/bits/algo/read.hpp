@@ -8,6 +8,8 @@
 #ifndef RANGE_LAYER_ALGO_READ_HPP
 #define RANGE_LAYER_ALGO_READ_HPP
 
+#include "assert.hpp"
+
 namespace range_layer {
 
 template <typename Range, typename Pred>

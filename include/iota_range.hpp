@@ -21,20 +21,10 @@ T count;
 public:
 
 using read_type = T;
-//using write_type = read_type;
-
-static constexpr bool const is_io_synced = true;
-static constexpr bool const is_input_temporary = true;
-static constexpr bool const is_output_temporary = true;
+static constexpr T max_size = std::numeric_limits<T>::max();
 
 static constexpr validation_type const
   validation = validation_type::unsynced;
-
-static constexpr range_size const
-  input_size_type = range_size::countable;
-
-static constexpr range_size const
-  output_size_type = range_size::countable;
 
 iota_range (
   T const & _var
@@ -48,16 +38,22 @@ iota_range & operator = (iota_range const &) = default;
 iota_range & operator = (iota_range &&) = default;
 ~iota_range() = default;
 
-T& operator * ();
-//void operator = (T const &);
-iota_range& operator ++ ();
-iota_range& operator -- ();
-iota_range& operator += (T const &);
-iota_range& operator -= (T const &);
+T const & operator * ();
+iota_range & operator ++ ();
+iota_range & operator -- ();
+iota_range & operator += (T const &);
+iota_range & operator -= (T const &);
 bool operator == (sentinel::readable const &) const;
 bool operator == (T const &) const;
+iota_range & save();
 
 };
+
+template <typename T>
+iota_range<T> &
+iota_range<T>::save(){
+return *this;
+}
 
 template <typename T>
 bool
@@ -104,19 +100,11 @@ return *this;
 }
 
 template <typename T>
-T&
+T const &
 iota_range<T>::operator * (
 ){
 return this->count;
 }
-
-/*template <typename T>
-void
-iota_range<T>::operator = (
-  T const & _var
-){
-this->count = _var;
-}*/
 
 template <typename T>
 iota_range<T>&

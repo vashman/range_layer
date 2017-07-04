@@ -24,52 +24,10 @@
 
 namespace range_layer {
 
-template <typename Range>
-struct is_decorator {
-  static constexpr bool value = false;
-};
-
-template <typename Range, typename Pred>
-struct is_decorator <bits::remove_range<Range, Pred>> {
-  static constexpr bool value = true;
-};
-
-template <typename Func, typename Range>
-struct is_decorator <bits::transform_range<Func, Range>> {
-  static constexpr bool value = true;
-};
-
-template <typename Func, typename Range>
-struct is_decorator <
-  bits::input_transform_range<Func, Range> > {
-  static constexpr bool value = true;
-};
-
-template <typename Func, typename Range>
-struct is_decorator <
-  bits::output_transform_range<Func, Range> > {
-  static constexpr bool value = true;
-};
-
-template <typename Range>
-struct is_decorator <bits::reverse_range<Range>> {
-  static constexpr bool value = true;
-};
-
-template <typename Range, typename S>
-struct is_decorator <bits::sub_range_n<Range, S>> {
-  static constexpr bool value = true;
-};
-
-template <typename Range, typename S>
-struct is_decorator <bits::sub_range<Range, S>> {
-  static constexpr bool value = true;
-};
-
 template <
   typename Range
 , typename
-  std::enable_if<is_decorator<Range>::value, int>::type >
+  std::enable_if<range_trait::is_decorator<Range>::value, int>::type >
 auto
 disable_decorator (
   Range _range
@@ -81,7 +39,7 @@ return disable_decorator(_range.disable());
 template <
   typename Range
 , typename
-  std::enable_if<! is_decorator<Range>::value, int>::type >
+  std::enable_if<! range_trait::is_decorator<Range>::value, int>::type >
 Range
 disable_decorator (
   Range _range
@@ -207,6 +165,11 @@ bits::reverse_range<Range>
 reverse_range (
   Range _range
 ){
+static_assert(
+  range_trait::is_reversable<Range>::value
+, "Cannot reverse range"
+);
+
 return bits::reverse_range<Range>{_range};
 }
 

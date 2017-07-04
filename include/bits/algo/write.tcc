@@ -20,7 +20,12 @@ fill (
 , Range _range
 , T const & _var
 ){
-static_assert (range_traits<Range>::is_output, "Not output range.");
+bits::write_assert<Range>();
+
+static_assert (
+  ! range_trait::is_finite<Range>::value
+, "Cannot fill an infinite range."
+);
 
   while (has_writable(_range)){
   write(_range, _var);
@@ -40,7 +45,7 @@ fill (
 , T const & _var
 , N _n
 ){
-static_assert (range_traits<Range>::is_output, "Not output range.");
+bits::write_assert<Range>();
 
   while (has_writable(_range) && (0 != _n)){
   write(_range, _var);
@@ -58,7 +63,7 @@ generate (
 , Range _range
 , Generator _gen
 ){
-static_assert (range_traits<Range>::is_output, "Not output range.");
+bits::write_assert<Range>();
 
   while (has_writable(_range)){
   write(_range, _gen());
@@ -76,7 +81,7 @@ generate_n (
 , N _n
 , Generator _gen
 ){
-static_assert (range_traits<Range>::is_output, "Not output range.");
+bits::write_assert<Range>();
 
   while (has_writable(_range) && (0 != _n)){
   write(_range, _gen());
@@ -96,8 +101,12 @@ copy (
 , IRange _input
 , ORange _output
 ){
-static_assert (range_traits<IRange>::is_input, "Not input range.");
-static_assert (range_traits<ORange>::is_output, "Not output range.");
+bits::read_assert<IRange>();
+bits::write_assert<ORange>();
+static_assert (
+  range_trait::is_finite<IRange>::value == range_trait::is_finite<ORange>::value
+, ""
+);
 
   while (has_writable(_output) && has_readable(_input)){
   write(_output, read(_input));
@@ -117,8 +126,8 @@ copy_if (
 , ORange _output
 , Pred _pred
 ){
-static_assert (range_traits<IRange>::is_input, "Not input range.");
-static_assert (range_traits<ORange>::is_output, "Not output range.");
+bits::read_assert<IRange>();
+bits::write_assert<ORange>();
 
   while (has_writable(_output) && had_readable(_input)){
   auto temp = read(_input);
@@ -138,8 +147,8 @@ write (
 , IRange _input
 , ORange _output
 ){
-static_assert (range_traits<IRange>::is_input, "Not input range.");
-static_assert (range_traits<ORange>::is_output, "Not output range.");
+bits::read_assert<IRange>();
+bits::write_assert<ORange>();
 
 using range_layer::advance;
 
@@ -161,8 +170,8 @@ copy_n (
 , ORange _output
 , N _n
 ){
-static_assert (range_traits<IRange>::is_input, "Not input range.");
-static_assert (range_traits<ORange>::is_output, "Not output range.");
+bits::read_assert<IRange>();
+bits::write_assert<ORange>();
 
   while (
      has_writable(_output)

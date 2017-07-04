@@ -21,18 +21,8 @@ public:
 
 using read_type = T;
 using write_type = read_type;
-
-static constexpr bool const is_io_synced = true;
-static constexpr bool const is_input_temporary = false;
-static constexpr bool const is_output_temporary = false;
-static constexpr validation_type const validation
-  = validation_type::unsynced;
-
-static constexpr range_size const
-  input_size_type = range_size::finite;
-
-static constexpr range_size const
-  output_size_type = range_size::finite;
+static constexpr std::size_t max_size
+  = std::numeric_limits<std::size_t>::max()-1;
 
 array_range (
   T *
@@ -40,10 +30,15 @@ array_range (
 );
 
 array_range (array_range const &) = default;
-array_range& operator = (array_range const &) = default;
-array_range& operator = (array_range &&) = default;
+array_range & operator = (array_range const &) = default;
+array_range & operator = (array_range &&) = default;
 array_range (array_range &&) = default;
 ~array_range () = default;
+
+array_range &
+save (){
+return *this;
+}
 
 const T&
 operator * (
@@ -106,7 +101,7 @@ operator == (
   T const &
 ) const;
 
-};
+}; /* array range */
 
 template <typename T>
 bool

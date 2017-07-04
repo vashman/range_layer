@@ -21,19 +21,8 @@ bool flag;
 public:
 
 using read_type = decltype(gen());
-
-static constexpr bool const is_io_synced = true;
-static constexpr bool const is_input_temporary = true;
-static constexpr bool const is_output_temporary = true;
-
-static constexpr validation_type const
-  validation = validation_type::single;
-
-static constexpr range_size const
-  input_size_type = range_size::uncountable;
-
-static constexpr range_size const
-  output_size_type = range_size::uncountable;
+static constexpr std::size_t max_size
+  = std::numeric_limits<std::size_t>::max();
 
 generate_range (
   Gen _gen
@@ -46,7 +35,9 @@ generate_range (generate_range const &) = default;
 generate_range (generate_range &&) = default;
 ~generate_range () = default;
 generate_range & operator = (generate_range &&) = default;
-generate_range & operator = (generate_range const &) = default;
+
+generate_range &
+operator = (generate_range const &) = default;
 
 read_type
 operator * (
@@ -64,9 +55,6 @@ return *this;
 }
 
 bool operator == (sentinel::readable const &) const;
-bool operator == (read_type const &) const {
-return true;
-}
 
 }; /* generate range */
 
@@ -89,6 +77,13 @@ generate_range<Gen>
 make_generate_range (
   Gen _gen
 ){
+static_assert (
+     std::is_move_constructible<Gen>::value
+  && std::is_move_assignable<Gen>::value
+, "Error the Generator is not move constructible or"
+  " assignable."
+);
+
 return generate_range<Gen>(_gen);
 }
 

@@ -76,13 +76,10 @@ class join_range;
 
 } /* bits */
 
-template <typename Range>
-struct is_decorator;
-
 template <
   typename Range
-, typename
-  std::enable_if<is_decorator<Range>::value, int>::type = 0 >
+, typename std::enable_if
+    <range_trait::is_decorator<Range>::value, int>::type =0 >
 auto
 disable_decorator (
   Range _range
@@ -90,8 +87,8 @@ disable_decorator (
 
 template <
   typename Range
-, typename
-  std::enable_if<!is_decorator<Range>::value, int>::type = 0>
+, typename std::enable_if
+    <!range_trait::is_decorator<Range>::value, int>::type =0>
 Range
 disable_decorator (
   Range

@@ -9,6 +9,7 @@
 #define RANGE_LAYER_RANGE_HPP
 
 #include "range_traits.hpp"
+#include "bits/algo/asserts.hpp"
 #include <type_traits>
 
 namespace range_layer {
@@ -20,6 +21,8 @@ read (
 )
 -> decltype (*_range)
 {
+bits::read_assert<Range>();
+
 return *_range;
 }
 
@@ -29,6 +32,8 @@ write (
   Range & _range
 , T const & _var
 ){
+bits::write_assert<Range>();
+
 _range = _var;
 }
 

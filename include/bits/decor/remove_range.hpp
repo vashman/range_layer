@@ -20,26 +20,14 @@ typename std::remove_reference<decltype (*range)>::type temp;
 
 public:
 
-using read_type = typename range_trait::read_type<Range>::type;
-using write_type = typename range_trait::write_type<Range>::type;
+using read_type
+  = typename range_trait::read_type<Range>::type;
 
-static constexpr bool const
-  is_io_synced = range_trait::is_io_synced<Range>::value;
+using write_type
+  = typename range_trait::write_type<Range>::type;
 
-static constexpr validation_type const
-  validation = range_trait::validation<Range>::value;
-
-static constexpr bool const
-  is_input_temporary = range_trait::input::is_temporary<Range>::value;
-
-static constexpr range_size const
-  input_size_type = range_trait::input::size_type<Range>::value;
-
-static constexpr bool const
-  is_output_temporary = range_trait::output::is_temporary<Range>::value;
-
-static constexpr range_size const
-  output_size_type = range_trait::output::size_type<Range>::value;
+static constexpr auto max_size
+  = range_trait::max_size<Range>::value;
 
 remove_range (
   Range _range
@@ -65,6 +53,12 @@ remove_range & operator = (remove_range const &) = default;
 auto
 operator * () -> decltype(*this->range){
 return this->temp;
+}
+
+template <typename U = Range>
+remove_range &
+save(){
+return *this;
 }
 
 template <typename U = Range>

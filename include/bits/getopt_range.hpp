@@ -24,20 +24,9 @@ int rv;
 public:
 
 using read_type = char;
-using write_type = void;
 
-static constexpr bool const is_io_synced = false;
-static constexpr bool const is_input_temporary = true;
-static constexpr bool const is_output_temporary = false;
-
-static constexpr validation_type const
-  validation = validation_type::single;
-
-static constexpr range_size const
-  input_size_type = range_size::countable;
-
-static constexpr range_size const
-  output_size_type = range_size::countable;
+static constexpr validation_type validation
+  = validation_type::single;
 
 getopt_range (
   char * const *

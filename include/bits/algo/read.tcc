@@ -17,6 +17,8 @@ all_of (
 , Range _range
 , Pred _pred
 ){
+bits::read_assert<Range>();
+
   for (; has_readable(_range); advance(_range))
     if (! _pred(read(_range))) return false;
 return true;
@@ -29,6 +31,8 @@ none_of (
 , Range _range
 , Pred _pred
 ){
+bits::read_assert<Range>();
+
   for (; has_readable(_range); advance(_range))
     if (_pred(read(_range))) return false;
 return true;
@@ -41,6 +45,8 @@ any_of (
 , Range _range
 , Pred _pred
 ){
+bits::read_assert<Range>();
+
   for (; has_readable(_range); advance(_range))
     if (_pred(read(_range))) return true;
 return false;
@@ -53,6 +59,8 @@ any_is (
 , Range _range
 , T const _value
 ){
+bits::read_assert<Range>();
+
   for (; has_readable(_range); advance(_range))
     if (_value == read(_range)) return true;
 return false;
@@ -65,6 +73,8 @@ any_is_not (
 , Range _range
 , T const _value
 ){
+bits::read_assert<Range>();
+
   for (; has_readable(_range); advance(_range))
     if (_value != read(_range)) return true;
 return false;
@@ -77,6 +87,9 @@ equal (
 , Range1 _range1
 , Range2 _range2
 ){
+bits::read_assert<Range1>();
+bits::read_assert<Range2>();
+
   for (
   ; has_readable(_range1) && has_readable(_range2)
   ; advance(_range1, _range2)
@@ -86,29 +99,34 @@ return true;
 }
 
 template <typename Range, typename Pred>
-std::size_t // traits::size_type
+range_trait::max_size<Range>::type
 count_if (
   execution_policy::sequenced
 , Range _range
 , Pred _pred
 ){
-std::size_t n = 0;
+bits::read_assert<Range>();
+
+range_trait::max_size<Range>::type n = 0;
   while (has_readable(_range))
     if (_pred(read(_range))) ++n;
 return n;
 }
 
 template <typename Range, typename T, typename Policy>
-std::size_t
+range_trait::max_size<Range>::type
 count (
   Policy _policy
 , Range _range
 , T _value
 ){
-using type = decltype(read(_range));
+bits::read_assert<Range>();
 
 return count_if (
-  _policy, _range, [=](type _var){return _var == _value;});
+  _policy
+, _range
+, [=](decltype(read(_range)) _var){return _var == _value;}
+);
 }
 
 template <typename Range, typename Operation>
@@ -118,6 +136,8 @@ for_each (
 , Range _range
 , Operation _op
 ){
+bits::read_assert<Range>();
+
   while (has_readable(_range)){
   _op(read(_range));
   advance(_range);

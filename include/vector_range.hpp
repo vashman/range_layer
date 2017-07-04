@@ -25,19 +25,8 @@ public:
 
 using read_type = T;
 using write_type = read_type;
-
-static constexpr bool const is_io_synced = true;
-static constexpr bool const is_input_temporary = false;
-static constexpr bool const is_output_temporary = false;
-
-static constexpr validation_type const
-  validation = validation_type::unsynced;
-
-static constexpr range_size const
-  input_size_type = range_size::finite;
-
-static constexpr range_size const
-  output_size_type = range_size::finite;
+static constexpr std::size_t max_size
+  = std::numeric_limits<std::size_t>::max()-1;
 
 vector_range (
   std::vector<T> &
@@ -49,7 +38,12 @@ vector_range & operator = (vector_range const &) = default;
 vector_range & operator = (vector_range &&) = default;
 ~vector_range() = default;
 
-const T&
+vector_range &
+save (){
+return *this;
+}
+
+T const &
 operator * (){
 return *this->vec[this->pos-1];
 }

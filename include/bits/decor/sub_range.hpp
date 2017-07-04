@@ -25,26 +25,14 @@ return (this->pos > this->count) || (this->pos == 0);
 
 public:
 
-using read_type = typename range_trait::read_type<Range>::type;
-using write_type = typename range_trait::write_type<Range>::type;
+using read_type
+  = typename range_trait::read_type<Range>::type;
 
-static constexpr bool const
-  is_io_synced = range_trait::is_io_synced<Range>::value;
+using write_type
+  = typename range_trait::write_type<Range>::type;
 
-static constexpr validation_type const
-  validation = range_trait::validation<Range>::value;
-
-static constexpr bool const
-  is_input_temporary = range_trait::input::is_temporary<Range>::value;
-
-static constexpr range_size const
-  input_size_type = range_size::finite;
-
-static constexpr bool const
-  is_output_temporary = range_trait::output::is_temporary<Range>::value;
-
-static constexpr range_size const
-  output_size_type = range_size::finite;
+static constexpr auto max_size
+  = range_trait::max_size<Range>::value;
 
 sub_range_n (
   Range _range
@@ -72,6 +60,12 @@ sub_range_n &
 operator ++ (){
 ++this->pos;
 ++this->range;
+return *this;
+}
+
+template <typename U = Range>
+sub_range_n &
+save(){
 return *this;
 }
 
