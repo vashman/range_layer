@@ -286,7 +286,12 @@ struct is_heterogeneous {
 static constexpr bool value
   = bits
     ::trait_bits
-    ::is_typelist<typename read_type<Range>::type>::value;
+    ::is_typelist <
+      typename bits
+      ::detected_or<void, bits::trait_bits::rtype, Range>
+      ::type
+      >
+    ::value;
 }; 
 
 } /* input */
@@ -298,7 +303,12 @@ struct is_heterogeneous {
 static constexpr bool value
   = bits
     ::trait_bits
-    ::is_typelist<typename write_type<Range>::type>::value;
+    ::is_typelist <
+      typename bits
+      ::detected_or<void, bits::trait_bits::wtype, Range>
+      ::type
+      >
+    ::value;
 }; 
 
 } /* output */

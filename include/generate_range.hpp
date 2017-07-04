@@ -20,7 +20,7 @@ bool flag;
 
 public:
 
-using read_type = decltype(gen());
+using read_type = decltype(gen.operator()());
 static constexpr std::size_t max_size
   = std::numeric_limits<std::size_t>::max();
 
