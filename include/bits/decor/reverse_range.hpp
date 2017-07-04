@@ -52,7 +52,7 @@ return *this->range;
 template <typename U = Range>
 reverse_range &
 save(){
-return *this;
+return reverse_range(*this).range = this->range.save();
 }
 
 reverse_range &

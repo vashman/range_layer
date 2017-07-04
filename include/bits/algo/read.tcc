@@ -8,6 +8,8 @@
 #ifndef RANGE_LAYER_ALGO_READ_TCC
 #define RANGE_LAYER_ALGO_READ_TCC
 
+#include "asserts.hpp"
+
 namespace range_layer {
 
 template <typename Range, typename Pred>
@@ -99,7 +101,7 @@ return true;
 }
 
 template <typename Range, typename Pred>
-range_trait::max_size<Range>::type
+typename range_trait::max_size<Range>::type
 count_if (
   execution_policy::sequenced
 , Range _range
@@ -107,14 +109,14 @@ count_if (
 ){
 bits::read_assert<Range>();
 
-range_trait::max_size<Range>::type n = 0;
+typename range_trait::max_size<Range>::type n = 0;
   while (has_readable(_range))
     if (_pred(read(_range))) ++n;
 return n;
 }
 
 template <typename Range, typename T, typename Policy>
-range_trait::max_size<Range>::type
+typename range_trait::max_size<Range>::type
 count (
   Policy _policy
 , Range _range

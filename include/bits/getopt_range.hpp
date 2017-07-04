@@ -24,9 +24,8 @@ int rv;
 public:
 
 using read_type = char;
-
-static constexpr validation_type validation
-  = validation_type::single;
+static constexpr std::size_t max_size
+  = std::numeric_limits<std::size_t>::max();
 
 getopt_range (
   char * const *

@@ -58,7 +58,7 @@ return this->temp;
 template <typename U = Range>
 remove_range &
 save(){
-return *this;
+return remove_range(*this).range = this->range.save();
 }
 
 template <typename U = Range>

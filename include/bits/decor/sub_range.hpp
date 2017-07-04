@@ -64,9 +64,9 @@ return *this;
 }
 
 template <typename U = Range>
-sub_range_n &
+sub_range_n
 save(){
-return *this;
+return sub_range_n(*this).range = this->range.save();;
 }
 
 template <typename U = Range>

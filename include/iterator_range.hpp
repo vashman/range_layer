@@ -28,20 +28,11 @@ struct iterator_range
 
 using read_type
   = typename std::iterator_traits<Iter>::value_type;
+
 using write_type = read_type;
 
-static constexpr bool const is_io_synced = true;
-static constexpr bool const is_input_temporary = true;
-static constexpr bool const is_output_temporary = true;
-
-static constexpr validation_type const
-  validation = validation_type::single;
-
-static constexpr range_size const
-  input_size_type = range_size::countable;
-
-static constexpr range_size const
-  output_size_type = range_size::countable;
+//static constexpr std::iterator_traits<Iter>::difference_type
+//  max_size = std::numeric_limits<>
 
 Iter iter_begin;
 IterEnd iter_end;
@@ -85,7 +76,11 @@ iterator_range (
 
 iterator_range (iterator_range const &) = default;
 iterator_range (iterator_range &&) = default;
-iterator_range & operator = (iterator_range const &) = default;
+
+iterator_range & operator = (
+  iterator_range const &
+) = default;
+
 iterator_range & operator = (iterator_range &&) = default;
 
 };
@@ -99,20 +94,8 @@ struct iterator_range
 
 using read_type
   = typename std::iterator_traits<Iter>::value_type;
+
 using write_type = read_type;
-
-static constexpr bool const is_io_synced = true;
-static constexpr bool const is_input_temporary = true;
-static constexpr bool const is_output_temporary = true;
-
-static constexpr validation_type const
-  validation = validation_type::unsynced;
-
-static constexpr range_size const
-  input_size_type = range_size::countable;
-
-static constexpr range_size const
-  output_size_type = range_size::countable;
 
 iterator_range (
   Iter _iter
@@ -132,7 +115,11 @@ operator = (
 
 iterator_range (iterator_range const &) = default;
 iterator_range (iterator_range &&) = default;
-iterator_range & operator = (iterator_range const &) = default;
+
+iterator_range & operator = (
+  iterator_range const &
+) = default;
+
 iterator_range & operator = (iterator_range &&) = default;
 
 };
@@ -146,20 +133,8 @@ struct iterator_range
 
 using read_type
   = typename std::iterator_traits<Iter>::value_type;
+
 using write_type = read_type;
-
-static constexpr bool const is_io_synced = true;
-static constexpr bool const is_input_temporary = true;
-static constexpr bool const is_output_temporary = true;
-
-static constexpr validation_type const
-  validation = validation_type::unsynced;
-
-static constexpr range_size const
-  input_size_type = range_size::countable;
-
-static constexpr range_size const
-  output_size_type = range_size::countable;
 
 iterator_range &
 operator -- (
@@ -178,7 +153,11 @@ iterator_range (
 
 iterator_range (iterator_range const &) = default;
 iterator_range (iterator_range &&) = default;
-iterator_range & operator = (iterator_range const &) = default;
+
+iterator_range & operator = (
+  iterator_range const &
+) = default;
+
 iterator_range & operator = (iterator_range &&) = default;
 
 }; /* bidirectional iterator range */
@@ -193,20 +172,8 @@ struct iterator_range
 
 using read_type
   = typename std::iterator_traits<Iter>::value_type;
+
 using write_type = read_type;
-
-static constexpr bool const is_io_synced = true;
-static constexpr bool const is_input_temporary = false;
-static constexpr bool const is_output_temporary = false;
-
-static constexpr validation_type const
-  validation = validation_type::unsynced;
-
-static constexpr range_size const
-  input_size_type = range_size::countable;
-
-static constexpr range_size const
-  output_size_type = range_size::countable;
 
 template <typename T>
 void
@@ -260,22 +227,10 @@ template <typename Iter>
 struct iterator_range<Iter, void> {
 
 using read_type = void;
+
 // The iterator may have a void type.
 using write_type
   = typename std::iterator_traits<Iter>::value_type *;
-
-static constexpr bool const is_io_synced = false;
-static constexpr bool const is_input_temporary = true;
-static constexpr bool const is_output_temporary = true;
-
-static constexpr validation_type const
-  validation = validation_type::unsynced;
-
-static constexpr range_size const
-  input_size_type = range_size::countable;
-
-static constexpr range_size const
-  output_size_type = range_size::countable;
 
 Iter iter_begin;
 

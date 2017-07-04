@@ -36,7 +36,10 @@ output_transform_range (
 , func (_func)
 {}
 
-output_transform_range (output_transform_range const &) = default;
+output_transform_range (
+  output_transform_range const &
+) = default;
+
 output_transform_range (output_transform_range &&) = default;
 
 output_transform_range &
@@ -56,7 +59,8 @@ return *this->range;
 template <typename U = Range>
 output_transform_range &
 save(){
-return *this;
+return output_transform_range(*this).range
+  = this->range.save();
 }
 
 output_transform_range &

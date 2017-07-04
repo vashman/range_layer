@@ -22,15 +22,15 @@ class writable {};
 } /* sentinel */
 
 template <template <typename...> class Tuple, typename... Ts>
-struct type_list {
+struct typelist {
 
-using tuple_type = Tuple<Ts...>;
+using type = Tuple<Ts...>;
 
-type_list () = delete;
-type_list (type_list const &) = delete;
-type_list (type_list &&) = delete;
-type_list & operator = (type_list const &) = delete;
-type_list & operator = (type_list &&) = delete;
+typelist () = delete;
+typelist (typelist const &) = delete;
+typelist (typelist &&) = delete;
+typelist & operator = (typelist const &) = delete;
+typelist & operator = (typelist &&) = delete;
 
 }; /* type list */
 
@@ -113,6 +113,18 @@ struct single_value <Range, true> {
 static constexpr bool value = Range::is_singleton;
 };
 
+template <typename T>
+struct is_typelist {
+using type = T;
+static constexpr bool value = false;
+};
+
+template <template <typename...> class Tuple, typename... Ts>
+struct is_typelist <typelist<Tuple, Ts...>> {
+static constexpr bool value = true;
+using type = typename typelist<Tuple, Ts...>::type;
+};
+
 } /* trait bits */ } /* bits */
 
 namespace range_trait {
@@ -133,17 +145,19 @@ static constexpr bool value
 template <typename Range>
 struct read_type {
 using type
-  = typename bits
+  = typename bits::trait_bits::is_typelist < typename bits
     ::detected_or<void, bits::trait_bits::rtype, Range>
-    ::type;
+    ::type
+    >::type;
 };
 
 template <typename Range>
 struct write_type {
 using type
-  = typename bits
+  = typename bits::trait_bits::is_typelist < typename bits
     ::detected_or<void, bits::trait_bits::wtype, Range>
-    ::type;
+    ::type
+    >::type;
 };
 
 template <typename Range>
@@ -209,16 +223,18 @@ static constexpr bool value
 template <typename Range>
 struct is_linear {
 static constexpr bool value
-   = !( bits
-        ::is_detected<bits::trait_bits::linear_fwd_t, Range>
-        ::value
-  && (( bits
-        ::is_detected<bits::trait_bits::linear_bck_t, Range>
-        ::value
-      && is_reversable<Range>::value )
-    || ! is_reversable<Range>::value
-       )
-      );
+   = !(
+       bits
+       ::is_detected<bits::trait_bits::linear_fwd_t, Range>
+       ::value
+  && ((
+       bits
+       ::is_detected <bits::trait_bits::linear_bck_t, Range>
+       ::value
+  && is_reversable<Range>::value
+  )
+  || ! is_reversable<Range>::value
+  ));
 };
 
 /* if true; erase, shrink */
@@ -253,20 +269,37 @@ template <typename Range>
 struct is_temporary {
 
 static constexpr bool value
-   = ( std::is_reference
+   = (
+       std::is_reference
        <decltype(std::declval<Range&>().operator *())>::value
-    && std::is_const
+  && std::is_const
        <decltype(std::declval<Range&>().operator *())>::value
-     )
+  )
   || ! std::is_reference <
          decltype(std::declval<Range&>().operator *())>
-      ::value;
+       ::value;
 
 };
+
+template <typename Range>
+struct is_heterogeneous {
+static constexpr bool value
+  = bits
+    ::trait_bits
+    ::is_typelist<typename read_type<Range>::type>::value;
+}; 
 
 } /* input */
 
 namespace output {
+
+template <typename Range>
+struct is_heterogeneous {
+static constexpr bool value
+  = bits
+    ::trait_bits
+    ::is_typelist<typename write_type<Range>::type>::value;
+}; 
 
 } /* output */
 
@@ -280,7 +313,8 @@ static constexpr bool value
   && (is_linear<Range>::value == false)
   && is_finite<Range>::value
   && bits
-  ::is_detected<bits::trait_bits::subscript_t, Range>::value;
+     ::is_detected<bits::trait_bits::subscript_t, Range>
+     ::value;
 };
 
 template <typename Range>

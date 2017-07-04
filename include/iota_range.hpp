@@ -9,6 +9,7 @@
 #define RANGE_LAYER_IOTA_RANGE_HPP
 
 #include <limits>
+#include <type_traits>
 #include "range_traits.hpp"
 
 namespace range_layer {
@@ -21,10 +22,12 @@ T count;
 public:
 
 using read_type = T;
-static constexpr T max_size = std::numeric_limits<T>::max();
+using size_type
+  = typename std
+    ::remove_cv<typename std::make_unsigned<T>::type>::type;
 
-static constexpr validation_type const
-  validation = validation_type::unsynced;
+static constexpr size_type max_size
+  = std::numeric_limits<size_type>::max();
 
 iota_range (
   T const & _var

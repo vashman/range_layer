@@ -56,9 +56,11 @@ return this->func(*this->range);
 }
 
 template <typename U = Range>
-input_transform_range &
+input_transform_range
 save(){
-return *this;
+input_transform_range temp = *this;
+temp.range = this->range.save();
+return temp;
 }
 
 input_transform_range &

@@ -67,9 +67,9 @@ return *this;
 }
 
 template <typename U = Range>
-transform_range &
+transform_range
 save(){
-return *this;
+return transform_range(*this).range = this->range.save();
 }
 
 template <typename T>
