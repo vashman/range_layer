@@ -14,6 +14,7 @@
 #include "decor/replace_range.hpp"
 #include "decor/reverse_range.hpp"
 #include "decor/sub_range.hpp"
+#include "decor/remove_decorator.hpp"
 
 #include "decor/transform_range.hpp"
 #include "decor/transform_range.tcc"
@@ -26,8 +27,10 @@ namespace range_layer {
 
 template <
   typename Range
-, typename
-  std::enable_if<range_trait::is_decorator<Range>::value, int>::type >
+, typename std
+  ::enable_if <range_trait::is_decorator<Range>::value, int>
+  ::type
+>
 auto
 disable_decorator (
   Range _range
@@ -38,8 +41,10 @@ return disable_decorator(_range.disable());
 
 template <
   typename Range
-, typename
-  std::enable_if<! range_trait::is_decorator<Range>::value, int>::type >
+, typename std
+  ::enable_if<! range_trait::is_decorator<Range>::value, int>
+  ::type
+>
 Range
 disable_decorator (
   Range _range
@@ -48,12 +53,11 @@ return _range;
 }
 
 template <typename Range>
-auto
+bits::remove_decorator<Range>
 remove_decorator (
   Range _range
-) -> decltype (_range.disable())
-{
-return _range.disable();
+){
+return bits::remove_decorator<Range>(_range);
 }
 
 template <typename Range, typename Pred>

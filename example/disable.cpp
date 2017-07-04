@@ -30,9 +30,9 @@ copy (
 
 copy (
   range_layer::execution_policy::sequenced {}
-, remove_decorator (
+, disable_decorator ( remove_decorator (
     sub_range_n(sub_range_n(rng, 4), 2)
-  )
+  ))
 , output_console_range()
 );
 

@@ -74,12 +74,17 @@ class shuffle_range;
 template <typename LhsRange, typename RhsRange>
 class join_range;
 
+template <typename Range>
+class remove_decorator;
+
 } /* bits */
 
 template <
   typename Range
-, typename std::enable_if
-    <range_trait::is_decorator<Range>::value, int>::type =0 >
+, typename std
+  ::enable_if <range_trait::is_decorator<Range>::value, int>
+  ::type = 0
+>
 auto
 disable_decorator (
   Range _range
@@ -87,18 +92,20 @@ disable_decorator (
 
 template <
   typename Range
-, typename std::enable_if
-    <!range_trait::is_decorator<Range>::value, int>::type =0>
+, typename std
+  ::enable_if <!range_trait::is_decorator<Range>::value, int>
+  ::type = 0
+>
 Range
 disable_decorator (
   Range
 );
 
 template <typename Range>
-auto
+bits::remove_decorator<Range>
 remove_decorator (
   Range _range
-) -> decltype (_range.disable());
+);
 
 template <typename Range, typename Pred>
 bits::remove_range<Range, Pred>
