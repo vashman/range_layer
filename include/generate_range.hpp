@@ -9,18 +9,41 @@
 #define RANGE_LAYER_GENERATE_RANGE_TCC
 
 #include "range_traits.hpp"
+#include <tuple>
 
 namespace range_layer {
+namespace bits {
 
-template <typename Gen>
+template<template <typename...> class Tuple, typename... Ts>
+struct typelist_base {
+
+using type = range_layer::typelist<Tuple, Ts...>;
+
+};
+
+template <template <typename...> class Tuple, typename T>
+struct typelist_base<Tuple, T> {
+
+using type = T;
+
+};
+
+} /* bits */
+
+template <typename Gen, typename... Ts>
 class generate_range {
 
 Gen gen;
-bool flag;
+
+using rtype = decltype(gen());
+
+rtype temp;
 
 public:
 
-using read_type = decltype(gen.operator()());
+using read_type
+  = typename bits::typelist_base<std::tuple, Ts...>::type;
+
 static constexpr std::size_t max_size
   = std::numeric_limits<std::size_t>::max();
 
@@ -28,7 +51,7 @@ generate_range (
   Gen _gen
 )
 : gen (_gen)
-, flag (false)
+, temp (gen())
 {}
 
 generate_range (generate_range const &) = default;
@@ -39,18 +62,15 @@ generate_range & operator = (generate_range &&) = default;
 generate_range &
 operator = (generate_range const &) = default;
 
-read_type
+rtype
 operator * (
 ){
-this->flag = false;
-return this->gen();
+return this->temp;
 }
 
-generate_range<Gen> &
-operator ++ (
-){
-  if (this->flag) this->gen();
-  else this->flag = true;
+generate_range<Gen, Ts...> &
+operator ++ (){
+this->temp = this->gen();
 return *this;
 }
 
@@ -58,34 +78,28 @@ bool operator == (sentinel::readable const &) const;
 
 }; /* generate range */
 
-template <typename Gen>
+template <typename Gen, typename... Ts>
 bool
-generate_range<Gen>::operator == (
+generate_range<Gen, Ts...>::operator == (
   sentinel::readable const &
 ) const {
 return true;
 }
 
-template <typename Gen>
-generate_range<Gen>
+template <typename Gen, typename... Ts>
+generate_range<Gen, Ts...>
 make_generate_range (
   Gen _gen
 );
 
-template <typename Gen>
-generate_range<Gen>
+template <typename... Ts, typename Gen>
+generate_range<Gen, Ts...>
 make_generate_range (
   Gen _gen
 ){
-static_assert (
-     std::is_move_constructible<Gen>::value
-  && std::is_move_assignable<Gen>::value
-, "Error the Generator is not move constructible or"
-  " assignable."
-);
-
-return generate_range<Gen>(_gen);
+return generate_range<Gen, Ts...>(_gen);
 }
 
 } /* range layer */
 #endif
+

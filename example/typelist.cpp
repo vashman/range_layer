@@ -16,6 +16,7 @@ using range_layer::typelist;
 using std::tuple;
 using std::get;
 using range_layer::range_trait::input::is_heterogeneous;
+using range_layer::typelist;
 
 struct gen {
 
@@ -31,10 +32,12 @@ return this->temp;
 
 int main (){
 
-auto rng = make_generate_range (gen());
+auto rng
+  = make_generate_range<typelist<tuple, int, char>>(gen());
 
 assert (has_readable(rng));
 auto var = read(rng);
+
 
 static_assert (
   std::is_same<decltype(var), tuple<int, char>>::value
