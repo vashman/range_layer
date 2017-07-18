@@ -34,6 +34,19 @@ typelist & operator = (typelist &&) = delete;
 
 }; /* type list */
 
+template <template <typename...> class Tuple, typename T>
+struct typelist<Tuple, T> {
+
+using type = T;
+
+typelist () = delete;
+typelist (typelist const &) = delete;
+typelist (typelist &&) = delete;
+typelist & operator = (typelist const &) = delete;
+typelist & operator = (typelist &&) = delete;
+
+}; /* type list */
+
 namespace bits {
 namespace trait_bits {
 
@@ -125,6 +138,12 @@ static constexpr bool value = true;
 using type = typename typelist<Tuple, Ts...>::type;
 };
 
+template <template <typename...> class Tuple, typename T>
+struct is_typelist <typelist<Tuple, T>> {
+static constexpr bool value = false;
+using type = typename typelist<Tuple, T>::type;
+};
+
 } /* trait bits */ } /* bits */
 
 namespace range_trait {
@@ -145,7 +164,8 @@ static constexpr bool value
 template <typename Range>
 struct read_type {
 using type
-  = typename bits::trait_bits::is_typelist < typename bits
+  = typename bits::trait_bits::is_typelist <
+      typename bits
     ::detected_or<void, bits::trait_bits::rtype, Range>
     ::type
     >::type;
@@ -154,7 +174,8 @@ using type
 template <typename Range>
 struct write_type {
 using type
-  = typename bits::trait_bits::is_typelist < typename bits
+  = typename bits::trait_bits::is_typelist <
+      typename bits
     ::detected_or<void, bits::trait_bits::wtype, Range>
     ::type
     >::type;
@@ -167,8 +188,7 @@ using type
   = typename bits
     ::detected_or <
         std::size_t, bits::trait_bits::stype, Range
-      >
-    ::type;
+    >::type;
 
 static constexpr type value
   = std::numeric_limits<std::size_t>::max();

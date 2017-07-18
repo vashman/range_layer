@@ -32,12 +32,10 @@ return this->temp;
 
 int main (){
 
-auto rng
-  = make_generate_range<typelist<tuple, int, char>>(gen());
+auto rng = make_generate_range<int, char>(gen());
 
 assert (has_readable(rng));
 auto var = read(rng);
-
 
 static_assert (
   std::is_same<decltype(var), tuple<int, char>>::value
@@ -45,7 +43,7 @@ static_assert (
 );
 
 static_assert (
-  range_layer
+    range_layer
   ::range_trait
   ::input
   ::is_heterogeneous<decltype(rng)>::value

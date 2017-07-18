@@ -12,23 +12,6 @@
 #include <tuple>
 
 namespace range_layer {
-namespace bits {
-
-template<template <typename...> class Tuple, typename... Ts>
-struct typelist_base {
-
-using type = range_layer::typelist<Tuple, Ts...>;
-
-};
-
-template <template <typename...> class Tuple, typename T>
-struct typelist_base<Tuple, T> {
-
-using type = T;
-
-};
-
-} /* bits */
 
 template <typename Gen, typename... Ts>
 class generate_range {
@@ -41,8 +24,7 @@ rtype temp;
 
 public:
 
-using read_type
-  = typename bits::typelist_base<std::tuple, Ts...>::type;
+using read_type = typelist<std::tuple, Ts...>;
 
 static constexpr std::size_t max_size
   = std::numeric_limits<std::size_t>::max();
@@ -86,7 +68,7 @@ generate_range<Gen, Ts...>::operator == (
 return true;
 }
 
-template <typename Gen, typename... Ts>
+template <typename... Ts, typename Gen>
 generate_range<Gen, Ts...>
 make_generate_range (
   Gen _gen

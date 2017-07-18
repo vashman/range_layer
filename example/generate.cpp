@@ -18,8 +18,6 @@ int operator ()(){return this->temp++;}
 
 };
 
-using range_layer::range_trait::input::is_heterogeneous;
-
 int main (){
 
 auto rng = make_generate_range<int> (gen());
@@ -29,7 +27,7 @@ static_assert (
   ::range_trait
   ::input
   ::is_heterogeneous<decltype(rng)>::value
-, "Must return multiple types as tuple."
+, "Must return only a single type"
 );
 
 assert (has_readable(rng));
