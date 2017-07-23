@@ -20,7 +20,7 @@ int main (){
 array<char, 5> arr {{'a', 'e', 'i', 'o', 'u'}};
 array_range<char> rng {arr.data(), arr.data()+arr.size()};
 
-copy (
+write (
   range_layer::execution_policy::sequenced {}
 , disable_decorator (
     sub_range_n(sub_range_n(rng, 4), 2)
@@ -28,7 +28,7 @@ copy (
 , output_console_range()
 );
 
-copy (
+write (
   range_layer::execution_policy::sequenced {}
 , disable_decorator ( remove_decorator (
     sub_range_n(sub_range_n(rng, 4), 2)

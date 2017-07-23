@@ -18,14 +18,12 @@ int local_optind;
 std::string local_opts;
 int local_argc;
 program_option option;
-char *const * local_argv;
+char * const * local_argv;
 int rv;
 
 public:
 
 using read_type = char;
-static constexpr std::size_t max_size
-  = std::numeric_limits<std::size_t>::max();
 
 getopt_range (
   char * const *
@@ -43,7 +41,13 @@ program_option & operator * ();
 getopt_range & operator ++ ();
 bool operator == (sentinel::readable const) const;
 
-};
+int
+postion (
+) const {
+return this->local_argc;
+}
+
+}; /* getopt range */
 
 } /* range layer */
 #endif

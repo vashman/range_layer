@@ -210,6 +210,30 @@ return
 (_range == sentinel::writable{}) && (_range == _sentinel);
 }
 
+template <typename Range>
+auto
+size (
+  Range const & _range
+) -> decltype(_range.size()) {
+static_assert (
+  range_trait::is_range<Range>::value
+, "Must be a range."
+);
+return _range.size();
+}
+
+template <typename Range>
+auto
+position (
+  Range const & _range
+) -> decltype (_range.position()) {
+static_assert (
+  range_trait::is_range<Range>::value
+, "Must be a range."
+);
+return _range.position();
+}
+
 } /* range layer */
 #endif
 #include "bits/decorator.hpp"

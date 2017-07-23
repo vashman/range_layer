@@ -101,7 +101,7 @@ return true;
 }
 
 template <typename Range, typename Pred>
-typename range_trait::max_size<Range>::type
+typename range_trait::size_type<Range>::type
 count_if (
   execution_policy::sequenced
 , Range _range
@@ -109,14 +109,22 @@ count_if (
 ){
 bits::read_assert<Range>();
 
-typename range_trait::max_size<Range>::type n = 0;
-  while (has_readable(_range))
+static_assert (
+  range_trait::is_finite<Range>::value
+, "Cannot count a infinite range."
+);
+
+typename range_trait::size_type<Range>::type n = 0;
+
+  while (has_readable(_range)){
     if (_pred(read(_range))) ++n;
+  advance(_range);
+  }
 return n;
 }
 
 template <typename Range, typename T, typename Policy>
-typename range_trait::max_size<Range>::type
+typename range_trait::size_type<Range>::type
 count (
   Policy _policy
 , Range _range

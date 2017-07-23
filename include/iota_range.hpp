@@ -14,7 +14,8 @@
 
 namespace range_layer {
 
-template <
+template
+<
   typename T
 , typename Size
     = typename std
@@ -31,9 +32,6 @@ using read_type = T;
 using size_type
   = typename std
     ::remove_cv<typename std::make_unsigned<T>::type>::type;
-
-static constexpr Size max_size
-  = std::numeric_limits<size_type>::max();
 
 iota_range (
   T const & _var
@@ -55,6 +53,18 @@ iota_range & operator -= (T const &);
 bool operator == (sentinel::readable const &) const;
 bool operator == (T const &) const;
 iota_range & save();
+
+size_type
+size (
+) const {
+return std::numeric_limits<size_type>::max();
+}
+
+size_type
+position (
+) const {
+return this->count;
+}
 
 }; /* iota range */
 

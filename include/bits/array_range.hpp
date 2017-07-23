@@ -21,8 +21,6 @@ public:
 
 using read_type = T;
 using write_type = read_type;
-static constexpr std::size_t max_size
-  = std::numeric_limits<std::size_t>::max()-1;
 
 array_range (
   T *
@@ -100,6 +98,18 @@ bool
 operator == (
   T const &
 ) const;
+
+std::size_t
+size (
+) const {
+return this->end_pos - this->pos;
+}
+
+std::size_t
+position (
+) const {
+return this->array - this->end_pos;
+}
 
 }; /* array range */
 

@@ -31,9 +31,6 @@ using read_type
 using write_type
   = typename range_trait::write_type<Range>::type;
 
-static constexpr auto max_size
-  = range_trait::max_size<Range>::value;
-
 sub_range_n (
   Range _range
 , S _count
@@ -44,7 +41,7 @@ sub_range_n (
 {}
 
 sub_range_n (sub_range_n const &) = default;
-sub_range_n& operator = (sub_range_n const &) = default;
+sub_range_n & operator = (sub_range_n const &) = default;
 sub_range_n (sub_range_n &&) = default;
 sub_range_n& operator = (sub_range_n &&) = default;
 ~sub_range_n() = default;
@@ -124,13 +121,22 @@ operator == (
   T const & _sen
 ) const {
 return this->range == _sen && !this->is_end();
-}
-
-Range
-disable (
-) const {
 return this->range;
 } 
+
+template <typename U = Range>
+auto
+size (
+) const -> decltype(this->range.size()) {
+return this->range.size();
+}
+
+template <typename U = Range>
+auto
+position (
+) const -> decltype(this->range.position()) {
+return this->range.position();
+}
 
 }; /* sub_range_n*/
 

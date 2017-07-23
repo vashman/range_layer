@@ -24,9 +24,6 @@ using read_type
 using write_type
   = typename range_trait::write_type<Range>::type;
 
-static constexpr auto max_size
-  = range_trait::max_size<Range>::value;
-
 remove_decorator (
   Range _range
 )
@@ -119,7 +116,14 @@ operator == (
 return this->range == _sen;
 }
 
-};
+template <typename T = Range>
+auto
+size (
+) const -> decltype(this->range.size()) {
+return this->range.size();
+}
+
+}; /* remove decorator */
 
 } /* bits */ } /* range layer */
 #endif

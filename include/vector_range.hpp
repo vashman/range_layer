@@ -25,8 +25,6 @@ public:
 
 using read_type = T;
 using write_type = read_type;
-static constexpr std::size_t max_size
-  = std::numeric_limits<std::size_t>::max()-1;
 
 vector_range (
   std::vector<T> &
@@ -41,6 +39,18 @@ vector_range & operator = (vector_range &&) = default;
 vector_range &
 save (){
 return *this;
+}
+
+std::size_t
+size (
+) const {
+return this->vec->size();
+}
+
+std::size_t
+position (
+) const {
+return this->pos;
 }
 
 T const &

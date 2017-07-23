@@ -57,13 +57,16 @@ template <typename T>
 using wtype = typename T::write_type;
 
 template <typename T>
-using stype = decltype(T::max_size);
-
-template <typename T>
 using sing_t = decltype(T::is_singleton);
 
 template <typename T>
 using read_t = decltype(std::declval<T&>().operator *());
+
+template <typename T>
+using rsize_t = decltype(std::declval<T&>().size());
+
+template <typename T>
+using rpos = decltype(std::declval<T&>().position());
 
 template <typename T>
 using advance_t = decltype(std::declval<T&>().operator ++());
@@ -144,6 +147,21 @@ static constexpr bool value = false;
 using type = typename typelist<Tuple, T>::type;
 };
 
+template <typename Range, bool HasSize>
+struct size_type;
+
+template <typename Range>
+struct size_type<Range, false> {
+using type = std::size_t;
+};
+
+template <typename Range>
+struct size_type<Range, true> {
+
+using type = decltype(std::declval<Range&>().size());
+
+};
+
 } /* trait bits */ } /* bits */
 
 namespace range_trait {
@@ -163,44 +181,62 @@ static constexpr bool value
 
 template <typename Range>
 struct read_type {
-using type
-  = typename bits::trait_bits::is_typelist <
-      typename bits
-    ::detected_or<void, bits::trait_bits::rtype, Range>
-    ::type
-    >::type;
+using type = typename bits::trait_bits::is_typelist <
+    typename bits
+  ::detected_or<void, bits::trait_bits::rtype, Range>
+  ::type
+  >::type;
 };
 
 template <typename Range>
 struct write_type {
 using type
-  = typename bits::trait_bits::is_typelist <
-      typename bits
+  = typename bits::trait_bits::is_typelist
+  < typename bits
     ::detected_or<void, bits::trait_bits::wtype, Range>
     ::type
-    >::type;
+  >
+  ::type;
 };
 
 template <typename Range>
-struct max_size {
-
+struct size_type {
 using type
   = typename bits
-    ::detected_or <
-        std::size_t, bits::trait_bits::stype, Range
-    >::type;
-
-static constexpr type value
-  = std::numeric_limits<std::size_t>::max();
+  ::trait_bits
+  ::size_type
+  < Range
+  , bits::is_detected<bits::trait_bits::rsize_t, Range>
+    ::value
+  >
+  ::type;
 
 static_assert (
   std::is_unsigned<type>::value
-, "Size must be a unsigned type."
+, "Range size must be a unsigned type."
 );
 
 static_assert (
   std::numeric_limits<type>::is_integer
-, "Size must be a interger type."
+, "Range size must be a interger type."
+);
+
+};
+
+template <typename Range>
+struct has_position {
+static constexpr bool value
+  = bits
+  ::is_detected<bits::trait_bits::rpos, Range>
+  ::value;
+
+static_assert (
+  std::is_same
+  < typename size_type<Range>::type
+  , decltype(std::declval<Range&>().position())
+  >
+  ::value
+, "Range postion and Size must return same type."
 );
 
 };
@@ -209,52 +245,54 @@ template <typename Range>
 struct is_singleton {
 static constexpr bool value
   = ! bits
-      ::is_detected<bits::trait_bits::save_t, Range>::value;
+  ::is_detected<bits::trait_bits::save_t, Range>::value;
 };
 
 template <typename Range>
 struct is_output {
 static constexpr bool value
-   = bits
-     ::is_detected<bits::trait_bits::write_t, Range>::value
-  && bits
-     ::is_detected<bits::trait_bits::write_sen_t, Range>
-     ::value;
+  = bits
+  ::is_detected<bits::trait_bits::write_t, Range>::value
+&&  bits
+  ::is_detected<bits::trait_bits::write_sen_t, Range>
+  ::value;
 };
 
 template <typename Range>
 struct is_input {
 static constexpr bool value
-   = bits
-     ::is_detected<bits::trait_bits::read_t, Range>
-     ::value
-  && bits
-     ::is_detected<bits::trait_bits::read_sen_t, Range>
-     ::value;
+  = bits
+  ::is_detected<bits::trait_bits::read_t, Range>
+  ::value
+&&
+    bits
+  ::is_detected<bits::trait_bits::read_sen_t, Range>
+  ::value;
 };
 
 template <typename Range>
 struct is_reversable {
 static constexpr bool value
   = bits
-    ::is_detected<bits::trait_bits::reverse_t, Range>::value;
+  ::is_detected<bits::trait_bits::reverse_t, Range>::value;
 };
 
 template <typename Range>
 struct is_linear {
 static constexpr bool value
-   = !(
-       bits
-       ::is_detected<bits::trait_bits::linear_fwd_t, Range>
-       ::value
-  && ((
-       bits
-       ::is_detected <bits::trait_bits::linear_bck_t, Range>
-       ::value
-  && is_reversable<Range>::value
-  )
+  = !(bits
+  ::is_detected<bits::trait_bits::linear_fwd_t, Range>
+  ::value
+&& ((
+        bits
+      ::is_detected <bits::trait_bits::linear_bck_t, Range>
+      ::value
+
+   && is_reversable<Range>::value
+   )
   || ! is_reversable<Range>::value
-  ));
+    )
+  );
 };
 
 /* if true; erase, shrink */
@@ -269,16 +307,15 @@ static constexpr bool value
 template <typename Range>
 struct is_insertable {
 static constexpr bool value
-   = bits
-  ::is_detected<bits::trait_bits::expand_t, Range>::value;
+   = bits::is_detected<bits::trait_bits::expand_t, Range>
+  ::value;
 };
 
 template <typename Range>
 struct is_finite {
 static constexpr bool value
-  = max_size<Range>::value
-  < std::numeric_limits
-      <typename max_size<Range>::type>::max();
+  = bits::is_detected<bits::trait_bits::rsize_t, Range>
+  ::value;
 };
 
 namespace input {
@@ -291,7 +328,7 @@ struct is_temporary {
 static constexpr bool value
    = (
        std::is_reference
-       <decltype(std::declval<Range&>().operator *())>::value
+      <decltype(std::declval<Range&>().operator *())>::value
   && std::is_const
        <decltype(std::declval<Range&>().operator *())>::value
   )
@@ -322,13 +359,13 @@ template <typename Range>
 struct is_heterogeneous {
 static constexpr bool value
   = bits
-    ::trait_bits
-    ::is_typelist <
-      typename bits
-      ::detected_or<void, bits::trait_bits::wtype, Range>
-      ::type
-      >
-    ::value;
+  ::trait_bits
+  ::is_typelist
+  <   typename bits
+    ::detected_or<void, bits::trait_bits::wtype, Range>
+    ::type
+  >
+  ::value;
 }; 
 
 } /* output */
@@ -337,20 +374,20 @@ static constexpr bool value
 template <typename Range>
 struct is_subscriptable {
 static constexpr bool value
-   = is_reversable<Range>::value
-  && is_input<Range>::value
-  && is_output<Range>::value
-  && (is_linear<Range>::value == false)
-  && is_finite<Range>::value
-  && bits
-     ::is_detected<bits::trait_bits::subscript_t, Range>
-     ::value;
+  = is_reversable<Range>::value
+&& is_input<Range>::value
+&& is_output<Range>::value
+&& (is_linear<Range>::value == false)
+&& is_finite<Range>::value
+&&  bits
+  ::is_detected<bits::trait_bits::subscript_t, Range>
+  ::value;
 };
 
 template <typename Range>
 struct is_decorator {
 static constexpr bool value
-   = bits
+  = bits
   ::is_detected<bits::trait_bits::disable_t, Range>::value;
 };
 

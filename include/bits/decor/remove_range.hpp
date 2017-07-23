@@ -26,9 +26,6 @@ using read_type
 using write_type
   = typename range_trait::write_type<Range>::type;
 
-static constexpr auto max_size
-  = range_trait::max_size<Range>::value;
-
 remove_range (
   Range _range
 , Pred _pred
@@ -37,6 +34,7 @@ remove_range (
 , pred {_pred}
 , temp ()
 {
+// Should not transverse the range in the ctor!
   while (this->range == sentinel::readable{}){
   this->temp = *this->range;
     if (! this->pred(this->temp)) break;
@@ -148,6 +146,20 @@ Range
 disable (
 ) const {
 return this->range;
+}
+
+template <typename T = Range>
+auto
+size (
+) const -> decltype(this->range.size()) {
+return this->range.size();
+}
+
+template <typename U = Range>
+auto
+size (
+) const -> decltype(this->range.position()) {
+return this->range.position();
 }
 
 }; /* remove range */

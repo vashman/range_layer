@@ -25,9 +25,6 @@ using read_type
 using write_type
   = typename range_trait::write_type<Range>::type;
 
-static constexpr auto max_size
-  = range_trait::max_size<Range>::value;
-
 output_transform_range (
   Range _range
 , Func _func
@@ -127,6 +124,20 @@ Range
 disable (
 ) const {
 return this->range;
+}
+
+template <typename T = Range>
+auto
+size (
+) const -> decltype(this->range.size()) {
+return this->range.size();
+}
+
+template <typename U = Range>
+auto
+position (
+) const -> decltype(this->range.position()) {
+return this->range.position();
 }
 
 }; /* output transform range */

@@ -77,6 +77,9 @@ class join_range;
 template <typename Range>
 class remove_decorator;
 
+template <typename Range>
+class circular_range;
+
 } /* bits */
 
 template <
@@ -206,3 +209,4 @@ return bits::sub_range<Range>{_range, _sentinal};
 
 } /* range layer */
 #endif
+

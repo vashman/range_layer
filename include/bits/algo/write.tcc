@@ -23,7 +23,7 @@ fill (
 bits::write_assert<Range>();
 
 static_assert (
-  ! range_trait::is_finite<Range>::value
+  range_trait::is_finite<Range>::value
 , "Cannot fill an infinite range."
 );
 
@@ -103,9 +103,11 @@ copy (
 ){
 bits::read_assert<IRange>();
 bits::write_assert<ORange>();
+
 static_assert (
-  range_trait::is_finite<IRange>::value == range_trait::is_finite<ORange>::value
-, ""
+   range_trait::is_finite<IRange>::value
+== range_trait::is_finite<ORange>::value
+, "Both ranges must have a finite size."
 );
 
   while (has_writable(_output) && has_readable(_input)){

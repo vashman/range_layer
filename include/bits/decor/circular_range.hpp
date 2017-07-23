@@ -5,16 +5,26 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_REVERSE_RANGE_HPP
-#define RANGE_LAYER_REVERSE_RANGE_HPP
+#ifndef RANGE_LAYER_CIRCULAR_RANGE_HPP
+#define RANGE_LAYER_CIRCULAR_RANGE_HPP
 
 namespace range_layer {
 namespace bits {
 
 template <typename Range>
-class reverse_range {
+class circular_range {
 
 Range range;
+
+bool
+is_end (
+) const {
+// Return true if either end is reached.
+return (
+   ! (this->range == sentinel::writable)
+|| ! (this->range == sentinel::readable)
+);
+}
 
 public:
 
@@ -24,68 +34,75 @@ using read_type
 using write_type
   = typename range_trait::write_type<Range>::type;
 
-reverse_range (
+static constexpr auto max_size
+  = range_trait::max_size<Range>::value;
+
+circular_range (
   Range _range
+, Pred _pred
 )
 : range {_range}
 {}
 
-reverse_range (reverse_range const &) = default;
-reverse_range (reverse_range &&) = default;
-
-reverse_range &
-operator = (reverse_range &&) = default;
-
-reverse_range &
-operator = (reverse_range const &) = default;
-
-~reverse_range () = default;
+circular_range (circular_range const &) = default;
+circular_range (circular_range &&) = default;
+circular_range & operator = (circular_range &&) = default;
+circular_range & operator = (circular_range const &) = default;
+~circular_range () = default;
 
 auto
-operator * () -> decltype(*this->range){
+operator * (
+) -> decltype(*this->range) {
 return *this->range;
 }
 
 template <typename U = Range>
-reverse_range &
+circular_range &
 save(){
-return reverse_range(*this).range = this->range.save();
+return circular_range(*this).range = this->range.save();
 }
 
-reverse_range &
+template <typename U = Range>
+circular_range &
 operator ++ (){
---this->range;
+++this->range;
+  if (this->is_end()) // Reset postion to start.
 return *this;
 }
 
 template <typename U = Range>
-reverse_range &
+circular_range &
 operator -- (){
-++this->range;
+--this->range;
+  if (this->is_end()) // reset postion to end.
 return *this;
 }
 
 template <typename T>
 void
-operator = (T const & _var){
+operator = (
+  T const & _var
+){
 this->range = _var;
 }
 
 template <typename N>
-reverse_range &
+circular_range &
 operator += (
   N _n
 ){
-this->range -= _n;
+this->range += _n;
+  if (this->is_end()) // Reset postion to start.
 return *this;
 }
 
 template <typename N>
-reverse_range &
+circular_range &
 operator -= (
   N _n
 ){
-this->range += _n;
+this->range -= _n;
+  if (this->is_end()) // reset postion to end.
 return *this;
 }
 
@@ -118,21 +135,7 @@ disable (
 return this->range;
 }
 
-template <typename T = Range>
-auto
-size (
-) const -> decltype(this->range.size()) {
-return this->range.size();
-}
-
-template <typename U = Range>
-auto
-position (
-) const -> decltype(this->range.position()) {
-return this->range.position();
-}
-
-}; /* reverse range */
+}; /* circular range */
 
 } /* bits */ } /* range layer */
 #endif
