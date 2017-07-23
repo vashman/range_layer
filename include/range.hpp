@@ -234,6 +234,112 @@ static_assert (
 return _range.position();
 }
 
+template <typename Range>
+Range
+end_of (
+  Range _range
+){
+static_assert (
+  range_trait::is_range<Range>::value
+, "Must be a range."
+);
+
+while (has_readable(_range) || has_writable(_range))
+advance(_range);
+
+return _range;
+}
+
+template <typename Range>
+Range
+end_of_output (
+  Range _range
+){
+static_assert (
+  range_trait::is_range<Range>::value
+, "Must be a range."
+);
+
+static_assert (
+  range_trait::is_output<Range>::value
+, ""
+);
+
+while (has_writable(_range))
+advance(_range);
+
+return _range;
+}
+
+template <typename Range>
+Range
+end_of_input (
+  Range _range
+){
+static_assert (
+  range_trait::is_range<Range>::value
+, "Must be a range."
+);
+
+while (has_readable(_range))
+advance(_range);
+
+return _range;
+}
+
+template <typename Range>
+Range
+start_of (
+  Range _range
+){
+static_assert (
+  range_trait::is_range<Range>::value
+, "Must be a range."
+);
+
+while (has_readable(_range) || has_writable(_range))
+reverse(_range);
+
+return _range;
+}
+
+template <typename Range>
+Range
+start_of_output (
+  Range _range
+){
+static_assert (
+  range_trait::is_range<Range>::value
+, "Must be a range."
+);
+
+static_assert (
+  range_trait::is_output<Range>::value
+, ""
+);
+
+while (has_writable(_range))
+reverse(_range);
+
+return _range;
+}
+
+template <typename Range>
+Range
+start_of_input (
+  Range _range
+){
+static_assert (
+  range_trait::is_range<Range>::value
+, "Must be a range."
+);
+
+while (has_readable(_range))
+reverse(_range);
+
+return _range;
+}
+
 } /* range layer */
 #endif
 #include "bits/decorator.hpp"
