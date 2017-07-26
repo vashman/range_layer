@@ -198,6 +198,24 @@ sub_range_n (
 , N
 );
 
+template <typename Range>
+bits::circular_range<Range>
+circular_range (
+  Range
+);
+
+template <typename Range>
+bits::disable_input<Range>
+disable_input (
+  Range
+);
+
+template <typename Range>
+bits::disable_output<Range>
+disable_output (
+  Range
+);
+
 /*template <typename Range, typename Sentinal>
 bits::sub_range<Range>
 sub_range (

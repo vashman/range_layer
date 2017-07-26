@@ -15,6 +15,9 @@
 #include "decor/reverse_range.hpp"
 #include "decor/sub_range.hpp"
 #include "decor/remove_decorator.hpp"
+#include "decor/circular_range.hpp"
+#include "decor/disable_input.hpp"
+#include "decor/disable_output.hpp"
 
 #include "decor/transform_range.hpp"
 #include "decor/transform_range.tcc"
@@ -184,6 +187,30 @@ sub_range_n (
 , N _n
 ){
 return bits::sub_range_n<Range, N>{_range, _n};
+}
+
+template <typename Range>
+bits::circular_range<Range>
+circular_range (
+  Range _range
+){
+return bits::circular_range<Range>{_range};
+}
+
+template <typename Range>
+bits::disable_input<Range>
+disable_input (
+  Range _range
+){
+return bits::disable_input<Range>{_range};
+}
+
+template <typename Range>
+bits::disable_output<Range>
+disable_output (
+  Range _range
+){
+return bits::disable_output<Range>{_range};
 }
 
 } /* range layer */
