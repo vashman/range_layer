@@ -24,7 +24,7 @@ auto con = output_console_range();
 
 range_layer::execution_policy::sequenced seq {};
 
-write (seq, rng, con);
+write (seq, con, rng);
 
 return 0;
 }

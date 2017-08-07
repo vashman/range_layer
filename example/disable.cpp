@@ -22,18 +22,18 @@ array_range<char> rng {arr.data(), arr.data()+arr.size()};
 
 write (
   range_layer::execution_policy::sequenced {}
+, output_console_range()
 , disable_decorator (
     sub_range_n(sub_range_n(rng, 4), 2)
   )
-, output_console_range()
 );
 
 write (
   range_layer::execution_policy::sequenced {}
+, output_console_range()
 , disable_decorator ( remove_decorator (
     sub_range_n(sub_range_n(rng, 4), 2)
   ))
-, output_console_range()
 );
 
 return 0;

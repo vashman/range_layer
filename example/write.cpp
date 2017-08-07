@@ -8,25 +8,27 @@
 #include <cassert>
 #include <array>
 #include "../include/array_range.hpp"
-#include "../include/console_range.hpp"
 #include "../include/range.hpp"
 #include "../include/algorithm.hpp"
 
 using std::array;
-using range_layer::array_range;
-using range_layer::input_console_range;
-using range_layer::output_console_range;
+using range_layer::range;
+using range_layer::has_writable;
 
 int main (){
+auto rng = range(array<int, 5> {{0, 1, 2, 3, 4}});
 
-range_layer::execution_policy::sequenced seq{};
-char arr[] = "Press a button and press enter to continue.";
-array_range<char> rng {arr, arr + 43};
-
-auto out = output_console_range();
-write(seq, out, rng);
-auto in = input_console_range();
-write(out, read(in));
+assert (has_writable(rng));
+write (rng, 99);
+advance (rng);
+write (
+  range_layer::execution_policy::sequenced{}
+, rng
+, 400
+, range(array<int, 5> {{0, 1, 2, 3, 4}})
+, range(array<int, 5> {{0, 1, 2, 3, 4}})
+, range(array<int, 5> {{0, 1, 2, 3, 4}})
+);
 
 return 0;
 }

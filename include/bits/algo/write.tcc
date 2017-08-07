@@ -140,17 +140,17 @@ return _output;
 }
 
 /*
-  copy
+  write
 */
-template <typename IRange, typename ORange>
-ORange
+namespace bits {
+template <typename ORange, typename IRange>
+void *
 write (
   execution_policy::sequenced
-, IRange _input
-, ORange _output
+, ORange & _output // Modify the output range.
+, IRange & _input
 ){
 bits::read_assert<IRange>();
-bits::write_assert<ORange>();
 
 using range_layer::advance;
 
@@ -158,6 +158,23 @@ using range_layer::advance;
   write(_output, read(_input));
   range_layer::advance(_output, _input);
   }
+return static_cast<void*>(0);
+}
+} /* bits */
+
+template <typename ORange, typename... IRange>
+ORange
+write (
+  execution_policy::sequenced _policy
+, ORange _output
+, IRange... _input
+){
+bits::write_assert<ORange>();
+
+void* list[] = {
+  0
+, (bits::write(_policy, _output, _input))...
+};
 return _output;
 }
 
