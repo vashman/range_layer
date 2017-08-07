@@ -26,15 +26,17 @@ bits::read_assert<Range>();
 return *_range;
 }
 
-template <typename Range, typename T>
+template <typename Range, typename T, typename... Ts>
 void
 write (
   Range & _range
 , T const & _var
+, Ts const &... _ts
 ){
 bits::write_assert<Range>();
 
 _range = _var;
+void* list[] = {0, (static_cast<void*>(_range = _ts))...};
 }
 
 template <typename Range, typename... Ranges>
