@@ -5,79 +5,79 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_CIRCULAR_RANGE_HPP
-#define RANGE_LAYER_CIRCULAR_RANGE_HPP
+#ifndef RANGE_LAYER_SELECT_RANGE_HPP
+#define RANGE_LAYER_SELECT_RANGE_HPP
+
+#include <tuple>
 
 namespace range_layer {
 namespace bits {
 
-template <typename Range>
-class circular_range {
+template <typename T, std::size_t I>
+struct range_element_type {
+using type = typename std::tuple_element<I, T>::type;
+};
+
+template <std::size_t I>
+struct range_element_type <void, I> {
+using type = void;
+};
+
+template <typename Range, std::size_t I>
+class select {
 
 Range range;
-
-bool
-is_end (
-) const {
-// Return true if either end is reached.
-return (
-   ! (this->range == sentinel::writable{})
-|| ! (this->range == sentinel::readable{})
-);
-}
 
 public:
 
 using read_type
-  = typename range_trait::read_type<Range>::type;
+  = typename range_element_type
+  < typename range_trait::read_type<Range>::type
+  , I
+  >::type;
 
 using write_type
-  = typename range_trait::write_type<Range>::type;
+  = typename range_element_type
+  < typename range_trait::write_type<Range>::type
+  , I
+  >::type;
 
-circular_range (
+select (
   Range _range
 )
 : range {_range}
 {}
 
-circular_range (circular_range const &) = default;
-circular_range (circular_range &&) = default;
-circular_range & operator = (circular_range &&) = default;
-
-circular_range &
-operator = (
-  circular_range const &
-) = default;
-
-~circular_range () = default;
+select (select const &) = default;
+select (select &&) = default;
+select & operator = (select &&) = default;
+select & operator = (select const &) = default;
+~select () = default;
 
 auto
 operator * (
-) -> decltype(*this->range) {
-return *this->range;
+) -> decltype(std::get<I>(*this->range)) {
+using std::get;
+return get<I>(*this->range);
 }
 
 template <typename U = Range>
-circular_range &
+select &
 save(){
-return circular_range(*this).range = this->range.save();
+return select(*this).range = this->range.save();
 }
 
 template <typename U = Range>
-circular_range &
+select &
 operator ++ (){
 ++this->range;
-  if (this->is_end())
-  this->range = start_of(this->range);
 return *this;
 }
 
 template <typename U = Range>
-circular_range &
+select &
 operator -- (){
 --this->range;
-  if (this->is_end())
-  this->range = end_of(this->range);
 return *this;
 }
 
@@ -86,33 +86,29 @@ void
 operator = (
   T const & _var
 ){
-this->range = _var;
+using std::get;
+get<I>(this->range) = _var;
 }
 
 template <typename N>
-circular_range &
+select &
 operator += (
   N _n
 ){
-while (_n > 0){
-this->operator ++();
---_n;
-}
+this->range += _n;
 return *this;
 }
 
 template <typename N>
-circular_range &
+select &
 operator -= (
   N _n
 ){
-while (_n > 0){
-this->operator --();
---_n;
-}
+this->range -= _n;
 return *this;
 }
 
+template <typename U = Range>
 bool
 operator == (
   sentinel::readable const & _sen
@@ -139,8 +135,8 @@ return this->range == _sen;
 template <typename U = Range>
 auto
 size (
-) const -> decltype(size(this->range)) {
-return size(this->range);
+) const -> decltype(this->range.size()) {
+return this->range.size();
 }
 
 template <typename U = Range>
@@ -156,7 +152,7 @@ disable (
 return this->range;
 }
 
-}; /* circular range */
+}; /* select */
 
 } /* bits */ } /* range layer */
 #endif

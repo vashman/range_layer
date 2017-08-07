@@ -71,14 +71,14 @@ class insert_range;
 template <typename Range>
 class shuffle_range;
 
-template <typename LhsRange, typename RhsRange>
-class join_range;
-
 template <typename Range>
 class remove_decorator;
 
 template <typename Range>
 class circular_range;
+
+template <typename Range, std::size_t I>
+class select;
 
 } /* bits */
 
@@ -213,6 +213,12 @@ disable_input (
 template <typename Range>
 bits::disable_output<Range>
 disable_output (
+  Range
+);
+
+template <std::size_t I, typename Range>
+bits::select<Range, I>
+select (
   Range
 );
 

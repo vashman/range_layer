@@ -18,6 +18,7 @@
 #include "decor/circular_range.hpp"
 #include "decor/disable_input.hpp"
 #include "decor/disable_output.hpp"
+#include "decor/select.hpp"
 
 #include "decor/transform_range.hpp"
 #include "decor/transform_range.tcc"
@@ -211,6 +212,14 @@ disable_output (
   Range _range
 ){
 return bits::disable_output<Range>{_range};
+}
+
+template <std::size_t I, typename Range>
+bits::select<Range, I>
+select (
+  Range _range
+){
+return bits::select<Range, I> {_range};
 }
 
 } /* range layer */

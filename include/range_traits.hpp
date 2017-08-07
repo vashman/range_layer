@@ -11,6 +11,7 @@
 #include "bits/is_detected.hpp"
 #include <limits>
 #include <type_traits>
+#include "bits/typelist.hpp"
 
 namespace range_layer {
 
@@ -20,32 +21,6 @@ class readable {};
 class writable {};
 
 } /* sentinel */
-
-template <template <typename...> class Tuple, typename... Ts>
-struct typelist {
-
-using type = Tuple<Ts...>;
-
-typelist () = delete;
-typelist (typelist const &) = delete;
-typelist (typelist &&) = delete;
-typelist & operator = (typelist const &) = delete;
-typelist & operator = (typelist &&) = delete;
-
-}; /* type list */
-
-template <template <typename...> class Tuple, typename T>
-struct typelist<Tuple, T> {
-
-using type = T;
-
-typelist () = delete;
-typelist (typelist const &) = delete;
-typelist (typelist &&) = delete;
-typelist & operator = (typelist const &) = delete;
-typelist & operator = (typelist &&) = delete;
-
-}; /* type list */
 
 namespace bits {
 namespace trait_bits {
@@ -181,7 +156,9 @@ static constexpr bool value
 
 template <typename Range>
 struct read_type {
-using type = typename bits::trait_bits::is_typelist <
+using type
+  = typename bits::trait_bits::is_typelist
+  <
     typename bits
   ::detected_or<void, bits::trait_bits::rtype, Range>
   ::type
