@@ -19,6 +19,7 @@
 #include "decor/disable_input.hpp"
 #include "decor/disable_output.hpp"
 #include "decor/select.hpp"
+#include "decor/extend_life.hpp"
 
 #include "decor/transform_range.hpp"
 #include "decor/transform_range.tcc"
@@ -220,6 +221,15 @@ select (
   Range _range
 ){
 return bits::select<Range, I> {_range};
+}
+
+template <typename Range, typename... Ts>
+bits::extend_life<Range, Ts...>
+extend_life (
+  Range _range
+, Ts... _ts
+){
+return bits::extend_life<Range, Ts...>{_range, _ts...};
 }
 
 } /* range layer */

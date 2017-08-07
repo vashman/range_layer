@@ -139,6 +139,44 @@ return count_if (
 );
 }
 
+template <typename Range, typename Pred>
+typename range_trait::size_type<Range>::type
+count_if_until (
+  execution_policy::sequenced
+, Range _range
+, Pred _pred
+){
+bits::read_assert<Range>();
+
+static_assert (
+  range_trait::is_finite<Range>::value
+, "Cannot count a infinite range."
+);
+
+typename range_trait::size_type<Range>::type n = 0;
+
+  for (; has_readable(_range); advance(_range))
+    if (_pred(read(_range))) ++n;
+    else break;
+return n;
+}
+
+template <typename Range, typename T, typename Policy>
+typename range_trait::size_type<Range>::type
+count_until (
+  Policy _policy
+, Range _range
+, T _value
+){
+bits::read_assert<Range>();
+
+return count_if_until (
+  _policy
+, _range
+, [=](decltype(read(_range)) _var){return _var == _value;}
+);
+}
+
 template <typename Range, typename Operation>
 Range
 for_each (

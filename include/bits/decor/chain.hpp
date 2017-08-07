@@ -1,101 +1,101 @@
-//
+// Chains ranges in sequence.
 
 //          Copyright Sundeep S. Sangha 2015 - 2017.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_SUB_RANGE_HPP
-#define RANGE_LAYER_SUB_RANGE_HPP
+#ifndef RANGE_LAYER_CHAIN_RANGE_HPP
+#define RANGE_LAYER_CHAIN_RANGE_HPP
+
+#include <tuple>
 
 namespace range_layer {
 namespace bits {
 
-template <typename Range, typename S>
-class sub_range_n {
+template <typename Range, typename... Ranges>
+class chain {
 
-Range range;
-S pos;
-S count;
+std::tuple<Range, Ranges...> range;
+std::size_t pos;
 
-bool
-is_end () const {
-return (this->pos > this->count) || (this->pos == 0);
-}
+public:size
 
-public:
-
+/* Read & write types must be the same for each range other
+ * ranges read & write types.
+ */
 using read_type
   = typename range_trait::read_type<Range>::type;
 
 using write_type
   = typename range_trait::write_type<Range>::type;
 
-sub_range_n (
+chain (
   Range _range
-, S _count
+, Ranges... _ranges
 )
-: range {_range}
-, pos {1}
-, count {_count}
+: range {_range, _ranges...}
+, pos {0}
 {}
 
-sub_range_n (sub_range_n const &) = default;
-sub_range_n & operator = (sub_range_n const &) = default;
-sub_range_n (sub_range_n &&) = default;
-sub_range_n& operator = (sub_range_n &&) = default;
-~sub_range_n() = default;
+chain (chain const &) = default;
+chain & operator = (chain const &) = default;
+chain (chain &&) = default;
+chain & operator = (chain &&) = default;
+~chain() = default;
 
 template <typename U = Range>
-auto
-operator * () -> decltype(*this->range){
-return *this->range;
+read_type
+operator * (
+){
+return *get<>this->range;
 }
 
 template <typename U = Range>
-sub_range_n &
-operator ++ (){
-++this->pos;
+chain &
+operator ++ (
+){
 ++this->range;
 return *this;
 }
 
 template <typename U = Range>
-sub_range_n
-save(){
-return sub_range_n(*this).range = this->range.save();;
+chain
+save (
+){
+return chain(*this).range = this->range.save();
 }
 
 template <typename U = Range>
-sub_range_n &
-operator -- (){
---this->pos;
+chain &
+operator -- (
+){
 --this->range;
 return *this;
 }
 
 template <typename T>
 void
-operator = (T const & _var){
+operator = (
+  T const & _var
+){
 this->range = _var;
 }
 
 template <typename N>
-sub_range_n &
+chain &
 operator += (
   N _n
 ){
-this->pos += _n;
 this->range += _n;
 return *this;
 }
 
 template <typename N>
-sub_range_n &
+chain &
 operator -= (
   N _n
 ){
-this->pos -= _n;
 this->range -= _n;
 return *this;
 }
@@ -104,7 +104,7 @@ bool
 operator == (
   sentinel::readable const & _sen
 ) const {
-return this->range == _sen && !this->is_end();
+return this->range == _sen;
 }
 
 template <typename U = Range>
@@ -112,17 +112,8 @@ bool
 operator == (
   sentinel::writable const & _sen
 ) const {
-return this->range == _sen && !this->is_end();
+return this->range == _sen;
 }
-
-template <typename T>
-bool
-operator == (
-  T const & _sen
-) const {
-return this->range == _sen && !this->is_end();
-return this->range;
-} 
 
 template <typename U = Range>
 auto
@@ -144,7 +135,7 @@ disable (
 return this->range;
 }
 
-}; /* sub_range_n*/
+}; /* chain */
 
 } /* bits */ } /* range layer */
 #endif

@@ -21,7 +21,8 @@ iterator_range<std::ostream_iterator<char>, void>
 output_console_range ();
 
 iterator_range<std::istream_iterator<char>>
-input_console_range (){
+input_console_range (
+){
 return make_iterator_range (
   std::istream_iterator<char>{std::cin}
 , std::istream_iterator<char>{}
@@ -29,7 +30,8 @@ return make_iterator_range (
 }
 
 iterator_range<std::ostream_iterator<char>, void>
-output_console_range (){
+output_console_range (
+){
 return make_iterator_range (
   std::ostream_iterator<char>{std::cout} );
 }

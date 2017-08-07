@@ -9,7 +9,9 @@
 #define RANGE_LAYER_ARRAY_RANGE_HPP
 
 #include <cstddef>
+#include <array>
 #include "range_traits.hpp"
+#include "bits/decor/extend_life.hpp"
 #include "bits/array_range_fwd.hpp"
 #include "bits/array_range.hpp"
 #include "bits/array_range.tcc"

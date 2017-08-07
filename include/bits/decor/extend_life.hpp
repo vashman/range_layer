@@ -1,29 +1,27 @@
-//
+// Attempts to tie the life time of varaibles with ranges.
 
 //          Copyright Sundeep S. Sangha 2015 - 2017.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_SUB_RANGE_HPP
-#define RANGE_LAYER_SUB_RANGE_HPP
+#ifndef RANGE_LAYER_EXTEND_LIFE_RANGE_HPP
+#define RANGE_LAYER_EXTEND_LIFE_RANGE_HPP
+
+#include <tuple>
 
 namespace range_layer {
 namespace bits {
 
-template <typename Range, typename S>
-class sub_range_n {
+template <typename Range, typename... Ts>
+class extend_life {
 
 Range range;
-S pos;
-S count;
-
-bool
-is_end () const {
-return (this->pos > this->count) || (this->pos == 0);
-}
 
 public:
+
+// variables need to be movable and copyable.
+std::tuple<Ts...> variables;
 
 using read_type
   = typename range_trait::read_type<Range>::type;
@@ -31,71 +29,72 @@ using read_type
 using write_type
   = typename range_trait::write_type<Range>::type;
 
-sub_range_n (
+extend_life (
   Range _range
-, S _count
+, Ts... _ts
 )
 : range {_range}
-, pos {1}
-, count {_count}
+, variables {_ts...}
 {}
 
-sub_range_n (sub_range_n const &) = default;
-sub_range_n & operator = (sub_range_n const &) = default;
-sub_range_n (sub_range_n &&) = default;
-sub_range_n& operator = (sub_range_n &&) = default;
-~sub_range_n() = default;
+extend_life (extend_life const &) = default;
+extend_life & operator = (extend_life const &) = default;
+extend_life (extend_life &&) = default;
+extend_life & operator = (extend_life &&) = default;
+~extend_life() = default;
 
 template <typename U = Range>
 auto
-operator * () -> decltype(*this->range){
+operator * (
+) -> decltype(*this->range) {
 return *this->range;
 }
 
 template <typename U = Range>
-sub_range_n &
-operator ++ (){
-++this->pos;
+extend_life &
+operator ++ (
+){
 ++this->range;
 return *this;
 }
 
 template <typename U = Range>
-sub_range_n
-save(){
-return sub_range_n(*this).range = this->range.save();;
+extend_life
+save (
+){
+return extend_life(*this).range = this->range.save();
 }
 
 template <typename U = Range>
-sub_range_n &
-operator -- (){
---this->pos;
+extend_life &
+operator -- (
+){
 --this->range;
 return *this;
 }
 
 template <typename T>
 void
-operator = (T const & _var){
+operator = (
+  T const & _var
+){
 this->range = _var;
 }
 
 template <typename N>
-sub_range_n &
+extend_life &
 operator += (
   N _n
 ){
-this->pos += _n;
 this->range += _n;
 return *this;
 }
 
 template <typename N>
-sub_range_n &
+extend_life &
 operator -= (
   N _n
 ){
-this->pos -= _n;
 this->range -= _n;
 return *this;
 }
@@ -104,7 +103,7 @@ bool
 operator == (
   sentinel::readable const & _sen
 ) const {
-return this->range == _sen && !this->is_end();
+return this->range == _sen;
 }
 
 template <typename U = Range>
@@ -112,17 +111,8 @@ bool
 operator == (
   sentinel::writable const & _sen
 ) const {
-return this->range == _sen && !this->is_end();
+return this->range == _sen;
 }
-
-template <typename T>
-bool
-operator == (
-  T const & _sen
-) const {
-return this->range == _sen && !this->is_end();
-return this->range;
-} 
 
 template <typename U = Range>
 auto
@@ -144,7 +134,17 @@ disable (
 return this->range;
 }
 
-}; /* sub_range_n*/
+/* used internally to reset the range, after the container
+ * has moved or been copied to inside the range.
+ */
+void
+set_range (
+  Range _range
+){
+this->range = _range;
+}
+
+}; /* extend_life */
 
 } /* bits */ } /* range layer */
 #endif

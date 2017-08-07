@@ -80,6 +80,9 @@ class circular_range;
 template <typename Range, std::size_t I>
 class select;
 
+template <typename Range, typename... Ts>
+class extend_life;
+
 } /* bits */
 
 template <
@@ -220,6 +223,13 @@ template <std::size_t I, typename Range>
 bits::select<Range, I>
 select (
   Range
+);
+
+template <typename Range, typename... Ts>
+bits::extend_life<Range, Ts...>
+extend_life (
+  Range
+, Ts...
 );
 
 /*template <typename Range, typename Sentinal>

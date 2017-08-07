@@ -13,6 +13,27 @@ namespace range_layer {
 template <typename T>
 class array_range;
 
+template <typename T>
+array_range <T>
+range (
+  T *
+);
+
+template <typename T, std::size_t N>
+array_range <T>
+range (
+  std::array<T, N> &
+);
+
+template <typename T, std::size_t N>
+bits::extend_life
+< array_range <T>
+, std::array<T, N>
+>
+range (
+  std::array<T, N> &&
+);
+
 } /* range layer */
 #endif
 

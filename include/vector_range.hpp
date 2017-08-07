@@ -10,15 +10,34 @@
 
 #include <vector>
 #include "range_traits.hpp"
+#include "bits/decor/extend_life.hpp"
 
 namespace range_layer {
 
-template <typename T>
+template <typename T, typename Alloc>
+struct vector_range;
+
+template <typename T, typename Alloc>
+vector_range<T, Alloc>
+range (
+  std::vector<T, Alloc> &
+);
+
+template <typename T, typename Alloc>
+bits::extend_life
+< vector_range<T, Alloc>
+, std::vector<T, Alloc>
+>
+range (
+  std::vector<T, Alloc> &&
+);
+
+template <typename T, typename Alloc>
 struct vector_range {
 
 private:
 
-std::vector<T> * vec;
+std::vector<T, Alloc> * vec;
 std::size_t pos;
 
 public:
@@ -27,7 +46,7 @@ using read_type = T;
 using write_type = read_type;
 
 vector_range (
-  std::vector<T> &
+  std::vector<T, Alloc> &
 );
 
 vector_range (vector_range const &) = default;
@@ -109,22 +128,48 @@ operator == (
 return *this == sentinel::readable{};
 }
 
-bool
+/*bool
 operator == (
   vector_range const & _lhs //?
 ){
 return this->pos = _lhs.pos;
-}
+}*/
 
 }; /* vector range */
 
-template <typename T>
-vector_range<T>::vector_range (
-  std::vector<T> & _vec
+template <typename T, typename Alloc>
+vector_range<T, Alloc>::vector_range (
+  std::vector<T, Alloc> & _vec
 )
 : vec {&_vec}
 , pos {1}
 {}
+
+template <typename T, typename Alloc>
+vector_range<T, Alloc>
+range (
+  std::vector<T, Alloc> & _vec
+){
+return vector_range<T, Alloc> {_vec};
+}
+
+template <typename T, typename Alloc>
+bits::extend_life
+< vector_range<T, Alloc>
+, std::vector<T, Alloc>
+>
+range (
+  std::vector<T, Alloc> && _vec
+){
+auto temp = bits::extend_life
+< vector_range<T, Alloc>
+, std::vector<T, Alloc>
+>{vector_range<T, Alloc> {_vec}, _vec};
+
+temp.set_range(vector_range<T, Alloc> {_vec});
+
+return temp;
+}
 
 } /* range layer */
 #endif

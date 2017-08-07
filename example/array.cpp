@@ -11,11 +11,10 @@
 #include "../include/range.hpp"
 
 using std::array;
-using range_layer::array_range;
+using range_layer::range;
 
 int main (){
-array<int, 5> arr {{0, 1, 2, 3, 4}};
-array_range<int> rng {arr.data(), arr.data()+arr.size()};
+auto rng = range(array<int, 5> {{0, 1, 2, 3, 4}});
 
 int temp;
 

@@ -11,6 +11,7 @@
 #include <tuple>
 
 namespace range_layer {
+namespace bits {
 
 template <template <typename...> class Tuple, typename... Ts>
 struct typelist {
@@ -45,8 +46,6 @@ LHSTuple lhs_tuple;
 RHSTuple rhs_tuple;
 
 };
-
-namespace bits {
 
 template <typename Lhs, typename Rhs>
 struct typelist_cat {
@@ -93,6 +92,9 @@ using type = typelist <LhsTuple, Lhs..., Rhs>;
 };
 
 } /* bits */
+
+template <template <typename...> class Tuple, typename... Ts>
+using typelist = bits::typelist<Tuple, Ts...>;
 
 template <typename Lhs, typename Rhs>
 using typelist_cat = bits::typelist_cat<Lhs, Rhs>;

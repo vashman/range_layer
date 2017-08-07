@@ -17,7 +17,7 @@ find_if (
 , Range _range
 , Pred _pred
 ){
-  while (has_readable(_range))
+  for (; has_readable(_range); advance(_range))
     if (_pred(read(_range))) break;
 return _range;
 }
@@ -29,7 +29,7 @@ find_if_not (
 , Range _range
 , Pred _pred
 ){
-  while (has_readable(_range))
+  for (; has_readable(_range); advance(_range))
     if (! _pred(read(_range))) break;
 return _range;
 }
@@ -43,8 +43,8 @@ find (
 ){
 using type = decltype(read(_range));
 
-return find_if (
-  _policy, _range, [=](type _v){return _v == _value;});
+return find_if
+(_policy, _range, [=](type _v){return _v == _value;});
 }
 
 } /* range layer */
