@@ -59,11 +59,12 @@ void* list[] = {0, (static_cast<void*>(&(--_ranges)))...};
 
 namespace bits {
 
-template <
-  typename Range
+template
+< typename Range
 , typename N
 , typename std::enable_if
-  <range_trait::is_linear<Range>::value, int>::type = 0 >
+  <range_trait::is_linear<Range>::value, int>::type = 0
+>
 void
 advance_n (
   N const _n
@@ -73,11 +74,12 @@ N count = _n;
 while (0 != count--) ++_range;
 }
 
-template <
-  typename Range
+template
+< typename Range
 , typename N
 , typename std::enable_if
-  <! range_trait::is_linear<Range>::value, int>::type = 0 >
+  <! range_trait::is_linear<Range>::value, int>::type = 0
+>
 void
 advance_n (
   N const _n

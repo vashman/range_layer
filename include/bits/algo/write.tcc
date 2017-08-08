@@ -143,7 +143,12 @@ return _output;
   write
 */
 namespace bits {
-template <typename ORange, typename IRange>
+template
+< typename ORange
+, typename IRange
+, typename std::enable_if
+  <range_trait::is_range<IRange>::value, int>::type = 0
+>
 void *
 write (
   execution_policy::sequenced
@@ -157,6 +162,27 @@ using range_layer::advance;
   while (has_writable(_output) && has_readable(_input)){
   write(_output, read(_input));
   range_layer::advance(_output, _input);
+  }
+return static_cast<void*>(0);
+}
+
+template
+< typename ORange
+, typename T
+, typename std::enable_if
+  <! range_trait::is_range<T>::value, int>::type = 0
+>
+void *
+write (
+  execution_policy::sequenced
+, ORange & _output // Modify the output range.
+, T & _variable
+){
+using range_layer::advance;
+
+  if (has_writable(_output)){
+  write(_output, _variable);
+  range_layer::advance(_output);
   }
 return static_cast<void*>(0);
 }

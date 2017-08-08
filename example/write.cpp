@@ -30,5 +30,12 @@ write (
 , range(array<int, 5> {{0, 1, 2, 3, 4}})
 );
 
+reverse (rng);
+assert (read(rng) == 99);
+advance (rng);
+assert (read(rng) == 400);
+advance (rng);
+assert (read(rng) == 0);
+
 return 0;
 }

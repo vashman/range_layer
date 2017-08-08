@@ -20,7 +20,7 @@ Range range;
 
 public:
 
-// variables need to be movable and copyable.
+// variables will need to be stored as pointers.
 std::tuple<Ts...> variables;
 
 using read_type
