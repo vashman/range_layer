@@ -14,6 +14,7 @@
 #include "decor/replace_range.hpp"
 #include "decor/reverse_range.hpp"
 #include "decor/sub_range.hpp"
+#include "decor/sub_range_n.hpp"
 #include "decor/remove_decorator.hpp"
 #include "decor/circular_range.hpp"
 #include "decor/disable_input.hpp"
@@ -230,6 +231,15 @@ extend_life (
 , Ts... _ts
 ){
 return bits::extend_life<Range, Ts...>{_range, _ts...};
+}
+
+template <typename Range, typename Sentinal>
+bits::sub_range<Range, Sentinal>
+sub_range (
+  Range _range
+, Sentinal _sentinal
+){
+return bits::sub_range<Range, Sentinal>{_range, _sentinal};
 }
 
 } /* range layer */

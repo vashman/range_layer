@@ -5,14 +5,23 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_SUB_RANGE_HPP
-#define RANGE_LAYER_SUB_RANGE_HPP
+#ifndef RANGE_LAYER_SUB_RANGE_N_HPP
+#define RANGE_LAYER_SUB_RANGE_N_HPP
 
 namespace range_layer {
 namespace bits {
 
-template <typename Range, typename Sentinel>
-class sub_range {
+template <typename Range, typename S>
+class sub_range_n {
+
+Range range;
+S pos;
+S count;
+
+bool
+is_end () const {
+return (this->pos > this->count) || (this->pos == 0);
+}
 
 public:
 
@@ -22,93 +31,75 @@ using read_type
 using write_type
   = typename range_trait::write_type<Range>::type;
 
-private:
-
-Range range;
-Sentinel sen;
-read_type temp;
-
-bool
-is_end (
-) const {
-return (this->sen == this->temp);
-}
-
-public:
-
-sub_range (
+sub_range_n (
   Range _range
-, Sentinel _sentinel
+, S _count
 )
 : range {_range}
-, sen {_sentinel}
-, temp {*_range}
+, pos {1}
+, count {_count}
 {}
 
-sub_range (sub_range const &) = default;
-sub_range & operator = (sub_range const &) = default;
-sub_range (sub_range &&) = default;
-sub_range & operator = (sub_range &&) = default;
-~sub_range() = default;
+sub_range_n (sub_range_n const &) = default;
+sub_range_n & operator = (sub_range_n const &) = default;
+sub_range_n (sub_range_n &&) = default;
+sub_range_n& operator = (sub_range_n &&) = default;
+~sub_range_n() = default;
 
 template <typename U = Range>
 auto
-operator * (
-) -> decltype(this->temp) {
-return this->temp;
+operator * () -> decltype(*this->range){
+return *this->range;
 }
 
 template <typename U = Range>
-sub_range &
+sub_range_n &
 operator ++ (){
+++this->pos;
 ++this->range;
-this->temp = *this->range;
 return *this;
 }
 
 template <typename U = Range>
-sub_range
-save (
-){
-return sub_range(*this).range = this->range.save();
+sub_range_n
+save(){
+return sub_range_n(*this).range = this->range.save();;
 }
 
 template <typename U = Range>
-sub_range &
-operator -- (
-){
+sub_range_n &
+operator -- (){
+--this->pos;
 --this->range;
-this->temp = *this->range;
 return *this;
 }
 
 template <typename T>
 void
-operator = (
-  T const & _var
-){
+operator = (T const & _var){
 this->range = _var;
 }
 
 template <typename N>
-sub_range &
+sub_range_n &
 operator += (
   N _n
 ){
-  while (_n-- > 0) this->operator ++<Range>();
+this->pos += _n;
+this->range += _n;
 return *this;
 }
 
 template <typename N>
-sub_range &
+sub_range_n &
 operator -= (
   N _n
 ){
-  while (_n-- > 0) this->operator --<Range>();
+this->pos -= _n;
+this->range -= _n;
 return *this;
 }
 
-template <typename U = Range>
 bool
 operator == (
   sentinel::readable const & _sen
@@ -123,6 +114,15 @@ operator == (
 ) const {
 return this->range == _sen && !this->is_end();
 }
+
+template <typename T>
+bool
+operator == (
+  T const & _sen
+) const {
+return this->range == _sen && !this->is_end();
+return this->range;
+} 
 
 template <typename U = Range>
 auto
@@ -144,7 +144,7 @@ disable (
 return this->range;
 }
 
-}; /* sub_range */
+}; /* sub_range_n*/
 
 } /* bits */ } /* range layer */
 #endif

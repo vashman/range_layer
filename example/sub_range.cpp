@@ -11,18 +11,24 @@
 #include "../include/range.hpp"
 #include "../include/algorithm.hpp"
 
+#include <iostream>
+
 using std::array;
-using range_layer::array_range;
+using range_layer::range;
 using range_layer::sub_range_n;
+using range_layer::sub_range;
 
 int main (){
 range_layer::execution_policy::sequenced seq{};
-array<int, 7> arr {{0, 1, 2, 3, 4, 5, 6}};
+array<int, 7> arr {{0, 1, 2, 3, 4, 9, 10}};
 
-auto arr_rng = sub_range_n (
-  next(array_range<int> {arr.data(), arr.data()+arr.size()})
-, 3
-);
+auto rng = sub_range(range(arr), 4);
+for (int i = 0; has_readable(rng); ++i){
+assert (read(rng) == i);
+advance(rng);
+}
+
+auto arr_rng = sub_range_n (next(range(arr)), 3);
 
 assert(has_readable(arr_rng));
 assert(read(arr_rng) == 1);

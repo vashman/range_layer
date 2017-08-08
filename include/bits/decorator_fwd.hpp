@@ -232,14 +232,12 @@ extend_life (
 , Ts...
 );
 
-/*template <typename Range, typename Sentinal>
-bits::sub_range<Range>
+template <typename Range, typename Sentinal>
+bits::sub_range<Range, Sentinal>
 sub_range (
-  Range _range
-, Sentinal _sentinal
-){
-return bits::sub_range<Range>{_range, _sentinal};
-}*/
+  Range
+, Sentinal
+);
 
 } /* range layer */
 #endif
