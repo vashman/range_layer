@@ -151,20 +151,23 @@ range (
 return string_range<CharT, Traits, Alloc> {_str};
 }
 
+/*
+ *
+ */
 template <typename CharT, typename Traits, typename Alloc>
 bits::extend_life
-< vector_range<T, Alloc>
-, std::vector<T, Alloc>
+< string_range<CharT, Traits, Alloc>
+, std::basic_string<CharT, Traits, Alloc>
 >
 range (
-  std::vector<T, Alloc> && _vec
+  std::basic_string<CharT, Traits, Alloc> && _con
 ){
 auto temp = bits::extend_life
-< vector_range<T, Alloc>
-, std::vector<T, Alloc>
->{vector_range<T, Alloc> {_vec}, _vec};
+< string_range<CharT, Traits, Alloc>
+, std::basic_string<CharT, Traits, Alloc>
+>{range(_con), _con};
 
-temp.set_range(vector_range<T, Alloc> {_vec});
+temp.set_range(range(_con));
 
 return temp;
 }

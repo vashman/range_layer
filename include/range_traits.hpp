@@ -78,12 +78,44 @@ using linear_bck_t = decltype (
   std::declval<T&>().operator -=(std::declval<int>()) );
 
 template <typename T>
-using expand_t = decltype (
-  std::declval<T&>().expand(std::declval<int>()) );
+using aexpand_t = decltype (
+  std::declval<T&>().advance_expand(std::declval<int>()) );
 
 template <typename T>
-using shrink_t = decltype (
-  std::declval<T&>().shrink(std::declval<int>()) );
+using rexpand_t = decltype (
+  std::declval<T&>().reverse_expand(std::declval<int>()) );
+
+template <typename T>
+using ainsert_t = decltype (
+  std::declval<T&>().advance_insert(std::declval<int>()) );
+
+template <typename T>
+using rinsert_t = decltype (
+  std::declval<T&>().reverse_insert(std::declval<int>()) );
+
+template <typename T>
+using insert_t = decltype (
+  std::declval<T&>().insert(std::declval<int>()) );
+
+template <typename T>
+using ashrink_t = decltype (
+  std::declval<T&>().advance_shrink(std::declval<int>()) );
+
+template <typename T>
+using rshrink_t = decltype (
+  std::declval<T&>().reverse_shrink(std::declval<int>()) );
+
+template <typename T>
+using rerase_t = decltype (
+  std::declval<T&>().reverse_erase(std::declval<int>()) );
+
+template <typename T>
+using aerase_t = decltype (
+  std::declval<T&>().advance_erase(std::declval<int>()) );
+
+template <typename T>
+using erase_t = decltype (
+  std::declval<T&>().erase(std::declval<int>()) );
 
 template <typename T>
 using disable_t = decltype (std::declval<T&>().disable());
@@ -141,6 +173,9 @@ using type = decltype(std::declval<Range&>().size());
 
 namespace range_trait {
 
+/*===========================================================
+  is_range
+===========================================================*/
 template <typename Range>
 struct is_range {
 
@@ -151,20 +186,24 @@ static constexpr bool value
   && std::is_copy_assignable<Range>::value
   && std::is_move_constructible<Range>::value
   && std::is_move_assignable<Range>::value;
-
 };
 
+/*===========================================================
+  read_type
+===========================================================*/
 template <typename Range>
 struct read_type {
 using type
   = typename bits::trait_bits::is_typelist
-  <
-    typename bits
+  < typename bits
   ::detected_or<void, bits::trait_bits::rtype, Range>
   ::type
   >::type;
 };
 
+/*===========================================================
+  write_type
+===========================================================*/
 template <typename Range>
 struct write_type {
 using type
@@ -172,21 +211,21 @@ using type
   < typename bits
     ::detected_or<void, bits::trait_bits::wtype, Range>
     ::type
-  >
-  ::type;
+  >::type;
 };
 
+/*===========================================================
+  size_type
+===========================================================*/
 template <typename Range>
 struct size_type {
 using type
   = typename bits
-  ::trait_bits
-  ::size_type
+  ::trait_bits::size_type
   < Range
   , bits::is_detected<bits::trait_bits::rsize_t, Range>
     ::value
-  >
-  ::type;
+  >::type;
 
 static_assert (
   std::is_unsigned<type>::value
@@ -200,6 +239,9 @@ static_assert (
 
 };
 
+/*===========================================================
+  has_position
+===========================================================*/
 template <typename Range>
 struct has_position {
 static constexpr bool value
@@ -211,13 +253,15 @@ static_assert (
   std::is_same
   < typename size_type<Range>::type
   , decltype(std::declval<Range&>().position())
-  >
-  ::value
+  >::value
 , "Range postion and Size must return same type."
 );
 
 };
 
+/*===========================================================
+  is_singleton
+===========================================================*/
 template <typename Range>
 struct is_singleton {
 static constexpr bool value
@@ -225,6 +269,9 @@ static constexpr bool value
   ::is_detected<bits::trait_bits::save_t, Range>::value;
 };
 
+/*===========================================================
+  is_output
+===========================================================*/
 template <typename Range>
 struct is_output {
 static constexpr bool value
@@ -235,6 +282,9 @@ static constexpr bool value
   ::value;
 };
 
+/*===========================================================
+  is_input
+===========================================================*/
 template <typename Range>
 struct is_input {
 static constexpr bool value
@@ -247,6 +297,9 @@ static constexpr bool value
   ::value;
 };
 
+/*===========================================================
+  is_reversable
+===========================================================*/
 template <typename Range>
 struct is_reversable {
 static constexpr bool value
@@ -254,6 +307,9 @@ static constexpr bool value
   ::is_detected<bits::trait_bits::reverse_t, Range>::value;
 };
 
+/*===========================================================
+  is_linear
+===========================================================*/
 template <typename Range>
 struct is_linear {
 static constexpr bool value
@@ -272,22 +328,164 @@ static constexpr bool value
   );
 };
 
-/* if true; erase, shrink */
-template <typename Range>
-struct is_erasable {
-static constexpr bool value
-   = bits
-  ::is_detected<bits::trait_bits::shrink_t, Range>::value;
-};
+/*===========================================================
+  is_advance_shrinkable
 
-/* if true; insert, expand */
+* When true, calling advance_shrink shrinks the size of the
+  range by removing elements from the beggining.
+* The removed elements are destroyed.
+* The ranges postion remains the same, until the element at
+  the position is removed, then the postion advances by 1.
+===========================================================*/
 template <typename Range>
-struct is_insertable {
+struct is_advance_shrinkable {
 static constexpr bool value
-   = bits::is_detected<bits::trait_bits::expand_t, Range>
+  = bits::is_detected<bits::trait_bits::ashrink_t, Range>
   ::value;
 };
 
+/*===========================================================
+  is_reverse_shrinkable
+
+* When true, calling reverse_shrink shrinks the size of the
+  range by removing elements from the end.
+* The removed elements are destroyed.
+* The range position remains the same, until the element at
+  the position is removed, then the postion reverses by 1.
+===========================================================*/
+template <typename Range>
+struct is_reverse_shrinkable {
+static constexpr bool value
+  = bits::is_detected<bits::trait_bits::rshrink_t, Range>
+  ::value
+&&
+  is_reversable<Range>::value;
+};
+
+/*===========================================================
+  is_erasable
+
+* When true, calling erase shrinks the size of the range by
+  removing the current element.
+* The removed elements are destroyed.
+* The postion advacnes by 1.
+===========================================================*/
+template <typename Range>
+struct is_erasable {
+static constexpr bool value
+  = bits
+  ::is_detected<bits::trait_bits::erase_t, Range>::value;
+};
+
+/*===========================================================
+  is_advance_erasable
+
+* When true, calling advance_erase shrinks the size of the
+  range by removing the next element.
+* The removed elements are destroyed.
+* The postion advacnes by 2.
+===========================================================*/
+template <typename Range>
+struct is_advance_erasable {
+static constexpr bool value
+  = bits
+  ::is_detected<bits::trait_bits::aerase_t, Range>::value;
+};
+
+/*===========================================================
+  is_reverse_erasable
+
+* When true, calling reverse_erase shrinks the size of the
+  range by removing the previous element.
+* The removed elements are destroyed.
+* The postion does not change.
+===========================================================*/
+template <typename Range>
+struct is_reverse_erasable {
+static constexpr bool value
+  = bits
+  ::is_detected<bits::trait_bits::rerase_t, Range>::value;
+};
+
+/*===========================================================
+  is_reverse_expandable
+
+* When true, calling reverse_expand expands the size of the
+  range by adding to the end.
+* The postion does not change.
+===========================================================*/
+template <typename Range>
+struct is_reverse_expandable {
+static constexpr bool value
+   = bits::is_detected<bits::trait_bits::rexpand_t, Range>
+  ::value;
+};
+
+/*===========================================================
+  is_advance_expandable
+
+* When true, calling advacne_expand expands the size of the
+  range by adding to the beggining.
+* The postion does not change.
+===========================================================*/
+template <typename Range>
+struct is_advance_expandable {
+static constexpr bool value
+   = bits::is_detected<bits::trait_bits::aexpand_t, Range>
+  ::value;
+};
+
+/*===========================================================
+  is_insertable
+
+* When true, calling insert expands the size of the range by
+  adding to the current postion with a write_type.
+* The postion changes to the inserted element.
+===========================================================*/
+template <typename Range>
+struct is_insertable {
+static constexpr bool value
+  = bits::is_detected<bits::trait_bits::insert_t, Range>
+  ::value;
+};
+
+/*===========================================================
+  is_advance_insertable
+
+* When true, calling advacne_insert expands the size of the
+  range by adding to the next postion with a write_type.
+* The postion is set to the insertated variable.
+===========================================================*/
+template <typename Range>
+struct is_advance_insertable {
+static constexpr bool value
+  = bits::is_detected<bits::trait_bits::ainsert_t, Range>
+  ::value
+||
+  (is_insertable<Range>::value && is_range<Range>::value);
+};
+
+/*===========================================================
+  is_reverse_insertable
+
+* When true, calling reverse_insert expands the size of the
+  range by adding to the previous postion with a write_type.
+* The postion is set to the insertated variable.
+===========================================================*/
+template <typename Range>
+struct is_reverse_insertable {
+static constexpr bool value
+  = bits::is_detected<bits::trait_bits::rinsert_t, Range>
+  ::value
+||
+  (  is_insertable<Range>::value
+  && is_reversable<Range>::value
+  );
+};
+
+/*===========================================================
+  is_finite
+===========================================================*/
 template <typename Range>
 struct is_finite {
 static constexpr bool value
@@ -297,8 +495,12 @@ static constexpr bool value
 
 namespace input {
 
-// if true, the read function performs UB when reading to
-// the same postion more than once.
+/*===========================================================
+  is_finite
+
+* if true, the read function performs UB when reading to
+  the same postion more than once.
+===========================================================*/
 template <typename Range>
 struct is_temporary {
 
@@ -315,6 +517,9 @@ static constexpr bool value
 
 };
 
+/*===========================================================
+  is_heterogeneous
+===========================================================*/
 template <typename Range>
 struct is_heterogeneous {
 static constexpr bool value
@@ -332,6 +537,9 @@ static constexpr bool value
 
 namespace output {
 
+/*===========================================================
+  is_heterogeneous
+===========================================================*/
 template <typename Range>
 struct is_heterogeneous {
 static constexpr bool value
@@ -347,7 +555,11 @@ static constexpr bool value
 
 } /* output */
 
-/* if true; T& range[n] */
+/*===========================================================
+  is_heterogeneous
+
+* if true; T& range[n]
+===========================================================*/
 template <typename Range>
 struct is_subscriptable {
 static constexpr bool value
@@ -361,6 +573,10 @@ static constexpr bool value
   ::value;
 };
 
+
+/*===========================================================
+  is_decorator
+===========================================================*/
 template <typename Range>
 struct is_decorator {
 static constexpr bool value

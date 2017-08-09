@@ -128,12 +128,19 @@ operator == (
 return *this == sentinel::readable{};
 }
 
-/*bool
-operator == (
-  vector_range const & _lhs //?
+void
+expand (
+  std::size_t _n
 ){
-return this->pos = _lhs.pos;
-}*/
+
+}
+
+void
+advance_insert (
+  write_type const & _var
+){
+this->vec->insert(this->vec->begin(), _var);
+}
 
 }; /* vector range */
 
@@ -161,10 +168,11 @@ bits::extend_life
 range (
   std::vector<T, Alloc> && _vec
 ){
-auto temp = bits::extend_life
-< vector_range<T, Alloc>
-, std::vector<T, Alloc>
->{vector_range<T, Alloc> {_vec}, _vec};
+auto temp
+  = bits::extend_life
+  < vector_range<T, Alloc>
+  , std::vector<T, Alloc>
+  >{vector_range<T, Alloc> {_vec}, _vec};
 
 temp.set_range(vector_range<T, Alloc> {_vec});
 

@@ -11,6 +11,22 @@
 namespace range_layer {
 namespace bits {
 
+/*===========================================================
+  range_assert
+===========================================================*/
+template <typename Range>
+constexpr int range_assert (){
+static_assert (
+  range_trait::is_range<Range>::value
+, "Not a range."
+);
+
+return 0;
+}
+
+/*===========================================================
+  read_assert
+===========================================================*/
 template <typename Range>
 constexpr int read_assert (){
 static_assert (
@@ -25,6 +41,9 @@ static_assert (
 return 0;
 }
 
+/*===========================================================
+  write_assert
+===========================================================*/
 template <typename Range>
 constexpr int write_assert (){
 static_assert (
