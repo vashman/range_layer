@@ -13,6 +13,7 @@
 #include "bits/decor/extend_life.hpp"
 
 namespace range_layer {
+namespace bits {
 
 template <typename T, typename Alloc>
 struct vector_range;
@@ -135,17 +136,31 @@ vector_range
 expand (
   std::size_t _n
 ){
-
+_n += this->vec->size();
+this->vec->resize(_n);
+return *this;
 }
 
 /*===========================================================
-  advance_insert
+  shrink
 ===========================================================*/
 vector_range
-advance_insert (
+shrink (
+  std::size_t _n
+){
+_n = this->vec->size() - _n;
+this->vec->resize(_n);
+return *this;
+}
+
+/*===========================================================
+  insert
+===========================================================*/
+vector_range
+insert (
   write_type const & _var
 ){
-this->vec->insert(this->vec->begin(), _var);
+this->vec->insert(this->vec->begin() + this->pos, _var);
 return *this;
 }
 
@@ -160,18 +175,21 @@ return *this;
 }
 
 /*===========================================================
-  erase_all
+  erase
 ===========================================================*/
 vector_range
-erase_all (
+erase (
 ){
-this->vec->clear();
+this->vec->erase(this->vec->begin() + this->pos);
 return *this;
 }
 
 
 }; /* vector range */
 
+/*===========================================================
+  vector_range:: ctor
+===========================================================*/
 template <typename T, typename Alloc>
 vector_range<T, Alloc>::vector_range (
   std::vector<T, Alloc> & _vec
@@ -180,17 +198,25 @@ vector_range<T, Alloc>::vector_range (
 , pos {1}
 {}
 
+} /* bits */
+
+/*===========================================================
+  range
+===========================================================*/
 template <typename T, typename Alloc>
-vector_range<T, Alloc>
+bits::vector_range<T, Alloc>
 range (
   std::vector<T, Alloc> & _vec
 ){
-return vector_range<T, Alloc> {_vec};
+return bits::vector_range<T, Alloc> {_vec};
 }
 
+/*===========================================================
+  range
+===========================================================*/
 template <typename T, typename Alloc>
 bits::extend_life
-< vector_range<T, Alloc>
+< bits::vector_range<T, Alloc>
 , std::vector<T, Alloc>
 >
 range (
@@ -198,11 +224,11 @@ range (
 ){
 auto temp
   = bits::extend_life
-  < vector_range<T, Alloc>
+  < bits::vector_range<T, Alloc>
   , std::vector<T, Alloc>
-  >{vector_range<T, Alloc> {_vec}, _vec};
+  >{bits::vector_range<T, Alloc> {_vec}, _vec};
 
-temp.set_range(vector_range<T, Alloc> {_vec});
+temp.set_range(bits::vector_range<T, Alloc> {_vec});
 
 return temp;
 }

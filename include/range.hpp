@@ -228,26 +228,6 @@ has_writable (
 return _range == sentinel::writable{};
 }
 
-/*template <typename Range, typename T>
-bool
-has_readable (
-  Range const & _range
-, T const & _sentinel
-){
-return
-(_range == sentinel::readable{}) && (_range == _sentinel);
-}
-
-template <typename Range, typename T>
-bool
-has_writable (
-  Range const & _range
-, T const & _sentinel
-){
-return
-(_range == sentinel::writable{}) && (_range == _sentinel);
-}*/
-
 /*===========================================================
   size
 ===========================================================*/
@@ -368,7 +348,7 @@ return _range;
 }
 
 /*===========================================================
-  advance_shrink
+  shrink
 ===========================================================*/
 template <typename Range, typename N>
 Range
@@ -378,21 +358,7 @@ advance_shrink (
 ){
 bits::range_assert<Range>();
 
-return _range.advance_shrink(_n);
-}
-
-/*===========================================================
-  reverse_shrink
-===========================================================*/
-template <typename Range, typename N>
-Range
-reverse_shrink (
-  Range _range
-, N _n
-){
-bits::range_assert<Range>();
-
-return _range.reverse_shrink(_n);
+return _range.shrink(_n);
 }
 
 /*===========================================================
@@ -422,60 +388,6 @@ return _range.erase_all();
 }
 
 /*===========================================================
-  advance_erase
-===========================================================*/
-template <typename Range>
-Range
-advance_erase (
-  Range _range
-){
-bits::range_assert<Range>();
-
-return _range.advance_erase();
-}
-
-/*===========================================================
-  reverse_erase
-===========================================================*/
-template <typename Range>
-Range
-reverse_erase (
-  Range _range
-){
-bits::range_assert<Range>();
-
-return _range.reverse_erase();
-}
-
-/*===========================================================
-  reverse_insert
-===========================================================*/
-template <typename Range, typename T>
-Range
-reverse_insert (
-  Range _range
-, T const & _var
-){
-bits::range_assert<Range>();
-
-return _range.reverse_insert(_var);
-}
-
-/*===========================================================
-  advance_insert
-===========================================================*/
-template <typename Range, typename T>
-Range
-advance_insert (
-  Range _range
-, T const & _var
-){
-bits::range_assert<Range>();
-
-return _range.advance_insert(_var);
-}
-
-/*===========================================================
   insert
 ===========================================================*/
 template <typename Range, typename T>
@@ -485,36 +397,26 @@ insert (
 , T const & _var
 ){
 bits::range_assert<Range>();
+static_assert (
+  range_trait::is_insertable<Range>::value
+, "range.hpp 442"
+);
 
 return _range.insert(_var);
 }
 
 /*===========================================================
-  advance_expand
+  expand
 ===========================================================*/
 template <typename Range, typename N>
 Range
-advance_expand (
+expand (
   Range _range
 , N _n
 ){
 bits::range_assert<Range>();
 
-return _range.advance_expand(_n);
-}
-
-/*===========================================================
-  reverse_expand
-===========================================================*/
-template <typename Range, typename N>
-Range
-reverse_expand (
-  Range _range
-, N _n
-){
-bits::range_assert<Range>();
-
-return _range.reverse_expand(_n);
+return _range.expand(_n);
 }
 
 } /* range layer */

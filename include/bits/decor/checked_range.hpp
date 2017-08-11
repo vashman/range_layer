@@ -49,7 +49,7 @@ checked_range (
 , end_of_write {false}
 {
 static_assert (
-  is_reversable<Range>::value
+  range_trait::is_reversable<Range>::value
 , "Cannot check reversable range."
 );
 }
@@ -85,17 +85,19 @@ this->has_read = false;
 this->has_wrote = false;
 ++this->range;
 
-  if (!(*this == sentinel::readable{})
+  if (!(*this == sentinel::readable{})){
     if (this->end_of_read)
     throw std::out_of_range("Advacning out of read range.");
 
     else this->end_of_read = true;
+  }
 
-  if (!(*this == sentinel::writable{})
+  if (!(*this == sentinel::writable{})){
     if (this->end_of_write)
     throw std::out_of_range("Advacning out of write range.");
 
     else this->end_of_write = true;
+  }
 
 return *this;
 }

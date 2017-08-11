@@ -78,44 +78,20 @@ using linear_bck_t = decltype (
   std::declval<T&>().operator -=(std::declval<int>()) );
 
 template <typename T>
-using aexpand_t = decltype (
-  std::declval<T&>().advance_expand(std::declval<int>()) );
-
-template <typename T>
-using rexpand_t = decltype (
-  std::declval<T&>().reverse_expand(std::declval<int>()) );
-
-template <typename T>
-using ainsert_t = decltype (
-  std::declval<T&>().advance_insert(std::declval<int>()) );
-
-template <typename T>
-using rinsert_t = decltype (
-  std::declval<T&>().reverse_insert(std::declval<int>()) );
+using expand_t = decltype (
+  std::declval<T&>().expand(std::declval<int>()) );
 
 template <typename T>
 using insert_t = decltype (
   std::declval<T&>().insert(std::declval<int>()) );
 
 template <typename T>
-using ashrink_t = decltype (
-  std::declval<T&>().advance_shrink(std::declval<int>()) );
-
-template <typename T>
-using rshrink_t = decltype (
-  std::declval<T&>().reverse_shrink(std::declval<int>()) );
-
-template <typename T>
-using rerase_t = decltype (
-  std::declval<T&>().reverse_erase(std::declval<int>()) );
+using shrink_t = decltype (
+  std::declval<T&>().shrink(std::declval<int>()) );
 
 template <typename T>
 using erase_all_t = decltype (
   std::declval<T&>().erase_all(std::declval<int>()) );
-
-template <typename T>
-using aerase_t = decltype (
-  std::declval<T&>().advance_erase(std::declval<int>()) );
 
 template <typename T>
 using erase_t = decltype (
@@ -333,7 +309,7 @@ static constexpr bool value
 };
 
 /*===========================================================
-  is_advance_shrinkable
+  is_shrinkable
 
 * When true, calling advance_shrink shrinks the size of the
   range by removing elements from the beggining.
@@ -343,39 +319,15 @@ static constexpr bool value
 
   pre:  | 0| 1|*2| 3| 4
   n = 1
-  post: | 1|*2| 3| 4
+  post: | 0| 1|*2| 3
   n = 3
-  post: |*3| 4
+  post: | 0| 1|*
 ===========================================================*/
 template <typename Range>
 struct is_advance_shrinkable {
 static constexpr bool value
-  = bits::is_detected<bits::trait_bits::ashrink_t, Range>
+  = bits::is_detected<bits::trait_bits::shrink_t, Range>
   ::value;
-};
-
-/*===========================================================
-  is_reverse_shrinkable
-
-* When true, calling reverse_shrink shrinks the size of the
-  range by removing elements from the end.
-* The removed elements are destroyed.
-* The range position remains the same, until the element at
-  the position is removed, then the postion reverses by 1.
-
-  pre:  | 0| 1|*2| 3| 4
-  n = 1
-  post: | 0| 1|*2| 3
-  n = 3
-  post: | 0|*1
-===========================================================*/
-template <typename Range>
-struct is_reverse_shrinkable {
-static constexpr bool value
-  = bits::is_detected<bits::trait_bits::rshrink_t, Range>
-  ::value
-&&
-  is_reversable<Range>::value;
 };
 
 /*===========================================================
@@ -384,10 +336,13 @@ static constexpr bool value
 * When true, calling erase shrinks the size of the range by
   removing the current element.
 * The removed elements are destroyed.
-* The postion advacnes by 1.
+* The postion does not change.
 
   pre:  | 0| 1|*2| 3| 4
   post: | 0| 1|*3| 4
+
+  pre:  | 0| 1| 2| 3|*4
+  post: | 0| 1| 2| 3|*
 ===========================================================*/
 template <typename Range>
 struct is_erasable {
@@ -415,52 +370,7 @@ static constexpr bool value
 };
 
 /*===========================================================
-  is_advance_erasable
-
-* When true, calling advance_erase shrinks the size of the
-  range by removing the next element.
-* The removed elements are destroyed.
-
-  pre:  | 0| 1|*2| 3| 4
-  n = 1
-  post: | 0|*2| 3| 4
-  n = 2
-  post: |*2| 3| 4
-  n = 3
-  post: |*3| 4
-===========================================================*/
-template <typename Range>
-struct is_advance_erasable {
-static constexpr bool value
-  = bits
-  ::is_detected<bits::trait_bits::aerase_t, Range>::value;
-};
-
-/*===========================================================
-  is_reverse_erasable
-
-* When true, calling reverse_erase shrinks the size of the
-  range by removing the previous element.
-* The removed elements are destroyed.
-* The postion does not change.
-
-  pre:  | 0| 1|*2| 3| 4
-  n = 1
-  post: | 0| 1|*2| 4
-  n = 2
-  post: | 0| 1|*2
-  n = 3
-  post: | 0|*1
-===========================================================*/
-template <typename Range>
-struct is_reverse_erasable {
-static constexpr bool value
-  = bits
-  ::is_detected<bits::trait_bits::rerase_t, Range>::value;
-};
-
-/*===========================================================
-  is_reverse_expandable
+  is_expandable
 
 * When true, calling reverse_expand expands the size of the
   range by adding to the end.
@@ -471,27 +381,9 @@ static constexpr bool value
   post: | 0| 1|*2| 3| 4| #
 ===========================================================*/
 template <typename Range>
-struct is_reverse_expandable {
+struct is_expandable {
 static constexpr bool value
-   = bits::is_detected<bits::trait_bits::rexpand_t, Range>
-  ::value;
-};
-
-/*===========================================================
-  is_advance_expandable
-
-* When true, calling advacne_expand expands the size of the
-  range by adding to the beggining.
-* The postion does not change.
-
-  pre:  | 0| 1|*2| 3| 4
-  n = 1
-  post: | #| 0| 1|*2| 3| 4
-===========================================================*/
-template <typename Range>
-struct is_advance_expandable {
-static constexpr bool value
-   = bits::is_detected<bits::trait_bits::aexpand_t, Range>
+   = bits::is_detected<bits::trait_bits::expand_t, Range>
   ::value;
 };
 
@@ -510,40 +402,6 @@ struct is_insertable {
 static constexpr bool value
   = bits::is_detected<bits::trait_bits::insert_t, Range>
   ::value;
-};
-
-/*===========================================================
-  is_advance_insertable
-
-* When true, calling advacne_insert expands the size of the
-  range by adding to the next postion with a write_type.
-* The postion is set to the insertated variable.
-===========================================================*/
-template <typename Range>
-struct is_advance_insertable {
-static constexpr bool value
-  = bits::is_detected<bits::trait_bits::ainsert_t, Range>
-  ::value
-||
-  (is_insertable<Range>::value && is_range<Range>::value);
-};
-
-/*===========================================================
-  is_reverse_insertable
-
-* When true, calling reverse_insert expands the size of the
-  range by adding to the previous postion with a write_type.
-* The postion is set to the insertated variable.
-===========================================================*/
-template <typename Range>
-struct is_reverse_insertable {
-static constexpr bool value
-  = bits::is_detected<bits::trait_bits::rinsert_t, Range>
-  ::value
-||
-  (  is_insertable<Range>::value
-  && is_reversable<Range>::value
-  );
 };
 
 /*===========================================================
