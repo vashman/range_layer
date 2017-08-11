@@ -83,6 +83,9 @@ class select;
 template <typename Range, typename... Ts>
 class extend_life;
 
+template <typename Range>
+class checked_range;
+
 } /* bits */
 
 template <
@@ -237,6 +240,15 @@ bits::sub_range<Range, Sentinal>
 sub_range (
   Range
 , Sentinal
+);
+
+/*===========================================================
+  checked_range
+===========================================================*/
+template <typename Range>
+bits::checked_range<Range>
+checked_range (
+  Range
 );
 
 } /* range layer */

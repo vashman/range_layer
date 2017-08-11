@@ -21,6 +21,7 @@
 #include "decor/disable_output.hpp"
 #include "decor/select.hpp"
 #include "decor/extend_life.hpp"
+#include "decor/checked_range.hpp"
 
 #include "decor/transform_range.hpp"
 #include "decor/transform_range.tcc"
@@ -31,6 +32,9 @@
 
 namespace range_layer {
 
+/*===========================================================
+  disable_decorator
+===========================================================*/
 template <
   typename Range
 , typename std
@@ -45,6 +49,9 @@ disable_decorator (
 return disable_decorator(_range.disable());
 }
 
+/*===========================================================
+  disable_decorator
+===========================================================*/
 template <
   typename Range
 , typename std
@@ -58,6 +65,9 @@ disable_decorator (
 return _range;
 }
 
+/*===========================================================
+  remove_decorator
+===========================================================*/
 template <typename Range>
 bits::remove_decorator<Range>
 remove_decorator (
@@ -66,6 +76,9 @@ remove_decorator (
 return bits::remove_decorator<Range>(_range);
 }
 
+/*===========================================================
+  remove_if_range
+===========================================================*/
 template <typename Range, typename Pred>
 bits::remove_range<Range, Pred>
 remove_if_range (
@@ -75,6 +88,9 @@ remove_if_range (
 return bits::remove_range<Range, Pred>{_range, _pred};
 }
 
+/*===========================================================
+  remove_range
+===========================================================*/
 template <typename Range, typename T>
 bits::remove_range<Range, bits::remove_pred<T>>
 remove_range (
@@ -85,6 +101,9 @@ return bits::remove_range<Range, bits::remove_pred<T>>
 {_range, bits::remove_pred<T>{_value}};
 }
 
+/*===========================================================
+  input_replace_range
+===========================================================*/
 template <typename Range, typename T>
 auto
 input_replace_range (
@@ -99,6 +118,9 @@ return input_transform_range
   (_range, bits::replace_func<T>{_old_value, _new_value});
 }
 
+/*===========================================================
+  output_replace_range
+===========================================================*/
 template <typename Range, typename T>
 auto
 output_replace_range (
@@ -113,6 +135,9 @@ return output_transform_range (
   _range, bits::replace_func<T>{_old_value, _new_value});
 }
 
+/*===========================================================
+  input_replace_if_range
+===========================================================*/
 template <typename Range, typename T, typename Pred>
 auto
 input_replace_if_range (
@@ -127,6 +152,9 @@ return input_transform_range
   (_range, bits::replace_if_func<T,Pred>{_new_value, _pred});
 }
 
+/*===========================================================
+  output_replace_if_range
+===========================================================*/
 template <typename Range, typename T, typename Pred>
 auto
 output_replace_if_range (
@@ -141,6 +169,9 @@ return output_transform_range (
   _range, bits::replace_if_func<T, Pred>{_new_value, _pred});
 }
 
+/*===========================================================
+  transform_range
+===========================================================*/
 template <typename Range, typename Func>
 bits::transform_range<Func, Range>
 transform_range (
@@ -150,6 +181,9 @@ transform_range (
 return bits::transform_range<Func, Range>{_range, _func};
 }
 
+/*===========================================================
+  input_transform_range
+===========================================================*/
 template <typename Range, typename Func>
 bits::input_transform_range<Func, Range>
 input_transform_range (
@@ -160,6 +194,9 @@ return bits::input_transform_range<Func, Range>
   {_range, _func};
 }
 
+/*===========================================================
+  output_transform_range
+===========================================================*/
 template <typename Range, typename Func>
 bits::output_transform_range<Func, Range>
 output_transform_range (
@@ -170,6 +207,9 @@ return bits::output_transform_range<Func, Range>
   {_range, _func};
 }
 
+/*===========================================================
+  reverse_range
+===========================================================*/
 template <typename Range>
 bits::reverse_range<Range>
 reverse_range (
@@ -183,6 +223,9 @@ static_assert(
 return bits::reverse_range<Range>{_range};
 }
 
+/*===========================================================
+  sub_range_n
+===========================================================*/
 template <typename Range, typename N>
 bits::sub_range_n<Range, N>
 sub_range_n (
@@ -192,6 +235,9 @@ sub_range_n (
 return bits::sub_range_n<Range, N>{_range, _n};
 }
 
+/*===========================================================
+  circular_range
+===========================================================*/
 template <typename Range>
 bits::circular_range<Range>
 circular_range (
@@ -200,6 +246,9 @@ circular_range (
 return bits::circular_range<Range>{_range};
 }
 
+/*===========================================================
+  disable_input
+===========================================================*/
 template <typename Range>
 bits::disable_input<Range>
 disable_input (
@@ -208,6 +257,9 @@ disable_input (
 return bits::disable_input<Range>{_range};
 }
 
+/*===========================================================
+  disable_output
+===========================================================*/
 template <typename Range>
 bits::disable_output<Range>
 disable_output (
@@ -216,6 +268,9 @@ disable_output (
 return bits::disable_output<Range>{_range};
 }
 
+/*===========================================================
+  select
+===========================================================*/
 template <std::size_t I, typename Range>
 bits::select<Range, I>
 select (
@@ -224,6 +279,9 @@ select (
 return bits::select<Range, I> {_range};
 }
 
+/*===========================================================
+  extend_life
+===========================================================*/
 template <typename Range, typename... Ts>
 bits::extend_life<Range, Ts...>
 extend_life (
@@ -233,6 +291,9 @@ extend_life (
 return bits::extend_life<Range, Ts...>{_range, _ts...};
 }
 
+/*===========================================================
+  sub_range
+===========================================================*/
 template <typename Range, typename Sentinal>
 bits::sub_range<Range, Sentinal>
 sub_range (
@@ -240,6 +301,17 @@ sub_range (
 , Sentinal _sentinal
 ){
 return bits::sub_range<Range, Sentinal>{_range, _sentinal};
+}
+
+/*===========================================================
+  checked_range
+===========================================================*/
+template <typename Range>
+bits::checked_range<Range>
+checked_range (
+  Range _range
+){
+return bits::checked_range<Range>{_range};
 }
 
 } /* range layer */

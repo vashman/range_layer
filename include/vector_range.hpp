@@ -128,19 +128,47 @@ operator == (
 return *this == sentinel::readable{};
 }
 
-void
+/*===========================================================
+  expand
+===========================================================*/
+vector_range
 expand (
   std::size_t _n
 ){
 
 }
 
-void
+/*===========================================================
+  advance_insert
+===========================================================*/
+vector_range
 advance_insert (
   write_type const & _var
 ){
 this->vec->insert(this->vec->begin(), _var);
+return *this;
 }
+
+/*===========================================================
+  erase_all
+===========================================================*/
+vector_range
+erase_all (
+){
+this->vec->clear();
+return *this;
+}
+
+/*===========================================================
+  erase_all
+===========================================================*/
+vector_range
+erase_all (
+){
+this->vec->clear();
+return *this;
+}
+
 
 }; /* vector range */
 

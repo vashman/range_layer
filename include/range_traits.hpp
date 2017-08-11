@@ -110,6 +110,10 @@ using rerase_t = decltype (
   std::declval<T&>().reverse_erase(std::declval<int>()) );
 
 template <typename T>
+using erase_all_t = decltype (
+  std::declval<T&>().erase_all(std::declval<int>()) );
+
+template <typename T>
 using aerase_t = decltype (
   std::declval<T&>().advance_erase(std::declval<int>()) );
 
@@ -336,6 +340,12 @@ static constexpr bool value
 * The removed elements are destroyed.
 * The ranges postion remains the same, until the element at
   the position is removed, then the postion advances by 1.
+
+  pre:  | 0| 1|*2| 3| 4
+  n = 1
+  post: | 1|*2| 3| 4
+  n = 3
+  post: |*3| 4
 ===========================================================*/
 template <typename Range>
 struct is_advance_shrinkable {
@@ -352,6 +362,12 @@ static constexpr bool value
 * The removed elements are destroyed.
 * The range position remains the same, until the element at
   the position is removed, then the postion reverses by 1.
+
+  pre:  | 0| 1|*2| 3| 4
+  n = 1
+  post: | 0| 1|*2| 3
+  n = 3
+  post: | 0|*1
 ===========================================================*/
 template <typename Range>
 struct is_reverse_shrinkable {
@@ -369,6 +385,9 @@ static constexpr bool value
   removing the current element.
 * The removed elements are destroyed.
 * The postion advacnes by 1.
+
+  pre:  | 0| 1|*2| 3| 4
+  post: | 0| 1|*3| 4
 ===========================================================*/
 template <typename Range>
 struct is_erasable {
@@ -378,12 +397,37 @@ static constexpr bool value
 };
 
 /*===========================================================
+  is_all_erasable
+
+* When true, calling erase shrinks the size of the range by
+  removing the current element.
+* The removed elements are destroyed.
+* The postion advacnes by 1.
+
+  pre:  | 0| 1|*2| 3| 4
+  post: *
+===========================================================*/
+template <typename Range>
+struct is_all_erasable {
+static constexpr bool value
+  = bits
+  ::is_detected<bits::trait_bits::erase_all_t, Range>::value;
+};
+
+/*===========================================================
   is_advance_erasable
 
 * When true, calling advance_erase shrinks the size of the
   range by removing the next element.
 * The removed elements are destroyed.
-* The postion advacnes by 2.
+
+  pre:  | 0| 1|*2| 3| 4
+  n = 1
+  post: | 0|*2| 3| 4
+  n = 2
+  post: |*2| 3| 4
+  n = 3
+  post: |*3| 4
 ===========================================================*/
 template <typename Range>
 struct is_advance_erasable {
@@ -399,6 +443,14 @@ static constexpr bool value
   range by removing the previous element.
 * The removed elements are destroyed.
 * The postion does not change.
+
+  pre:  | 0| 1|*2| 3| 4
+  n = 1
+  post: | 0| 1|*2| 4
+  n = 2
+  post: | 0| 1|*2
+  n = 3
+  post: | 0|*1
 ===========================================================*/
 template <typename Range>
 struct is_reverse_erasable {
@@ -413,6 +465,10 @@ static constexpr bool value
 * When true, calling reverse_expand expands the size of the
   range by adding to the end.
 * The postion does not change.
+
+  pre:  | 0| 1|*2| 3| 4
+  n = 1
+  post: | 0| 1|*2| 3| 4| #
 ===========================================================*/
 template <typename Range>
 struct is_reverse_expandable {
@@ -427,6 +483,10 @@ static constexpr bool value
 * When true, calling advacne_expand expands the size of the
   range by adding to the beggining.
 * The postion does not change.
+
+  pre:  | 0| 1|*2| 3| 4
+  n = 1
+  post: | #| 0| 1|*2| 3| 4
 ===========================================================*/
 template <typename Range>
 struct is_advance_expandable {
@@ -441,6 +501,9 @@ static constexpr bool value
 * When true, calling insert expands the size of the range by
   adding to the current postion with a write_type.
 * The postion changes to the inserted element.
+
+  pre:  | 0| 1|*2| 3| 4
+  post: | 0| 1|*#| 2| 3| 4
 ===========================================================*/
 template <typename Range>
 struct is_insertable {
@@ -496,7 +559,7 @@ static constexpr bool value
 namespace input {
 
 /*===========================================================
-  is_finite
+  is_temporary
 
 * if true, the read function performs UB when reading to
   the same postion more than once.
@@ -556,7 +619,7 @@ static constexpr bool value
 } /* output */
 
 /*===========================================================
-  is_heterogeneous
+  is_subscriptable
 
 * if true; T& range[n]
 ===========================================================*/

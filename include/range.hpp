@@ -44,7 +44,7 @@ _range = _var;
 }
 
 /*===========================================================
-  write
+  advance
 ===========================================================*/
 template <typename Range, typename... Ranges>
 void
@@ -406,6 +406,19 @@ erase (
 bits::range_assert<Range>();
 
 return _range.erase();
+}
+
+/*===========================================================
+  erase_all
+===========================================================*/
+template <typename Range>
+Range
+erase_all (
+  Range _range
+){
+bits::range_assert<Range>();
+
+return _range.erase_all();
 }
 
 /*===========================================================
