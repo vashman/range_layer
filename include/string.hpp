@@ -15,13 +15,14 @@
 namespace range_layer {
 namespace bits {
 
+/*===========================================================
+  string_range
+===========================================================*/
 template <typename CharT, typename Traits, typename Alloc>
-struct string_range;
+class string_range;
 
 template <typename CharT, typename Traits, typename Alloc>
-struct string_range {
-
-private:
+class string_range {
 
 std::basic_string<CharT, Traits, Alloc> * con;
 std::size_t pos;
@@ -31,6 +32,9 @@ public:
 using read_type = T;
 using write_type = read_type;
 
+/*===========================================================
+  ctor
+===========================================================*/
 string_range (
   std::basic_string<CharT, Traits, Alloc> &
 );
@@ -41,30 +45,45 @@ string_range & operator = (string_range const &) = default;
 string_range & operator = (string_range &&) = default;
 ~string_range() = default;
 
+/*===========================================================
+  save
+===========================================================*/
 string_range &
 save (
 ){
 return *this;
 }
 
+/*===========================================================
+  save
+===========================================================*/
 std::size_t
 size (
 ) const {
 return this->con->size();
 }
 
+/*===========================================================
+  position
+===========================================================*/
 std::size_t
 position (
 ) const {
 return this->pos;
 }
 
+/*===========================================================
+  operator *
+===========================================================*/
 T const &
 operator * (
 ){
 return *this->con[this->pos-1];
 }
 
+/*===========================================================
+  operator =
+===========================================================*/
 void
 operator = (
   T const & _var
@@ -72,6 +91,9 @@ operator = (
 *this->con[this->pos-1] = _var;
 }
 
+/*===========================================================
+  operator ++
+===========================================================*/
 string_range &
 operator ++ (
 ){
@@ -79,6 +101,9 @@ operator ++ (
 return *this;
 }
 
+/*===========================================================
+  operator --
+===========================================================*/
 string_range &
 operator -- (
 ){
@@ -86,6 +111,9 @@ operator -- (
 return *this;
 }
 
+/*===========================================================
+  operator +=
+===========================================================*/
 string_range &
 operator += (
   std::size_t const _n
@@ -94,6 +122,9 @@ this->pos += _n;
 return *this;
 }
 
+/*===========================================================
+  operator -=
+===========================================================*/
 string_range &
 operator -= (
   std::size_t const _n
@@ -102,6 +133,9 @@ this->pos -= _n;
 return *this;
 }
 
+/*===========================================================
+  operator ==
+===========================================================*/
 bool
 operator == (
   sentinel::readable const _sen
@@ -109,6 +143,9 @@ operator == (
 return this->pos <= this->con->size();
 }
 
+/*===========================================================
+  operator ==
+===========================================================*/
 bool
 operator == (
   sentinel::writable const _sen
@@ -116,24 +153,89 @@ operator == (
 return *this == sentinel::readable{};
 }
 
+/*===========================================================
+  erase
+===========================================================*/
+string_range &
+erase (
+  std::basic_string<CharT, Traits, Alloc> _str 
+){
+
+return *this;
+}
+
+/*===========================================================
+  erase_all
+===========================================================*/
+string_range &
+erase_all (
+  std::basic_string<CharT, Traits, Alloc> _str 
+){
+
+return *this;
+}
+
+/*===========================================================
+  shrink
+===========================================================*/
+string_range &
+shrink (
+  std::basic_string<CharT, Traits, Alloc> _str 
+){
+
+return *this;
+}
+
+/*===========================================================
+  expand
+===========================================================*/
+string_range &
+expand (
+  std::basic_string<CharT, Traits, Alloc> _str 
+){
+
+return *this;
+}
+
+/*===========================================================
+  insert
+===========================================================*/
+string_range &
+insert (
+  std::basic_string<CharT, Traits, Alloc> _str 
+){
+this->con->insert(_str);
+return *this;
+}
+
 }; /* string range */
 
+
+/*===========================================================
+  string_range:: ctor
+===========================================================*/
 template <typename CharT, typename Traits, typename Alloc>
-vector_range<T, Alloc>::vector_range (
-  std::vector<T, Alloc> & _vec
+string_range<T, Traits, Alloc>::string_range (
+  std::basic_string<CharT, Traits, Alloc> & _str 
 )
-: vec {&_vec}
+: con {&_str}
 , pos {1}
 {}
 
 } /* bits */
 
+/*===========================================================
+  range
+===========================================================*/
 template <typename CharT, typename Traits, typename Alloc>
 string_range<CharT, Traits, Alloc>
 range (
   std::basic_string<CharT, Traits, Alloc> &
 );
 
+/*===========================================================
+  range
+===========================================================*/
 template <typename CharT, typename Traits, typename Alloc>
 bits::extend_life
 < vector_range<T, Alloc>
@@ -143,6 +245,9 @@ range (
   std::basic_string<CharT, Traits, Alloc> &&
 );
 
+/*===========================================================
+  range
+===========================================================*/
 template <typename CharT, typename Traits, typename Alloc>
 string_range<CharT, Traits, Alloc>
 range (
@@ -151,9 +256,9 @@ range (
 return string_range<CharT, Traits, Alloc> {_str};
 }
 
-/*
- *
- */
+/*===========================================================
+  range
+===========================================================*/
 template <typename CharT, typename Traits, typename Alloc>
 bits::extend_life
 < string_range<CharT, Traits, Alloc>

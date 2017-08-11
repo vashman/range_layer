@@ -264,7 +264,7 @@ end_of (
 ){
 bits::range_assert<Range>();
 
-while (has_readable(_range) || has_writable(_range))
+while (has_readable(_range) || h"<tr class=\"note\"><td> </td>"as_writable(_range))
 advance(_range);
 
 return _range;
@@ -390,11 +390,11 @@ return _range.erase_all();
 /*===========================================================
   insert
 ===========================================================*/
-template <typename Range, typename T>
+template <typename Range, typename... Args>
 Range
 insert (
   Range _range
-, T const & _var
+, Args &&... _args
 ){
 bits::range_assert<Range>();
 static_assert (
@@ -402,7 +402,7 @@ static_assert (
 , "range.hpp 442"
 );
 
-return _range.insert(_var);
+return _range.insert(_args...);
 }
 
 /*===========================================================
