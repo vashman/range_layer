@@ -61,7 +61,7 @@ return std::make_tuple(*this->lhs_range, *this->rhs_range);
 }
 
 template <typename U = LhsRange>
-join &
+join
 save (
 ){
 join temp{*this};

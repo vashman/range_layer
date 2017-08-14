@@ -15,97 +15,125 @@
 
 namespace range_layer {
 
+/*===========================================================
+  range istream
+===========================================================*/
 template <typename CharT, typename Traits>
-iterator_range<std::istream_iterator<CharT, Traits>>
+iterator_range<std::istream_iterator<CharT, CharT, Traits>>
 range (
   std::basic_istream<CharT, Traits> &
 );
 
+/*===========================================================
+  range ostream
+===========================================================*/
 template <typename CharT, typename Traits>
-iterator_range<std::ostream_iterator<CharT, Traits>, void>
+iterator_range
+  <std::ostream_iterator<CharT, CharT, Traits>, void>
 range (
   std::basic_ostream<CharT, Traits> &
 );
 
+/*===========================================================
+  move range istream
+===========================================================*/
 template <typename CharT, typename Traits>
-iterator_range<std::istream_iterator<CharT, Traits>>
+iterator_range<std::istream_iterator<CharT, CharT, Traits>>
 range (
   std::basic_istream<CharT, Traits> &&
 );
 
+/*===========================================================
+  move range ostream
+===========================================================*/
 template <typename CharT, typename Traits>
-iterator_range<std::ostream_iterator<CharT, Traits>, void>
+iterator_range
+  <std::ostream_iterator<CharT, CharT, Traits>, void>
 range (
   std::basic_ostream<CharT, Traits> &&
 );
 
+/*===========================================================
+  range istream
+===========================================================*/
 template <typename CharT, typename Traits>
-iterator_range<std::istream_iterator<CharT, Traits>>
+iterator_range<std::istream_iterator<CharT, CharT, Traits>>
 range (
   std::basic_istream<CharT, Traits> & _stream
 ){
 return make_iterator_range (
-  std::istream_iterator<CharT, Traits>{_stream}
-, std::istream_iterator<CharT, Traits>{}
+  std::istream_iterator<CharT, CharT, Traits>{_stream}
+, std::istream_iterator<CharT, CharT, Traits>{}
 );
 }
 
+/*===========================================================
+  range ostream
+===========================================================*/
 template <typename CharT, typename Traits>
-iterator_range<std::ostream_iterator<CharT, Traits>, void>
+iterator_range
+  <std::ostream_iterator<CharT, CharT, Traits>, void>
 range (
   std::basic_ostream<CharT, Traits> & _stream
 ){
 return make_iterator_range (
-  std::ostream_iterator<CharT, Traits>{_stream}
+  std::ostream_iterator<CharT, CharT, Traits>(_stream)
 );
 }
 
+/*===========================================================
+  move range istream
+===========================================================*/
 template <typename CharT, typename Traits>
-iterator_range<std::istream_iterator<CharT, Traits>>
+iterator_range<std::istream_iterator<CharT, CharT, Traits>>
 range (
   std::basic_istream<CharT, Traits> && _stream
 ){
 using std::get;
 
 auto temp = bits::extend_life
-< iterator_range<std::istream_iterator<CharT, Traits>>
+< iterator_range<std::istream_iterator<CharT, CharT, Traits>>
 , std::basic_istream<CharT, Traits>
 > { make_iterator_range (
-  std::istream_iterator<CharT, Traits>{_stream}
-, std::istream_iterator<CharT, Traits>{}
+  std::istream_iterator<CharT, CharT, Traits>{_stream}
+, std::istream_iterator<CharT, CharT, Traits>{}
 )
 , _stream
 };
 
 temp.set_range ( make_iterator_range (
-  std::istream_iterator<CharT, Traits>{get<0>(temp.varables)}
-, std::istream_iterator<CharT, Traits>{}
+  std::istream_iterator<CharT, CharT, Traits>{get<0>(temp.varables)}
+, std::istream_iterator<CharT, CharT, Traits>{}
 ));
 return temp;
 }
 
+/*===========================================================
+  move range ostream
+===========================================================*/
 template <typename CharT, typename Traits>
-iterator_range<std::ostream_iterator<CharT, Traits>, void>
+iterator_range<std::ostream_iterator<CharT, CharT, Traits>, void>
 range (
   std::basic_ostream<CharT, Traits> && _stream
 ){
 using std::get;
 
 auto temp = bits::extend_life
-< iterator_range<std::ostream_iterator<CharT, Traits>>
+< iterator_range<std::ostream_iterator<CharT, CharT, Traits>>
 , std::basic_ostream<CharT, Traits>
 > {
   make_iterator_range
-  (std::ostream_iterator<CharT, Traits>{_stream})
+  (std::ostream_iterator<CharT, CharT, Traits>{_stream})
 , _stream
 };
 
 temp.set_range ( make_iterator_range (
-  std::ostream_iterator<CharT, Traits>{get<0>(temp.varables)}
+  std::ostream_iterator<CharT, CharT, Traits>{get<0>(temp.varables)}
 ));
 return temp;
 }
 
-} /* range layer */
+}
+//range layer------------------------------------------------
 #endif
 

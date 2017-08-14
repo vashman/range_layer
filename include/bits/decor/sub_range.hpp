@@ -11,6 +11,9 @@
 namespace range_layer {
 namespace bits {
 
+/*===========================================================
+  sub_range
+===========================================================*/
 template <typename Range, typename Sentinel>
 class sub_range {
 
@@ -28,6 +31,9 @@ Range range;
 Sentinel sen;
 read_type temp;
 
+/*===========================================================
+  is_end
+===========================================================*/
 bool
 is_end (
 ) const {
@@ -36,6 +42,9 @@ return (this->sen == this->temp);
 
 public:
 
+/*===========================================================
+  ctor
+===========================================================*/
 sub_range (
   Range _range
 , Sentinel _sentinel
@@ -51,6 +60,9 @@ sub_range (sub_range &&) = default;
 sub_range & operator = (sub_range &&) = default;
 ~sub_range() = default;
 
+/*===========================================================
+  operator *
+===========================================================*/
 template <typename U = Range>
 auto
 operator * (
@@ -58,14 +70,21 @@ operator * (
 return this->temp;
 }
 
+/*===========================================================
+  operator ++
+===========================================================*/
 template <typename U = Range>
 sub_range &
-operator ++ (){
+operator ++ (
+){
 ++this->range;
 this->temp = *this->range;
 return *this;
 }
 
+/*===========================================================
+  save
+===========================================================*/
 template <typename U = Range>
 sub_range
 save (
@@ -73,6 +92,9 @@ save (
 return sub_range(*this).range = this->range.save();
 }
 
+/*===========================================================
+  operator --
+===========================================================*/
 template <typename U = Range>
 sub_range &
 operator -- (
@@ -82,6 +104,9 @@ this->temp = *this->range;
 return *this;
 }
 
+/*===========================================================
+  operator =
+===========================================================*/
 template <typename T>
 void
 operator = (
@@ -90,6 +115,9 @@ operator = (
 this->range = _var;
 }
 
+/*===========================================================
+  operator +=
+===========================================================*/
 template <typename N>
 sub_range &
 operator += (
@@ -99,6 +127,9 @@ operator += (
 return *this;
 }
 
+/*===========================================================
+  operator -=
+===========================================================*/
 template <typename N>
 sub_range &
 operator -= (
@@ -108,6 +139,9 @@ operator -= (
 return *this;
 }
 
+/*===========================================================
+  operator ==
+===========================================================*/
 template <typename U = Range>
 bool
 operator == (
@@ -116,6 +150,9 @@ operator == (
 return this->range == _sen && !this->is_end();
 }
 
+/*===========================================================
+  operator ==
+===========================================================*/
 template <typename U = Range>
 bool
 operator == (
@@ -124,28 +161,41 @@ operator == (
 return this->range == _sen && !this->is_end();
 }
 
-template <typename U = Range>
+/*===========================================================
+  size
+===========================================================*/
+/*template <typename U = Range>
 auto
 size (
 ) const -> decltype(this->range.size()) {
 return this->range.size();
-}
+}*/
 
-template <typename U = Range>
+/*===========================================================
+  position
+===========================================================*/
+/*template <typename U = Range>
 auto
 position (
 ) const -> decltype(this->range.position()) {
 return this->range.position();
-}
+}*/
 
+/*===========================================================
+  disable
+===========================================================*/
 Range
 disable (
 ) const {
 return this->range;
 }
 
-}; /* sub_range */
+};
+//sub_range--------------------------------------------------
 
-} /* bits */ } /* range layer */
+}
+//bits-------------------------------------------------------
+}
+//range layer------------------------------------------------
 #endif
 

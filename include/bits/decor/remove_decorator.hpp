@@ -11,6 +11,9 @@
 namespace range_layer {
 namespace bits {
 
+/*===========================================================
+  remove_decorator
+===========================================================*/
 template <typename Range>
 class remove_decorator {
 
@@ -24,57 +27,95 @@ using read_type
 using write_type
   = typename range_trait::write_type<Range>::type;
 
+/*===========================================================
+  ctor
+===========================================================*/
 remove_decorator (
   Range _range
 )
 : range {_range}
 {}
 
+/*===========================================================
+  copy ctor
+===========================================================*/
 remove_decorator (remove_decorator const &) = default;
+
+/*===========================================================
+  move ctor
+===========================================================*/
 remove_decorator (remove_decorator &&) = default;
 
+/*===========================================================
+  move assignment operator
+===========================================================*/
 remove_decorator &
 operator = (
   remove_decorator &&
 ) = default;
 
+/*===========================================================
+  copy assignment operator
+===========================================================*/
 remove_decorator &
 operator = (
   remove_decorator const &
 ) = default;
 
+/*===========================================================
+  operator *
+===========================================================*/
 template <typename U = Range>
 auto
-operator * () -> decltype(*this->range){
+operator * (
+) -> decltype(*this->range){
 return *this->range;
 }
 
+/*===========================================================
+  operator ++
+===========================================================*/
 template <typename U = Range>
 remove_decorator &
-operator ++ (){
+operator ++ (
+){
 ++this->range;
 return *this;
 }
 
+/*===========================================================
+  save
+===========================================================*/
 template <typename U = Range>
 remove_decorator
-save(){
+save (
+){
 return remove_decorator(*this).range = this->range.save();;
 }
 
+/*===========================================================
+  operator --
+===========================================================*/
 template <typename U = Range>
 remove_decorator &
-operator -- (){
+operator -- (
+){
 --this->range;
 return *this;
 }
 
+/*===========================================================
+  operator =
+===========================================================*/
 template <typename T>
 void
 operator = (T const & _var){
 this->range = _var;
 }
 
+/*===========================================================
+  operator +=
+===========================================================*/
 template <typename N>
 remove_decorator &
 operator += (
@@ -84,6 +125,9 @@ this->range += _n;
 return *this;
 }
 
+/*===========================================================
+  operator -=
+===========================================================*/
 template <typename N>
 remove_decorator &
 operator -= (
@@ -93,6 +137,9 @@ this->range -= _n;
 return *this;
 }
 
+/*===========================================================
+  operator ==
+===========================================================*/
 bool
 operator == (
   sentinel::readable const & _sen
@@ -100,6 +147,9 @@ operator == (
 return this->range == _sen;
 }
 
+/*===========================================================
+  operator ==
+===========================================================*/
 template <typename U = Range>
 bool
 operator == (
@@ -108,14 +158,9 @@ operator == (
 return this->range == _sen;
 }
 
-template <typename T>
-bool
-operator == (
-  T const & _sen
-) const {
-return this->range == _sen;
-}
-
+/*===========================================================
+  size
+===========================================================*/
 template <typename T = Range>
 auto
 size (
@@ -123,7 +168,11 @@ size (
 return this->range.size();
 }
 
-}; /* remove decorator */
+};
+//remove decorator-------------------------------------------
 
-} /* bits */ } /* range layer */
+}
+//bits-------------------------------------------------------
+}
+//range layer------------------------------------------------
 #endif

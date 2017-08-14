@@ -22,6 +22,7 @@
 #include "decor/select.hpp"
 #include "decor/extend_life.hpp"
 #include "decor/checked_range.hpp"
+#include "decor/back_insert.hpp"
 
 #include "decor/transform_range.hpp"
 #include "decor/transform_range.tcc"
@@ -314,5 +315,22 @@ checked_range (
 return bits::checked_range<Range>{_range};
 }
 
-} /* range layer */
+/*===========================================================
+  back_insert
+===========================================================*/
+template <typename Range>
+bits::back_insert<Range>
+back_insert (
+  Range _range
+){
+static_assert (
+  range_trait::is_expandable<Range>::value
+, "Range must be expandable to insert into the end."
+);
+
+return bits::back_insert<Range>{_range};
+}
+
+}
+//range layer------------------------------------------------
 #endif

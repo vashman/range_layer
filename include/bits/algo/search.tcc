@@ -10,6 +10,9 @@
 
 namespace range_layer {
 
+/*===========================================================
+  find if
+===========================================================*/
 template <typename Range, typename Pred>
 Range
 find_if (
@@ -22,6 +25,9 @@ find_if (
 return _range;
 }
 
+/*===========================================================
+  find if not
+===========================================================*/
 template <typename Range, typename Pred>
 Range
 find_if_not (
@@ -34,6 +40,9 @@ find_if_not (
 return _range;
 }
 
+/*===========================================================
+  find
+===========================================================*/
 template <typename Range, typename T, typename Policy>
 Range
 find (
@@ -47,5 +56,6 @@ return find_if
 (_policy, _range, [=](type _v){return _v == _value;});
 }
 
-} /* range layer */
+}
+//range layer------------------------------------------------
 #endif

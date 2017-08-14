@@ -23,6 +23,9 @@ struct range_element_type <void, I> {
 using type = void;
 };
 
+/*===========================================================
+  select
+===========================================================*/
 template <typename Range, std::size_t I>
 class select {
 
@@ -42,6 +45,9 @@ using write_type
   , I
   >::type;
 
+/*===========================================================
+  ctor
+===========================================================*/
 select (
   Range _range
 )
@@ -54,6 +60,9 @@ select & operator = (select &&) = default;
 select & operator = (select const &) = default;
 ~select () = default;
 
+/*===========================================================
+  operator *
+===========================================================*/
 auto
 operator * (
 ) -> decltype(std::get<I>(*this->range)) {
@@ -61,12 +70,19 @@ using std::get;
 return get<I>(*this->range);
 }
 
+/*===========================================================
+  save
+===========================================================*/
 template <typename U = Range>
 select &
-save(){
+save (
+){
 return select(*this).range = this->range.save();
 }
 
+/*===========================================================
+  operator ++
+===========================================================*/
 template <typename U = Range>
 select &
 operator ++ (){
@@ -74,6 +90,9 @@ operator ++ (){
 return *this;
 }
 
+/*===========================================================
+  operator --
+===========================================================*/
 template <typename U = Range>
 select &
 operator -- (){
@@ -81,6 +100,9 @@ operator -- (){
 return *this;
 }
 
+/*===========================================================
+  operator =
+===========================================================*/
 template <typename T>
 void
 operator = (
@@ -90,6 +112,9 @@ using std::get;
 get<I>(this->range) = _var;
 }
 
+/*===========================================================
+  operator +=
+===========================================================*/
 template <typename N>
 select &
 operator += (
@@ -99,6 +124,9 @@ this->range += _n;
 return *this;
 }
 
+/*===========================================================
+  operator -=
+===========================================================*/
 template <typename N>
 select &
 operator -= (
@@ -108,6 +136,9 @@ this->range -= _n;
 return *this;
 }
 
+/*===========================================================
+  operator ==
+===========================================================*/
 template <typename U = Range>
 bool
 operator == (
@@ -116,6 +147,9 @@ operator == (
 return this->range == _sen;
 }
 
+/*===========================================================
+  operator ==
+===========================================================*/
 template <typename U = Range>
 bool
 operator == (
@@ -124,14 +158,9 @@ operator == (
 return this->range == _sen;
 }
 
-template <typename T>
-bool
-operator == (
-  T const & _sen
-) const {
-return this->range == _sen;
-}
-
+/*===========================================================
+  size
+===========================================================*/
 template <typename U = Range>
 auto
 size (
@@ -139,6 +168,9 @@ size (
 return this->range.size();
 }
 
+/*===========================================================
+  position
+===========================================================*/
 template <typename U = Range>
 auto
 position (
@@ -146,14 +178,21 @@ position (
 return this->range.position();
 }
 
+/*===========================================================
+  disable
+===========================================================*/
 Range
 disable (
 ) const {
 return this->range;
 }
 
-}; /* select */
+};
+//select-----------------------------------------------------
 
-} /* bits */ } /* range layer */
+}
+//bits-------------------------------------------------------
+}
+//range layer------------------------------------------------
 #endif
 

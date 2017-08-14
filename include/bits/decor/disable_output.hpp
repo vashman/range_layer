@@ -11,6 +11,9 @@
 namespace range_layer {
 namespace bits {
 
+/*===========================================================
+  disable_output
+===========================================================*/
 template <typename Range>
 class disable_output {
 
@@ -21,6 +24,9 @@ public:
 using read_type
   = typename range_trait::read_type<Range>::type;
 
+/*===========================================================
+  ctor
+===========================================================*/
 disable_output (
   Range _range
 )
@@ -33,6 +39,9 @@ disable_output & operator = (disable_output &&) = default;
 disable_output & operator = (disable_output const &) = default;
 ~disable_output () = default;
 
+/*===========================================================
+  save
+===========================================================*/
 template <typename U = Range>
 disable_output &
 save (
@@ -54,6 +63,9 @@ operator -- (){
 return *this;
 }
 
+/*===========================================================
+  operator *
+===========================================================*/
 template <typename T>
 auto
 operator * (
@@ -105,8 +117,8 @@ return this->range == _sen;
 
 auto
 size (
-) const -> decltype(size(this->range)) {
-return size(this->range);
+) const -> decltype(this->range.size()) {
+return this->range.size();
 }
 
 auto

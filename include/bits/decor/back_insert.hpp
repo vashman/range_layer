@@ -5,31 +5,21 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_SUB_RANGE_N_HPP
-#define RANGE_LAYER_SUB_RANGE_N_HPP
+#ifndef RANGE_LAYER_BACK_INSERT_HPP
+#define RANGE_LAYER_BACK_INSERT_HPP
 
 namespace range_layer {
 namespace bits {
 
 /*===========================================================
-  sub_range_n
+  back insert
 ===========================================================*/
-template <typename Range, typename S>
-class sub_range_n {
+template <typename Range>
+class back_insert {
 
 Range range;
-S pos;
-S count;
-
-bool
-is_end () const {
-return (this->pos > this->count) || (this->pos == 0);
-}
 
 public:
-
-using read_type
-  = typename range_trait::read_type<Range>::type;
 
 using write_type
   = typename range_trait::write_type<Range>::type;
@@ -37,60 +27,59 @@ using write_type
 /*===========================================================
   ctor
 ===========================================================*/
-sub_range_n (
+back_insert (
   Range _range
-, S _count
 )
-: range {_range}
-, pos {1}
-, count {_count}
-{}
-
-sub_range_n (sub_range_n const &) = default;
-sub_range_n & operator = (sub_range_n const &) = default;
-sub_range_n (sub_range_n &&) = default;
-sub_range_n& operator = (sub_range_n &&) = default;
-~sub_range_n() = default;
+: range {end_of_output(_range)}
+{
+expand(this->range, 1);
+}
 
 /*===========================================================
-  operator *
+  copy ctor
 ===========================================================*/
-template <typename U = Range>
-auto
-operator * () -> decltype(*this->range){
-return *this->range;
-}
+back_insert (back_insert const &) = default;
+
+/*===========================================================
+  copy assignment operator
+===========================================================*/
+back_insert & operator = (back_insert const &) = default;
+
+/*===========================================================
+  move ctor
+===========================================================*/
+back_insert (back_insert &&) = default;
+
+/*===========================================================
+  move assignment operator
+===========================================================*/
+back_insert & operator = (back_insert &&) = default;
+
+/*===========================================================
+  dtor
+===========================================================*/
+~back_insert() = default;
 
 /*===========================================================
   operator ++
 ===========================================================*/
 template <typename U = Range>
-sub_range_n &
-operator ++ (){
-++this->pos;
+back_insert &
+operator ++ (
+){
+expand(this->range, 1);
 ++this->range;
 return *this;
 }
 
 /*===========================================================
-  operator save
+  save
 ===========================================================*/
 template <typename U = Range>
-sub_range_n
+back_insert
 save (
 ){
-return sub_range_n(*this).range = this->range.save();;
-}
-
-/*===========================================================
-  operator --
-===========================================================*/
-template <typename U = Range>
-sub_range_n &
-operator -- (){
---this->pos;
---this->range;
-return *this;
+return back_insert(*this).range = this->range.save();
 }
 
 /*===========================================================
@@ -98,44 +87,21 @@ return *this;
 ===========================================================*/
 template <typename T>
 void
-operator = (T const & _var){
+operator = (
+  T const & _var
+){
 this->range = _var;
-}
-
-/*===========================================================
-  operator +=
-===========================================================*/
-template <typename N>
-sub_range_n &
-operator += (
-  N _n
-){
-this->pos += _n;
-this->range += _n;
-return *this;
-}
-
-/*===========================================================
-  operator -=
-===========================================================*/
-template <typename N>
-sub_range_n &
-operator -= (
-  N _n
-){
-this->pos -= _n;
-this->range -= _n;
-return *this;
 }
 
 /*===========================================================
   operator ==
 ===========================================================*/
+template <typename U = Range>
 bool
 operator == (
   sentinel::readable const & _sen
 ) const {
-return this->range == _sen && !this->is_end();
+return this->range == _sen;
 }
 
 /*===========================================================
@@ -146,7 +112,7 @@ bool
 operator == (
   sentinel::writable const & _sen
 ) const {
-return this->range == _sen && !this->is_end();
+return this->range == _sen;
 }
 
 /*===========================================================
@@ -179,8 +145,11 @@ return this->range;
 }
 
 };
-//sub_range_n------------------------------------------------
+//back insert------------------------------------------------
 
-} /* bits */ } /* range layer */
+}
+//bits-------------------------------------------------------
+}
+//range layer------------------------------------------------
 #endif
 

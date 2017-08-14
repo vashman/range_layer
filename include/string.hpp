@@ -29,7 +29,7 @@ std::size_t pos;
 
 public:
 
-using read_type = T;
+using read_type = CharT;
 using write_type = read_type;
 
 /*===========================================================
@@ -39,10 +39,29 @@ string_range (
   std::basic_string<CharT, Traits, Alloc> &
 );
 
+/*===========================================================
+  copy ctor
+===========================================================*/
 string_range (string_range const &) = default;
+
+/*===========================================================
+  move ctor
+===========================================================*/
 string_range (string_range &&) = default;
+
+/*===========================================================
+  copy assignemnt operator
+===========================================================*/
 string_range & operator = (string_range const &) = default;
+
+/*===========================================================
+  move assignemnt operator
+===========================================================*/
 string_range & operator = (string_range &&) = default;
+
+/*===========================================================
+  dtor
+===========================================================*/
 ~string_range() = default;
 
 /*===========================================================
@@ -55,7 +74,7 @@ return *this;
 }
 
 /*===========================================================
-  save
+  size
 ===========================================================*/
 std::size_t
 size (
@@ -75,10 +94,10 @@ return this->pos;
 /*===========================================================
   operator *
 ===========================================================*/
-T const &
+CharT const &
 operator * (
 ){
-return *this->con[this->pos-1];
+return (*this->con)[this->pos-1];
 }
 
 /*===========================================================
@@ -86,9 +105,9 @@ return *this->con[this->pos-1];
 ===========================================================*/
 void
 operator = (
-  T const & _var
+  CharT const & _var
 ){
-*this->con[this->pos-1] = _var;
+(*this->con)[this->pos-1] = _var;
 }
 
 /*===========================================================
@@ -158,9 +177,8 @@ return *this == sentinel::readable{};
 ===========================================================*/
 string_range &
 erase (
-  std::basic_string<CharT, Traits, Alloc> _str 
 ){
-
+this->con->erase(this->position(), 1);
 return *this;
 }
 
@@ -169,9 +187,8 @@ return *this;
 ===========================================================*/
 string_range &
 erase_all (
-  std::basic_string<CharT, Traits, Alloc> _str 
 ){
-
+this->con->clear();
 return *this;
 }
 
@@ -180,9 +197,9 @@ return *this;
 ===========================================================*/
 string_range &
 shrink (
-  std::basic_string<CharT, Traits, Alloc> _str 
+  std::size_t _n
 ){
-
+this->con->resize(this->size()-_n);
 return *this;
 }
 
@@ -191,9 +208,9 @@ return *this;
 ===========================================================*/
 string_range &
 expand (
-  std::basic_string<CharT, Traits, Alloc> _str 
+  std::size_t _n 
 ){
-
+this->con->resize(this->size()+_n);
 return *this;
 }
 
@@ -202,33 +219,34 @@ return *this;
 ===========================================================*/
 string_range &
 insert (
-  std::basic_string<CharT, Traits, Alloc> _str 
+  CharT _char
 ){
-this->con->insert(_str);
+this->con->insert(this->position(), _char);
 return *this;
 }
 
-}; /* string range */
-
+};
+//string range-----------------------------------------------
 
 /*===========================================================
   string_range:: ctor
 ===========================================================*/
 template <typename CharT, typename Traits, typename Alloc>
-string_range<T, Traits, Alloc>::string_range (
+string_range<CharT, Traits, Alloc>::string_range (
   std::basic_string<CharT, Traits, Alloc> & _str 
 )
 : con {&_str}
 , pos {1}
 {}
 
-} /* bits */
+}
+//bits-------------------------------------------------------
 
 /*===========================================================
   range
 ===========================================================*/
 template <typename CharT, typename Traits, typename Alloc>
-string_range<CharT, Traits, Alloc>
+bits::string_range<CharT, Traits, Alloc>
 range (
   std::basic_string<CharT, Traits, Alloc> &
 );
@@ -238,8 +256,8 @@ range (
 ===========================================================*/
 template <typename CharT, typename Traits, typename Alloc>
 bits::extend_life
-< vector_range<T, Alloc>
-, std::vector<T, Alloc>
+< bits::string_range<CharT, Traits, Alloc>
+, std::basic_string<CharT, Traits, Alloc>
 >
 range (
   std::basic_string<CharT, Traits, Alloc> &&
@@ -249,11 +267,11 @@ range (
   range
 ===========================================================*/
 template <typename CharT, typename Traits, typename Alloc>
-string_range<CharT, Traits, Alloc>
+bits::string_range<CharT, Traits, Alloc>
 range (
   std::basic_string<CharT, Traits, Alloc> & _str
 ){
-return string_range<CharT, Traits, Alloc> {_str};
+return bits::string_range<CharT, Traits, Alloc> {_str};
 }
 
 /*===========================================================
@@ -261,14 +279,14 @@ return string_range<CharT, Traits, Alloc> {_str};
 ===========================================================*/
 template <typename CharT, typename Traits, typename Alloc>
 bits::extend_life
-< string_range<CharT, Traits, Alloc>
+< bits::string_range<CharT, Traits, Alloc>
 , std::basic_string<CharT, Traits, Alloc>
 >
 range (
   std::basic_string<CharT, Traits, Alloc> && _con
 ){
 auto temp = bits::extend_life
-< string_range<CharT, Traits, Alloc>
+< bits::string_range<CharT, Traits, Alloc>
 , std::basic_string<CharT, Traits, Alloc>
 >{range(_con), _con};
 
@@ -277,6 +295,7 @@ temp.set_range(range(_con));
 return temp;
 }
 
-} /* range layer */
+}
+//range layer------------------------------------------------
 #endif
 

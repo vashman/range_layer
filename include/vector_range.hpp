@@ -212,7 +212,7 @@ return bits::vector_range<T, Alloc> {_vec};
 }
 
 /*===========================================================
-  range
+  move range
 ===========================================================*/
 template <typename T, typename Alloc>
 bits::extend_life

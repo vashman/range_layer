@@ -21,7 +21,7 @@ rng = next(rng);
 assert(temp == 65);
 
 temp = read(rng);
-assert(temp = 66);
+assert(temp == 66);
 
 rng = next(100, rng);
 temp = read(rng);

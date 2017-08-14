@@ -10,9 +10,9 @@
 
 namespace range_layer {
 
-/*
+/*===========================================================
   fill
-*/
+===========================================================*/
 template <typename Range, typename T>
 Range
 fill (
@@ -34,9 +34,9 @@ static_assert (
 return _range;
 }
 
-/*
+/*===========================================================
   fill n
-*/
+===========================================================*/
 template <typename Range, typename T, typename N>
 Range
 fill (
@@ -55,7 +55,9 @@ bits::write_assert<Range>();
 return _range;
 }
 
-/* generate */
+/*===========================================================
+  generate
+===========================================================*/
 template<typename Range, typename Generator>
 Range
 generate (
@@ -72,7 +74,9 @@ bits::write_assert<Range>();
 return _range;
 }
 
-/* generate n */
+/*===========================================================
+  generate n
+===========================================================*/
 template<typename Range, typename Generator, typename N>
 Range
 generate_n (
@@ -91,9 +95,9 @@ bits::write_assert<Range>();
 return _range;
 }
 
-/*
+/*===========================================================
   copy
-*/
+===========================================================*/
 template <typename IRange, typename ORange>
 ORange
 copy (
@@ -117,9 +121,9 @@ static_assert (
 return _output;
 }
 
-/*
+/*===========================================================
   copy if
-*/
+===========================================================*/
 template <typename IRange, typename ORange, typename Pred>
 ORange
 copy_if (
@@ -139,9 +143,9 @@ bits::write_assert<ORange>();
 return _output;
 }
 
-/*
+/*===========================================================
   write
-*/
+===========================================================*/
 namespace bits {
 template
 < typename ORange
@@ -160,12 +164,15 @@ bits::read_assert<IRange>();
 using range_layer::advance;
 
   while (has_writable(_output) && has_readable(_input)){
-  write(_output, read(_input));
+  range_layer::write(_output, read(_input));
   range_layer::advance(_output, _input);
   }
 return static_cast<void*>(0);
 }
 
+/*===========================================================
+  write
+===========================================================*/
 template
 < typename ORange
 , typename T
@@ -181,32 +188,36 @@ write (
 using range_layer::advance;
 
   if (has_writable(_output)){
-  write(_output, _variable);
+  range_layer::write(_output, _variable);
   range_layer::advance(_output);
   }
 return static_cast<void*>(0);
 }
-} /* bits */
+}
+//bits-------------------------------------------------------
 
-template <typename ORange, typename... IRange>
+/*===========================================================
+  write
+===========================================================*/
+template <typename ORange, typename T, typename... Ts>
 ORange
 write (
   execution_policy::sequenced _policy
 , ORange _output
-, IRange... _input
+, T _var
+, Ts... _ts
 ){
 bits::write_assert<ORange>();
+bits::write(_policy, _output, _var);
 
-void* list[] = {
-  0
-, (bits::write(_policy, _output, _input))...
-};
+void* list[]
+  = {0, bits::write(_policy, _output, _ts)...};
 return _output;
 }
 
-/*
+/*===========================================================
   copy n
-*/
+===========================================================*/
 template <typename IRange, typename ORange, typename N>
 ORange
 copy_n (
@@ -230,5 +241,6 @@ bits::write_assert<ORange>();
 return _output;
 }
 
-} /* range layer */
+}
+//range layer------------------------------------------------
 #endif
