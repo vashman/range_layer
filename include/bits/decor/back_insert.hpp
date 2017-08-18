@@ -8,6 +8,8 @@
 #ifndef RANGE_LAYER_BACK_INSERT_HPP
 #define RANGE_LAYER_BACK_INSERT_HPP
 
+#include "base_decor.hpp"
+
 namespace range_layer {
 namespace bits {
 
@@ -15,9 +17,11 @@ namespace bits {
   back insert
 ===========================================================*/
 template <typename Range>
-class back_insert {
+class back_insert
+: public bits::base_decor<Range, back_insert<Range>>
+{
 
-Range range;
+using base_t = bits::base_decor<Range, back_insert<Range>>;
 
 public:
 
@@ -30,7 +34,7 @@ using write_type
 back_insert (
   Range _range
 )
-: range {end_of_output(_range)}
+: base_t {end_of_output(_range)}
 {
 expand(this->range, 1);
 }
@@ -72,77 +76,17 @@ expand(this->range, 1);
 return *this;
 }
 
-/*===========================================================
-  save
-===========================================================*/
-template <typename U = Range>
-back_insert
-save (
-){
-return back_insert(*this).range = this->range.save();
-}
-
-/*===========================================================
-  operator =
-===========================================================*/
-template <typename T>
-void
-operator = (
-  T const & _var
-){
-this->range = _var;
-}
-
-/*===========================================================
-  operator ==
-===========================================================*/
-template <typename U = Range>
-bool
-operator == (
-  sentinel::readable const & _sen
-) const {
-return this->range == _sen;
-}
-
-/*===========================================================
-  operator ==
-===========================================================*/
-template <typename U = Range>
-bool
-operator == (
-  sentinel::writable const & _sen
-) const {
-return this->range == _sen;
-}
-
-/*===========================================================
-  size
-===========================================================*/
-template <typename U = Range>
-auto
-size (
-) const -> decltype(this->range.size()) {
-return this->range.size();
-}
-
-/*===========================================================
-  position
-===========================================================*/
-template <typename U = Range>
-auto
-position (
-) const -> decltype(this->range.position()) {
-return this->range.position();
-}
-
-/*===========================================================
-  disable
-===========================================================*/
-Range
-disable (
-) const {
-return this->range;
-}
+using base_t::size;
+using base_t::position;
+using base_t::save;
+using base_t::operator *;
+using base_t::operator =;
+using base_t::operator ==;
+using base_t::erase;
+using base_t::erase_all;
+using base_t::shrink;
+using base_t::insert;
+using base_t::expand;
 
 };
 //back insert------------------------------------------------

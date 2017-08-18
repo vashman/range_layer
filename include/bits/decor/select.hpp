@@ -9,6 +9,7 @@
 #define RANGE_LAYER_SELECT_RANGE_HPP
 
 #include <tuple>
+#include "base_decor.hpp"
 
 namespace range_layer {
 namespace bits {
@@ -27,9 +28,11 @@ using type = void;
   select
 ===========================================================*/
 template <typename Range, std::size_t I>
-class select {
+class select
+: public bits::base_decor<Range, select<Range, I>>
+{
 
-Range range;
+using base_t = bits::base_decor<Range, select<Range, I>>;
 
 public:
 
@@ -51,13 +54,32 @@ using write_type
 select (
   Range _range
 )
-: range {_range}
+: base_t {_range}
 {}
 
+/*===========================================================
+  copy ctor
+===========================================================*/
 select (select const &) = default;
+
+/*===========================================================
+  move ctor
+===========================================================*/
 select (select &&) = default;
+
+/*===========================================================
+  move assignment operator
+===========================================================*/
 select & operator = (select &&) = default;
+
+/*===========================================================
+  copy assignment operator
+===========================================================*/
 select & operator = (select const &) = default;
+
+/*===========================================================
+  dtor
+===========================================================*/
 ~select () = default;
 
 /*===========================================================
@@ -68,36 +90,6 @@ operator * (
 ) -> decltype(std::get<I>(*this->range)) {
 using std::get;
 return get<I>(*this->range);
-}
-
-/*===========================================================
-  save
-===========================================================*/
-template <typename U = Range>
-select &
-save (
-){
-return select(*this).range = this->range.save();
-}
-
-/*===========================================================
-  operator ++
-===========================================================*/
-template <typename U = Range>
-select &
-operator ++ (){
-++this->range;
-return *this;
-}
-
-/*===========================================================
-  operator --
-===========================================================*/
-template <typename U = Range>
-select &
-operator -- (){
---this->range;
-return *this;
 }
 
 /*===========================================================
@@ -112,80 +104,15 @@ using std::get;
 get<I>(this->range) = _var;
 }
 
-/*===========================================================
-  operator +=
-===========================================================*/
-template <typename N>
-select &
-operator += (
-  N _n
-){
-this->range += _n;
-return *this;
-}
-
-/*===========================================================
-  operator -=
-===========================================================*/
-template <typename N>
-select &
-operator -= (
-  N _n
-){
-this->range -= _n;
-return *this;
-}
-
-/*===========================================================
-  operator ==
-===========================================================*/
-template <typename U = Range>
-bool
-operator == (
-  sentinel::readable const & _sen
-) const {
-return this->range == _sen;
-}
-
-/*===========================================================
-  operator ==
-===========================================================*/
-template <typename U = Range>
-bool
-operator == (
-  sentinel::writable const & _sen
-) const {
-return this->range == _sen;
-}
-
-/*===========================================================
-  size
-===========================================================*/
-template <typename U = Range>
-auto
-size (
-) const -> decltype(this->range.size()) {
-return this->range.size();
-}
-
-/*===========================================================
-  position
-===========================================================*/
-template <typename U = Range>
-auto
-position (
-) const -> decltype(this->range.position()) {
-return this->range.position();
-}
-
-/*===========================================================
-  disable
-===========================================================*/
-Range
-disable (
-) const {
-return this->range;
-}
+using base_t::size;
+using base_t::position;
+using base_t::save;
+using base_t::operator ==;
+using base_t::erase;
+using base_t::erase_all;
+using base_t::shrink;
+using base_t::insert;
+using base_t::expand;
 
 };
 //select-----------------------------------------------------

@@ -13,6 +13,9 @@
 namespace range_layer {
 namespace bits {
 
+/*===========================================================
+  chain 
+===========================================================*/
 template <typename Range, typename... Ranges>
 class chain {
 

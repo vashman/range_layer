@@ -389,8 +389,8 @@ advance_shrink (
 , N _n
 ){
 bits::range_assert<Range>();
-
-return _range.shrink(_n);
+_range.shrink(_n);
+return _range;
 }
 
 /*===========================================================
@@ -402,8 +402,8 @@ erase (
   Range _range
 ){
 bits::range_assert<Range>();
-
-return _range.erase();
+_range.erase();
+return _range;
 }
 
 /*===========================================================
@@ -415,8 +415,8 @@ erase_all (
   Range _range
 ){
 bits::range_assert<Range>();
-
-return _range.erase_all();
+_range.erase_all();
+return _range;
 }
 
 /*===========================================================
@@ -433,8 +433,8 @@ static_assert (
   range_trait::is_insertable<Range>::value
 , "range.hpp 442"
 );
-
-return _range.insert(_args...);
+_range.insert(std::forward<Args...>(_args...));
+return _range;
 }
 
 /*===========================================================
@@ -447,8 +447,8 @@ expand (
 , N _n
 ){
 bits::range_assert<Range>();
-
-return _range.expand(_n);
+_range.expand(_n);
+return _range;
 }
 
 /*===========================================================
@@ -473,9 +473,9 @@ auto
 crange (
   T const & _var
 ) -> decltype (
-remove_decorator ( disable_output (
-  range(const_cast<T&>(_var))
-))
+  remove_decorator ( disable_output (
+    range(const_cast<T&>(_var))
+  ))
 ){
 return
 remove_decorator ( disable_output (

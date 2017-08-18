@@ -8,6 +8,8 @@
 #ifndef RANGE_LAYER_SUB_RANGE_HPP
 #define RANGE_LAYER_SUB_RANGE_HPP
 
+#include "base_decor.hpp"
+
 namespace range_layer {
 namespace bits {
 
@@ -15,7 +17,12 @@ namespace bits {
   sub_range
 ===========================================================*/
 template <typename Range, typename Sentinel>
-class sub_range {
+class sub_range
+: public bits::base_decor<Range, sub_range<Range, Sentinel>>
+{
+
+using base_t
+  = bits::base_decor<Range, sub_range<Range, Sentinel>>;
 
 public:
 
@@ -27,7 +34,6 @@ using write_type
 
 private:
 
-Range range;
 Sentinel sen;
 read_type temp;
 
@@ -42,6 +48,11 @@ return (this->sen == this->temp);
 
 public:
 
+using base_t::operator =;
+using base_t::operator *;
+using base_t::size;
+using base_t::position;
+
 /*===========================================================
   ctor
 ===========================================================*/
@@ -49,26 +60,35 @@ sub_range (
   Range _range
 , Sentinel _sentinel
 )
-: range {_range}
+: bits::base_decor<Range, sub_range<Range, Sentinel>>{_range}
 , sen {_sentinel}
 , temp {*_range}
 {}
 
+/*===========================================================
+  copy assignment operator
+===========================================================*/
 sub_range (sub_range const &) = default;
-sub_range & operator = (sub_range const &) = default;
-sub_range (sub_range &&) = default;
-sub_range & operator = (sub_range &&) = default;
-~sub_range() = default;
 
 /*===========================================================
-  operator *
+  copy assignment operator
 ===========================================================*/
-template <typename U = Range>
-auto
-operator * (
-) -> decltype(this->temp) {
-return this->temp;
-}
+sub_range & operator = (sub_range const &) = default;
+
+/*===========================================================
+  move ctor
+===========================================================*/
+sub_range (sub_range &&) = default;
+
+/*===========================================================
+  move assignment operator
+===========================================================*/
+sub_range & operator = (sub_range &&) = default;
+
+/*===========================================================
+  dtor
+===========================================================*/
+~sub_range() = default;
 
 /*===========================================================
   operator ++
@@ -83,16 +103,6 @@ return *this;
 }
 
 /*===========================================================
-  save
-===========================================================*/
-template <typename U = Range>
-sub_range
-save (
-){
-return sub_range(*this).range = this->range.save();
-}
-
-/*===========================================================
   operator --
 ===========================================================*/
 template <typename U = Range>
@@ -102,17 +112,6 @@ operator -- (
 --this->range;
 this->temp = *this->range;
 return *this;
-}
-
-/*===========================================================
-  operator =
-===========================================================*/
-template <typename T>
-void
-operator = (
-  T const & _var
-){
-this->range = _var;
 }
 
 /*===========================================================
@@ -159,35 +158,6 @@ operator == (
   sentinel::writable const & _sen
 ) const {
 return this->range == _sen && !this->is_end();
-}
-
-/*===========================================================
-  size
-===========================================================*/
-/*template <typename U = Range>
-auto
-size (
-) const -> decltype(this->range.size()) {
-return this->range.size();
-}*/
-
-/*===========================================================
-  position
-===========================================================*/
-/*template <typename U = Range>
-auto
-position (
-) const -> decltype(this->range.position()) {
-return this->range.position();
-}*/
-
-/*===========================================================
-  disable
-===========================================================*/
-Range
-disable (
-) const {
-return this->range;
 }
 
 };

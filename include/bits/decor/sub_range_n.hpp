@@ -8,6 +8,8 @@
 #ifndef RANGE_LAYER_SUB_RANGE_N_HPP
 #define RANGE_LAYER_SUB_RANGE_N_HPP
 
+#include "base_decor.hpp"
+
 namespace range_layer {
 namespace bits {
 
@@ -15,9 +17,13 @@ namespace bits {
   sub_range_n
 ===========================================================*/
 template <typename Range, typename S>
-class sub_range_n {
+class sub_range_n
+: public bits::base_decor<Range, sub_range_n<Range, S>>
+{
 
-Range range;
+using base_t =
+  bits::base_decor<Range, sub_range_n<Range, S>>;
+
 S pos;
 S count;
 
@@ -34,6 +40,20 @@ using read_type
 using write_type
   = typename range_trait::write_type<Range>::type;
 
+using base_t::position;
+using base_t::save;
+using base_t::operator *;
+using base_t::operator =;
+
+/*===========================================================
+  size
+===========================================================*/
+S
+size (
+) const {
+return this->count;
+}
+
 /*===========================================================
   ctor
 ===========================================================*/
@@ -41,25 +61,35 @@ sub_range_n (
   Range _range
 , S _count
 )
-: range {_range}
+: bits::base_decor<Range, sub_range_n<Range, S>> {_range}
 , pos {1}
 , count {_count}
 {}
 
+/*===========================================================
+  copy ctor
+===========================================================*/
 sub_range_n (sub_range_n const &) = default;
-sub_range_n & operator = (sub_range_n const &) = default;
-sub_range_n (sub_range_n &&) = default;
-sub_range_n& operator = (sub_range_n &&) = default;
-~sub_range_n() = default;
 
 /*===========================================================
-  operator *
+  copy assignment operator
 ===========================================================*/
-template <typename U = Range>
-auto
-operator * () -> decltype(*this->range){
-return *this->range;
-}
+sub_range_n & operator = (sub_range_n const &) = default;
+
+/*===========================================================
+  move ctor
+===========================================================*/
+sub_range_n (sub_range_n &&) = default;
+
+/*===========================================================
+  move assignment operator
+===========================================================*/
+sub_range_n& operator = (sub_range_n &&) = default;
+
+/*===========================================================
+  dtor
+===========================================================*/
+~sub_range_n() = default;
 
 /*===========================================================
   operator ++
@@ -73,16 +103,6 @@ return *this;
 }
 
 /*===========================================================
-  operator save
-===========================================================*/
-template <typename U = Range>
-sub_range_n
-save (
-){
-return sub_range_n(*this).range = this->range.save();;
-}
-
-/*===========================================================
   operator --
 ===========================================================*/
 template <typename U = Range>
@@ -91,15 +111,6 @@ operator -- (){
 --this->pos;
 --this->range;
 return *this;
-}
-
-/*===========================================================
-  operator =
-===========================================================*/
-template <typename T>
-void
-operator = (T const & _var){
-this->range = _var;
 }
 
 /*===========================================================
@@ -149,38 +160,12 @@ operator == (
 return this->range == _sen && !this->is_end();
 }
 
-/*===========================================================
-  size
-===========================================================*/
-template <typename U = Range>
-auto
-size (
-) const -> decltype(this->range.size()) {
-return this->range.size();
-}
-
-/*===========================================================
-  position
-===========================================================*/
-template <typename U = Range>
-auto
-position (
-) const -> decltype(this->range.position()) {
-return this->range.position();
-}
-
-/*===========================================================
-  disable
-===========================================================*/
-Range
-disable (
-) const {
-return this->range;
-}
-
 };
 //sub_range_n------------------------------------------------
 
-} /* bits */ } /* range layer */
+}
+//bits-------------------------------------------------------
+}
+//range layer------------------------------------------------
 #endif
 

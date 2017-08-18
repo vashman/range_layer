@@ -8,120 +8,81 @@
 #ifndef RANGE_LAYER_DISABLE_INPUT_HPP
 #define RANGE_LAYER_DISABLE_INPUT_HPP
 
+#include "base_decor.hpp"
+
 namespace range_layer {
 namespace bits {
 
+/*===========================================================
+  disable input
+===========================================================*/
 template <typename Range>
-class disable_input {
+class disable_input
+: public bits::base_decor<Range, disable_input<Range>>
+{
 
-Range range;
+using base_t = bits::base_decor<Range, disable_input<Range>>;
 
 public:
 
 using write_type
   = typename range_trait::write_type<Range>::type;
 
+/*===========================================================
+  ctor
+===========================================================*/
 disable_input (
   Range _range
 )
-: range {_range}
+: base_t {_range}
 {}
 
+/*===========================================================
+  copy ctor
+===========================================================*/
 disable_input (disable_input const &) = default;
+
+/*===========================================================
+  move ctor
+===========================================================*/
 disable_input (disable_input &&) = default;
+
+/*===========================================================
+  move assignment operator
+===========================================================*/
 disable_input & operator = (disable_input &&) = default;
+
+/*===========================================================
+  copy assignment operator
+===========================================================*/
 disable_input & operator = (disable_input const &) = default;
+
+/*===========================================================
+  dtor
+===========================================================*/
 ~disable_input () = default;
 
-template <typename U = Range>
-disable_input &
-save(){
-return disable_input(*this).range = this->range.save();
+using base_t::size;
+using base_t::position;
+using base_t::save;
+using base_t::operator =;
+using base_t::operator ++;
+using base_t::operator +=;
+using base_t::operator --;
+using base_t::operator -=;
+using base_t::operator ==;
+using base_t::erase;
+using base_t::erase_all;
+using base_t::shrink;
+using base_t::insert;
+using base_t::expand;
+
+};
+//disable input----------------------------------------------
+
 }
-
-template <typename U = Range>
-disable_input &
-operator ++ (){
-++this->range;
-return *this;
+//bits-------------------------------------------------------
 }
-
-template <typename U = Range>
-disable_input &
-operator -- (){
---this->range;
-return *this;
-}
-
-template <typename T>
-void
-operator = (
-  T const & _var
-){
-this->range = _var;
-}
-
-template <typename N>
-disable_input &
-operator += (
-  N _n
-){
-this->range += _n;
-return *this;
-}
-
-template <typename N>
-disable_input &
-operator -= (
-  N _n
-){
-this->range -= _n;
-return *this;
-}
-
-bool
-operator == (
-  sentinel::readable const & _sen
-) const {
-return this->range == _sen;
-}
-
-template <typename U = Range>
-bool
-operator == (
-  sentinel::writable const & _sen
-) const {
-return this->range == _sen;
-}
-
-template <typename T>
-bool
-operator == (
-  T const & _sen
-) const {
-return this->range == _sen;
-}
-
-auto
-size (
-) const -> decltype(size(this->range)) {
-return size(this->range);
-}
-
-auto
-position (
-) const -> decltype(this->range.position()) {
-return this->range.position();
-}
-
-Range
-disable (
-) const {
-return this->range;
-}
-
-}; /* disable input */
-
-} /* bits */ } /* range layer */
+//range layer------------------------------------------------
 #endif
 
