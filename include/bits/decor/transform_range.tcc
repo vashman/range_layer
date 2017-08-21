@@ -20,15 +20,9 @@ transform_range<Func, Range>::operator * (
 return this->func(*this->range);
 }*/
 
-template <typename Func, typename Range>
-template <typename T>
-void
-transform_range<Func, Range>::operator = (
-  T const & _var
-){
-this->range = this->func(_var);
 }
-
-} /* bits */ } /* range layer */
+//bits-------------------------------------------------------
+}
+//range layer------------------------------------------------
 #endif
 

@@ -1,15 +1,14 @@
-// forward definitions for range
+// Basic range operations and includes.
 
 //          Copyright Sundeep S. Sangha 2015 - 2017.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_BITS_RANGE_FWD_HPP
-#define RANGE_LAYER_BITS_RANGE_FWD_HPP
+#ifndef RANGE_LAYER_BITS_RANGE_TCC
+#define RANGE_LAYER_BITS_RANGE_TCC
 
-#include <type_traits>
-#include "range_traits_fwd.hpp"
+#include "algo/asserts.hpp"
 
 namespace range_layer {
 
@@ -20,7 +19,13 @@ template <typename Range>
 auto
 read (
   Range & _range
-) -> decltype (*_range);
+)
+-> decltype (*_range)
+{
+bits::read_assert<Range>();
+
+return *_range;
+}
 
 /*===========================================================
   write
@@ -28,9 +33,13 @@ read (
 template <typename Range, typename T>
 void
 write (
-  Range &
-, T const &
-);
+  Range & _range
+, T const & _var
+){
+bits::write_assert<Range>();
+
+_range = _var;
+}
 
 /*===========================================================
   advance
@@ -38,9 +47,12 @@ write (
 template <typename Range, typename... Ranges>
 void
 advance (
-  Range &
-, Ranges &...
-);
+  Range & _range
+, Ranges &... _ranges
+){
+++_range;
+void* list[] = {0, (static_cast<void*>(&(++_ranges)))...};
+}
 
 /*===========================================================
   reverse
@@ -48,9 +60,12 @@ advance (
 template <typename Range, typename... Ranges>
 void
 reverse (
-  Range &
-, Ranges &...
-);
+  Range & _range
+, Ranges &... _ranges
+){
+--_range;
+void* list[] = {0, (static_cast<void*>(&(--_ranges)))...};
+}
 
 namespace bits {
 
@@ -63,13 +78,16 @@ template
 < typename Range
 , typename N
 , typename std::enable_if
-  <range_trait::is_linear<Range>::value, int>::type = 0
+  <range_trait::is_linear<Range>::value, int>::type
 >
 void
 advance_n (
-  N const
-, Range &
-);
+  N const _n
+, Range & _range
+){
+N count = _n;
+while (0 != count--) ++_range;
+}
 
 /*===========================================================
   advance_n
@@ -80,13 +98,15 @@ template
 < typename Range
 , typename N
 , typename std::enable_if
-  <! range_trait::is_linear<Range>::value, int>::type = 0
+  <! range_trait::is_linear<Range>::value, int>::type
 >
 void
 advance_n (
-  N const
-, Range &
-);
+  N const _n
+, Range & _range
+){
+_range += _n;
+}
 
 /*===========================================================
   reverse_n
@@ -97,12 +117,15 @@ template <
   typename Range
 , typename N
 , typename std::enable_if
-  <range_trait::is_linear<Range>::value, int>::type = 0 >
+  <range_trait::is_linear<Range>::value, int>::type >
 void
 reverse_n (
-  N const
-, Range &
-);
+  N const _n
+, Range & _range
+){
+N count = _n;
+while (0 != count--) --_range;
+}
 
 /*===========================================================
   reverse_n
@@ -113,12 +136,14 @@ template <
   typename Range
 , typename N
 , typename std::enable_if
-  <! range_trait::is_linear<Range>::value, int>::type = 0 >
+  <! range_trait::is_linear<Range>::value, int>::type >
 void
 reverse_n (
-  N const
-, Range &
-);
+  N const _n
+, Range & _range
+){
+_range -= _n;
+}
 
 }
 //bits-------------------------------------------------------
@@ -129,10 +154,13 @@ reverse_n (
 template <typename N, typename Range, typename... Ranges>
 void
 advance_n (
-  N const
-, Range &
-, Ranges &...
-);
+  N const _n
+, Range & _range
+, Ranges &... _ranges
+){
+bits::advance_n(_n, _range);
+void* list[] = {0, (bits::advance_n(_n, _ranges), 0)...};
+}
 
 /*===========================================================
   reverse_n
@@ -140,10 +168,13 @@ advance_n (
 template <typename N, typename Range, typename... Ranges>
 void
 reverse_n (
-  N const
-, Range &
-, Ranges &...
-);
+  N const _n
+, Range & _range
+, Ranges &... _ranges
+){
+bits::reverse_n(_n, _range);
+void* list[] = {0, (bits::reverse_n(_n, _ranges),0)...};
+}
 
 /*===========================================================
   next
@@ -151,8 +182,11 @@ reverse_n (
 template <typename Range>
 Range
 next (
-  Range
-);
+  Range _range
+){
+advance(_range);
+return _range;
+}
 
 /*===========================================================
   next
@@ -160,9 +194,12 @@ next (
 template <typename Range, typename N>
 Range
 next (
-  N
-, Range
-);
+  N _n
+, Range _range
+){
+advance_n(_n, _range);
+return _range;
+}
 
 /*===========================================================
   prev
@@ -170,8 +207,11 @@ next (
 template <typename Range>
 Range
 prev (
-  Range
-);
+  Range _range
+){
+reverse(_range);
+return _range;
+}
 
 /*===========================================================
   prev
@@ -179,9 +219,12 @@ prev (
 template <typename Range, typename N>
 Range
 prev (
-  N
-, Range
-);
+  N _n
+, Range _range
+){
+reverse_n(_n, _range);
+return _range;
+}
 
 /*===========================================================
   has_readable
@@ -189,8 +232,10 @@ prev (
 template <typename Range>
 bool
 has_readable (
-  Range const &
-);
+  Range const & _range
+){
+return _range == sentinel::readable{};
+}
 
 /*===========================================================
   has_writable
@@ -198,8 +243,10 @@ has_readable (
 template <typename Range>
 bool
 has_writable (
-  Range const &
-);
+  Range const & _range
+){
+return _range == sentinel::writable{};
+}
 
 /*===========================================================
   size
@@ -211,7 +258,11 @@ template <typename Range>
 auto
 size (
   Range const & _range
-) -> decltype(_range.size());
+) -> decltype(_range.size()) {
+bits::range_assert<Range>();
+
+return _range.size();
+}
 
 /*===========================================================
   position
@@ -223,7 +274,11 @@ template <typename Range>
 auto
 position (
   Range const & _range
-) -> decltype(_range.position());
+) -> decltype (_range.position()) {
+bits::range_assert<Range>();
+
+return _range.position();
+}
 
 /*===========================================================
   end_of
@@ -231,8 +286,15 @@ position (
 template <typename Range>
 Range
 end_of (
-  Range
-);
+  Range _range
+){
+bits::range_assert<Range>();
+
+while (has_readable(_range) || has_writable(_range))
+advance(_range);
+
+return _range;
+}
 
 /*===========================================================
   end_of_output
@@ -241,7 +303,13 @@ template <typename Range>
 Range
 end_of_output (
   Range _range
-);
+){
+bits::write_assert<Range>();
+
+while (has_writable(_range)) advance(_range);
+
+return _range;
+}
 
 /*===========================================================
   end_of_input
@@ -249,8 +317,14 @@ end_of_output (
 template <typename Range>
 Range
 end_of_input (
-  Range
-);
+  Range _range
+){
+bits::range_assert<Range>();
+
+while (has_readable(_range)) advance(_range);
+
+return _range;
+}
 
 /*===========================================================
   start_of
@@ -258,8 +332,15 @@ end_of_input (
 template <typename Range>
 Range
 start_of (
-  Range
-);
+  Range _range
+){
+bits::range_assert<Range>();
+
+while (has_readable(_range) || has_writable(_range))
+reverse(_range);
+
+return _range;
+}
 
 /*===========================================================
   start_of_output
@@ -267,8 +348,14 @@ start_of (
 template <typename Range>
 Range
 start_of_output (
-  Range
-);
+  Range _range
+){
+bits::write_assert<Range>();
+
+while (has_writable(_range)) reverse(_range);
+
+return _range;
+}
 
 /*===========================================================
   start_of_input
@@ -276,18 +363,29 @@ start_of_output (
 template <typename Range>
 Range
 start_of_input (
-  Range
-);
+  Range _range
+){
+bits::range_assert<Range>();
+
+while (has_readable(_range))
+reverse(_range);
+
+return _range;
+}
 
 /*===========================================================
   shrink
 ===========================================================*/
 template <typename Range, typename N>
 Range
-shrink (
-  Range
-, N
-);
+advance_shrink (
+  Range _range
+, N _n
+){
+bits::range_assert<Range>();
+_range.shrink(_n);
+return _range;
+}
 
 /*===========================================================
   erase
@@ -295,8 +393,12 @@ shrink (
 template <typename Range>
 Range
 erase (
-  Range
-);
+  Range _range
+){
+bits::range_assert<Range>();
+_range.erase();
+return _range;
+}
 
 /*===========================================================
   erase_all
@@ -304,8 +406,12 @@ erase (
 template <typename Range>
 Range
 erase_all (
-  Range
-);
+  Range _range
+){
+bits::range_assert<Range>();
+_range.erase_all();
+return _range;
+}
 
 /*===========================================================
   insert
@@ -313,9 +419,17 @@ erase_all (
 template <typename Range, typename... Args>
 Range
 insert (
-  Range
-, Args &&...
+  Range _range
+, Args &&... _args
+){
+bits::range_assert<Range>();
+static_assert (
+  range_trait::is_insertable<Range>::value
+, "range.hpp 442"
 );
+_range.insert(std::forward<Args...>(_args...));
+return _range;
+}
 
 /*===========================================================
   expand
@@ -323,9 +437,13 @@ insert (
 template <typename Range, typename N>
 Range
 expand (
-  Range
-, N
-);
+  Range _range
+, N _n
+){
+bits::range_assert<Range>();
+_range.expand(_n);
+return _range;
+}
 
 /*===========================================================
   save
@@ -337,7 +455,9 @@ template <typename Range>
 auto
 save (
   Range _range
-) -> decltype(_range.save());
+) -> decltype(_range.save()) {
+return _range.save();
+}
 
 /*===========================================================
   const range
@@ -346,9 +466,16 @@ template <typename T>
 auto
 crange (
   T const & _var
-) -> decltype ( remove_decorator ( disable_output (
+) -> decltype (
+  remove_decorator ( disable_output (
+    range(const_cast<T&>(_var))
+  ))
+){
+return
+remove_decorator ( disable_output (
   range(const_cast<T&>(_var))
-)));
+));
+}
 
 /*===========================================================
   const move crange
@@ -357,7 +484,9 @@ template <typename T>
 auto
 crange (
   T const && _var
-) ->decltype(extend_life(range(_var), _var));
+) ->decltype(extend_life(range(_var), _var)) {
+return extend_life(range(_var), _var);
+}
 
 }
 //range layer------------------------------------------------

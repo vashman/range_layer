@@ -11,6 +11,9 @@
 namespace range_layer {
 namespace bits {
 
+/*===========================================================
+  base decor
+===========================================================*/
 template <typename Range, typename Decorator>
 class base_decor {
 
@@ -23,9 +26,7 @@ Range range;
 ===========================================================*/
 base_decor (
   Range _range
-)
-: range {_range}
-{}
+);
 
 /*===========================================================
   copy ctor
@@ -57,10 +58,7 @@ base_decor & operator = (base_decor &&) = default;
 ===========================================================*/
 template <typename U = Range>
 auto
-operator * (
-) -> decltype(*this->range) {
-return *this->range;
-}
+operator * () -> decltype(*this->range);
 
 /*===========================================================
   operator =
@@ -68,21 +66,15 @@ return *this->range;
 template <typename T>
 void
 operator = (
-  T const & _var
-){
-this->range = _var;
-}
+  T const &
+);
 
 /*===========================================================
   operator ++
 ===========================================================*/
 template <typename U = Range>
 Decorator &
-operator ++ (
-){
-++this->range;
-return static_cast<Decorator&>(*this);
-}
+operator ++ ();
 
 /*===========================================================
   operator +=
@@ -90,22 +82,15 @@ return static_cast<Decorator&>(*this);
 template <typename N>
 Decorator &
 operator += (
-  N _n
-){
-this->range += _n;
-return static_cast<Decorator&>(*this);
-}
+  N
+);
 
 /*===========================================================
   operator --
 ===========================================================*/
 template <typename U = Range>
 Decorator &
-operator -- (
-){
---this->range;
-return static_cast<Decorator&>(*this);
-}
+operator -- ();
 
 /*===========================================================
   operator -=
@@ -113,11 +98,8 @@ return static_cast<Decorator&>(*this);
 template <typename N>
 Decorator &
 operator -= (
-  N _n
-){
-this->range -= _n;
-return static_cast<Decorator&>(*this);
-}
+  N
+);
 
 /*===========================================================
   operator ==
@@ -125,10 +107,8 @@ return static_cast<Decorator&>(*this);
 template <typename U = Range>
 bool
 operator == (
-  sentinel::readable const & _sen
-) const {
-return this->range == _sen;
-}
+  sentinel::readable const &
+) const;
 
 /*===========================================================
   operator ==
@@ -136,62 +116,43 @@ return this->range == _sen;
 template <typename U = Range>
 bool
 operator == (
-  sentinel::writable const & _sen
-) const {
-return this->range == _sen;
-}
+  sentinel::writable const &
+) const;
 
 /*===========================================================
   size
 ===========================================================*/
 template <typename U = Range>
 auto
-size (
-) const -> decltype(this->range.size()) {
-return this->range.size();
-}
+size () const -> decltype(this->range.size());
 
 /*===========================================================
   position
 ===========================================================*/
 template <typename U = Range>
 auto
-position (
-) const -> decltype(this->range.position()) {
-return this->range.position();
-}
+position () const -> decltype(this->range.position());
 
 /*===========================================================
   save
 ===========================================================*/
 template <typename U = Range>
 Decorator
-save (
-){
-Decorator temp{static_cast<Decorator&>(*this)};
-temp.range = this->range.save();
-return temp;
-}
+save ();
 
 /*===========================================================
   erase
 ===========================================================*/
 template <typename U = Range>
 void
-erase (
-){
-this->range->erase();
-}
+erase ();
 
 /*===========================================================
   erase all
 ===========================================================*/
 template <typename U = Range>
 void
-erase_all (
-){
-this->range->erase_all();
-}
+erase_all ();
 
 /*===========================================================
   shrink
@@ -199,10 +160,8 @@ this->range->erase_all();
 template <typename N>
 void
 shrink (
-  N _n
-){
-this->range->shrink(_n);
-}
+  N
+);
 
 /*===========================================================
   insert
@@ -210,10 +169,8 @@ this->range->shrink(_n);
 template <typename... Args>
 void
 insert (
-  Args &&... _args
-){
-this->range->insert(std::forward<Args...>(_args...));
-}
+  Args &&...
+);
 
 /*===========================================================
   expand
@@ -221,10 +178,8 @@ this->range->insert(std::forward<Args...>(_args...));
 template <typename N>
 void
 expand (
-  N _n
-){
-this->range->expand(_n);
-}
+  N
+);
 
 public:
 
@@ -232,10 +187,7 @@ public:
   disable
 ===========================================================*/
 Range
-disable (
-) const {
-return this->range;
-}
+disable () const;
 
 };
 //base decor-------------------------------------------------
@@ -244,4 +196,6 @@ return this->range;
 //bits-------------------------------------------------------
 }
 //range layer------------------------------------------------
+#include "base_decor.tcc"
 #endif
+

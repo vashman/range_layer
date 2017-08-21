@@ -11,6 +11,9 @@
 namespace range_layer {
 namespace bits {
 
+/*===========================================================
+  input_transform_range
+===========================================================*/
 template <typename Func, typename Range>
 class input_transform_range {
 

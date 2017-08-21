@@ -8,11 +8,12 @@
 #ifndef RANGE_LAYER_JOIN_RANGE_HPP
 #define RANGE_LAYER_JOIN_RANGE_HPP
 
-#include "range_traits.hpp"
-
 namespace range_layer {
 namespace bits {
 
+/*===========================================================
+  join
+===========================================================*/
 template <typename LhsRange, typename RhsRange>
 class join {
 
@@ -39,6 +40,9 @@ using write_type = typelist_cat_t
   ::type
 >;
 
+/*===========================================================
+  ctor
+===========================================================*/
 join (
   LhsRange _lhs_range
 , RhsRange _rhs_range
@@ -51,6 +55,10 @@ join (join const &) = default;
 join (join &&) = default;
 join & operator = (join &&) = default;
 join & operator = (join const &) = default;
+
+/*===========================================================
+  dtor
+===========================================================*/
 ~join () = default;
 
 template <typename U = LhsRange>

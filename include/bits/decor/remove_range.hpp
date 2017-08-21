@@ -1,4 +1,4 @@
-//
+// Skips over range elements that match the predicate.
 
 //          Copyright Sundeep S. Sangha 2015 - 2017.
 // Distributed under the Boost Software License, Version 1.0.
@@ -8,15 +8,24 @@
 #ifndef RANGE_LAYER_REMOVE_RANGE_HPP
 #define RANGE_LAYER_REMOVE_RANGE_HPP
 
+#include "base_decor.hpp"
+
 namespace range_layer {
 namespace bits {
 
+/*===========================================================
+  remove range
+===========================================================*/
 template <typename Range, typename Pred>
-class remove_range {
+class remove_range
+: public bits::base_decor<Range, remove_range<Range, Pred>>
+{
 
-Range range;
 Pred pred;
-typename std::remove_reference<decltype (*range)>::type temp;
+typename range_trait::read_type<Range>::type temp;
+
+using base_t
+  = bits::base_decor<Range, remove_range<Range, Pred>>;
 
 public:
 
@@ -26,11 +35,14 @@ using read_type
 using write_type
   = typename range_trait::write_type<Range>::type;
 
+/*===========================================================
+  ctor
+===========================================================*/
 remove_range (
   Range _range
 , Pred _pred
 )
-: range {_range}
+: base_t {_range}
 , pred {_pred}
 , temp ()
 {
@@ -42,23 +54,46 @@ remove_range (
   }
 }
 
+/*===========================================================
+  copy ctor
+===========================================================*/
 remove_range (remove_range const &) = default;
+
+/*===========================================================
+  move ctor
+===========================================================*/
 remove_range (remove_range &&) = default;
+
+/*===========================================================
+  move assignment operator
+===========================================================*/
 remove_range & operator = (remove_range &&) = default;
+
+/*===========================================================
+  copy assignment operator
+===========================================================*/
 remove_range & operator = (remove_range const &) = default;
+
+/*===========================================================
+  dtor
+===========================================================*/
 ~remove_range () = default;
 
-auto
-operator * () -> decltype(*this->range){
-return this->temp;
-}
+using base_t::save;
+using base_t::size;
+using base_t::position;
+using base_t::erase;
+using base_t::erase_all;
+using base_t::shrink;
+using base_t::expand;
+using base_t::insert;
+using base_t::operator *;
+using base_t::operator =;
+using base_t::operator ==;
 
-template <typename U = Range>
-remove_range &
-save(){
-return remove_range(*this).range = this->range.save();
-}
-
+/*===========================================================
+  operator ++
+===========================================================*/
 template <typename U = Range>
 remove_range &
 operator ++ (){
@@ -71,6 +106,9 @@ operator ++ (){
 return *this;
 }
 
+/*===========================================================
+  operator --
+===========================================================*/
 template <typename U = Range>
 remove_range &
 operator -- (){
@@ -83,14 +121,9 @@ operator -- (){
 return *this;
 }
 
-template <typename T>
-void
-operator = (
-  T const & _var
-){
-this->range = _var;
-}
-
+/*===========================================================
+  operator +=
+===========================================================*/
 template <typename N>
 remove_range &
 operator += (
@@ -105,6 +138,9 @@ operator += (
 return *this;
 }
 
+/*===========================================================
+  operator -=
+===========================================================*/
 template <typename N>
 remove_range &
 operator -= (
@@ -119,56 +155,20 @@ operator -= (
 return *this;
 }
 
-bool
-operator == (
-  sentinel::readable const & _sen
-) const {
-return this->range == _sen;
-}
+};
+//remove range-----------------------------------------------
 
-template <typename U = Range>
-bool
-operator == (
-  sentinel::writable const & _sen
-) const {
-return this->range == _sen;
-}
-
-template <typename T>
-bool
-operator == (
-  T const & _sen
-) const {
-return this->range == _sen;
-}
-
-Range
-disable (
-) const {
-return this->range;
-}
-
-template <typename T = Range>
-auto
-size (
-) const -> decltype(this->range.size()) {
-return this->range.size();
-}
-
-template <typename U = Range>
-auto
-size (
-) const -> decltype(this->range.position()) {
-return this->range.position();
-}
-
-}; /* remove range */
-
+/*===========================================================
+  remove_pred
+===========================================================*/
 template <typename T>
 struct remove_pred {
 
 T value;
 
+/*===========================================================
+  operator ()
+===========================================================*/
 template <typename U>
 bool
 operator () (
@@ -177,8 +177,12 @@ operator () (
 return this->value == _lhs;
 }
 
-}; /* remove pred */
+};
+//remove pred------------------------------------------------
 
-} /* bits */ } /* range layer */
+}
+//bits-------------------------------------------------------
+}
+//range layer------------------------------------------------
 #endif
 

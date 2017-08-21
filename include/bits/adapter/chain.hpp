@@ -22,7 +22,7 @@ class chain {
 std::tuple<Range, Ranges...> range;
 std::size_t pos;
 
-public:size
+public:
 
 /* Read & write types must be the same for each range other
  * ranges read & write types.

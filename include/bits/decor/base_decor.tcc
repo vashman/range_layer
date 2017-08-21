@@ -25,7 +25,7 @@ base_decor<Range, Decorator>::base_decor (
   operator *
 ===========================================================*/
 template <typename Range, typename Decorator>
-template <typename U = Range>
+template <typename U>
 auto
 base_decor<Range, Decorator>::operator * (
 ) -> decltype(*this->range) {
@@ -48,12 +48,12 @@ this->range = _var;
   operator ++
 ===========================================================*/
 template <typename Range, typename Decorator>
-template <typename U = Range>
+template <typename U>
 Decorator &
 base_decor<Range, Decorator>::operator ++ (
 ){
 ++this->range;
-return static_cast<Decorator&>(*this);
+return (Decorator&)*this;
 }
 
 /*===========================================================
@@ -73,7 +73,7 @@ return static_cast<Decorator&>(*this);
   operator --
 ===========================================================*/
 template <typename Range, typename Decorator>
-template <typename U = Range>
+template <typename U>
 Decorator &
 base_decor<Range, Decorator>::operator -- (
 ){
@@ -98,7 +98,7 @@ return static_cast<Decorator&>(*this);
   operator ==
 ===========================================================*/
 template <typename Range, typename Decorator>
-template <typename U = Range>
+template <typename U>
 bool
 base_decor<Range, Decorator>::operator == (
   sentinel::readable const & _sen
@@ -110,7 +110,7 @@ return this->range == _sen;
   operator ==
 ===========================================================*/
 template <typename Range, typename Decorator>
-template <typename U = Range>
+template <typename U>
 bool
 base_decor<Range, Decorator>::operator == (
   sentinel::writable const & _sen
@@ -122,7 +122,7 @@ return this->range == _sen;
   size
 ===========================================================*/
 template <typename Range, typename Decorator>
-template <typename U = Range>
+template <typename U>
 auto
 base_decor<Range, Decorator>::size (
 ) const -> decltype(this->range.size()) {
@@ -133,7 +133,7 @@ return this->range.size();
   position
 ===========================================================*/
 template <typename Range, typename Decorator>
-template <typename U = Range>
+template <typename U>
 auto
 base_decor<Range, Decorator>::position (
 ) const -> decltype(this->range.position()) {
@@ -144,7 +144,7 @@ return this->range.position();
   save
 ===========================================================*/
 template <typename Range, typename Decorator>
-template <typename U = Range>
+template <typename U>
 Decorator
 base_decor<Range, Decorator>::save (
 ){
@@ -157,7 +157,7 @@ return temp;
   erase
 ===========================================================*/
 template <typename Range, typename Decorator>
-template <typename U = Range>
+template <typename U>
 void
 base_decor<Range, Decorator>::erase (
 ){
@@ -168,7 +168,7 @@ this->range->erase();
   erase all
 ===========================================================*/
 template <typename Range, typename Decorator>
-template <typename U = Range>
+template <typename U>
 void
 base_decor<Range, Decorator>::erase_all (
 ){

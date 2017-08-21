@@ -9,14 +9,21 @@
 #define RANGE_LAYER_EXTEND_LIFE_RANGE_HPP
 
 #include <tuple>
+#include "base_decor.hpp"
 
 namespace range_layer {
 namespace bits {
 
+/*===========================================================
+  extend life
+===========================================================*/
 template <typename Range, typename... Ts>
-class extend_life {
+class extend_life
+: public bits::base_decor<Range, extend_life<Range, Ts...>>
+{
 
-Range range;
+using base_t
+  = bits::base_decor<Range, extend_life<Range, Ts...>>;
 
 public:
 
@@ -29,110 +36,54 @@ using read_type
 using write_type
   = typename range_trait::write_type<Range>::type;
 
+/*===========================================================
+  ctor
+===========================================================*/
 extend_life (
-  Range _range
-, Ts... _ts
-)
-: range {_range}
-, variables {_ts...}
-{}
+  Range
+, Ts...
+);
 
+/*===========================================================
+  copy ctor
+===========================================================*/
 extend_life (extend_life const &) = default;
+
+/*===========================================================
+  copy assignment operator
+===========================================================*/
 extend_life & operator = (extend_life const &) = default;
+
+/*===========================================================
+  move ctor
+===========================================================*/
 extend_life (extend_life &&) = default;
+
+/*===========================================================
+  move assignment operator
+===========================================================*/
 extend_life & operator = (extend_life &&) = default;
+
+/*===========================================================
+  dtor
+===========================================================*/
 ~extend_life() = default;
 
-template <typename U = Range>
-auto
-operator * (
-) -> decltype(*this->range) {
-return *this->range;
-}
-
-template <typename U = Range>
-extend_life &
-operator ++ (
-){
-++this->range;
-return *this;
-}
-
-template <typename U = Range>
-extend_life
-save (
-){
-return extend_life(*this).range = this->range.save();
-}
-
-template <typename U = Range>
-extend_life &
-operator -- (
-){
---this->range;
-return *this;
-}
-
-template <typename T>
-void
-operator = (
-  T const & _var
-){
-this->range = _var;
-}
-
-template <typename N>
-extend_life &
-operator += (
-  N _n
-){
-this->range += _n;
-return *this;
-}
-
-template <typename N>
-extend_life &
-operator -= (
-  N _n
-){
-this->range -= _n;
-return *this;
-}
-
-bool
-operator == (
-  sentinel::readable const & _sen
-) const {
-return this->range == _sen;
-}
-
-template <typename U = Range>
-bool
-operator == (
-  sentinel::writable const & _sen
-) const {
-return this->range == _sen;
-}
-
-template <typename U = Range>
-auto
-size (
-) const -> decltype(this->range.size()) {
-return this->range.size();
-}
-
-template <typename U = Range>
-auto
-position (
-) const -> decltype(this->range.position()) {
-return this->range.position();
-}
-
-Range
-disable (
-) const {
-return this->range;
-}
+using base_t::operator *;
+using base_t::operator =;
+using base_t::operator ++;
+using base_t::operator +=;
+using base_t::operator --;
+using base_t::operator -=;
+using base_t::operator ==;
+using base_t::save;
+using base_t::size;
+using base_t::position;
+using base_t::insert;
+using base_t::expand;
+using base_t::shrink;
+using base_t::erase;
+using base_t::erase_all;
 
 /* used internally to reset the range, after the container
  * has moved or been copied to inside the range.
@@ -144,8 +95,24 @@ set_range (
 this->range = _range;
 }
 
-}; /* extend_life */
+};
+//extend_life------------------------------------------------
 
-} /* bits */ } /* range layer */
+/*===========================================================
+  ctor
+===========================================================*/
+template <typename Range, typename... Ts>
+extend_life<Range, Ts...>::extend_life (
+  Range _range
+, Ts... _ts
+)
+: extend_life<Range, Ts...>::base_t {_range}
+, variables {_ts...}
+{}
+
+}
+//bits-------------------------------------------------------
+}
+//range layer------------------------------------------------
 #endif
 

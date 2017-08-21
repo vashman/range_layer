@@ -14,11 +14,17 @@
 namespace range_layer {
 namespace bits {
 
+/*===========================================================
+  range_element_type
+===========================================================*/
 template <typename T, std::size_t I>
 struct range_element_type {
 using type = typename std::tuple_element<I, T>::type;
 };
 
+/*===========================================================
+  range_element_type
+===========================================================*/
 template <std::size_t I>
 struct range_element_type <void, I> {
 using type = void;

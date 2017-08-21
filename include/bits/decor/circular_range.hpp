@@ -8,14 +8,25 @@
 #ifndef RANGE_LAYER_CIRCULAR_RANGE_HPP
 #define RANGE_LAYER_CIRCULAR_RANGE_HPP
 
+#include "base_decor.hpp"
+
 namespace range_layer {
 namespace bits {
 
+/*===========================================================
+  circular range
+===========================================================*/
 template <typename Range>
-class circular_range {
+class circular_range
+: public bits::base_decor<Range, circular_range<Range>>
+{
 
-Range range;
+using base_t
+  = bits::base_decor<Range, circular_range<Range>>;
 
+/*===========================================================
+  is_end
+===========================================================*/
 bool
 is_end (
 ) const {
@@ -34,35 +45,46 @@ using read_type
 using write_type
   = typename range_trait::write_type<Range>::type;
 
+/*===========================================================
+  ctor
+===========================================================*/
 circular_range (
   Range _range
 )
-: range {_range}
+: base_t {_range}
 {}
 
+/*===========================================================
+  copy ctor
+===========================================================*/
 circular_range (circular_range const &) = default;
+
+/*===========================================================
+  move ctor
+===========================================================*/
 circular_range (circular_range &&) = default;
+
+/*===========================================================
+  move assignment operator
+===========================================================*/
 circular_range & operator = (circular_range &&) = default;
 
+/*===========================================================
+  copy assignment operator
+===========================================================*/
 circular_range &
 operator = (
   circular_range const &
 ) = default;
 
+/*===========================================================
+  dtor
+===========================================================*/
 ~circular_range () = default;
 
-auto
-operator * (
-) -> decltype(*this->range) {
-return *this->range;
-}
-
-template <typename U = Range>
-circular_range &
-save(){
-return circular_range(*this).range = this->range.save();
-}
-
+/*===========================================================
+  operator ++
+===========================================================*/
 template <typename U = Range>
 circular_range &
 operator ++ (){
@@ -72,6 +94,9 @@ operator ++ (){
 return *this;
 }
 
+/*===========================================================
+  operator --
+===========================================================*/
 template <typename U = Range>
 circular_range &
 operator -- (){
@@ -81,83 +106,73 @@ operator -- (){
 return *this;
 }
 
-template <typename T>
-void
-operator = (
-  T const & _var
-){
-this->range = _var;
-}
-
+/*===========================================================
+  operator +=
+===========================================================*/
 template <typename N>
 circular_range &
 operator += (
   N _n
 ){
-while (_n > 0){
-this->operator ++();
---_n;
-}
+  while (_n > 0){
+  this->operator ++();
+  --_n;
+  }
 return *this;
 }
 
+/*===========================================================
+  operator -=
+===========================================================*/
 template <typename N>
 circular_range &
 operator -= (
   N _n
 ){
-while (_n > 0){
-this->operator --();
---_n;
-}
+  while (_n > 0){
+  this->operator --();
+  --_n;
+  }
 return *this;
 }
 
-bool
+/*===========================================================
+  operator ==
+===========================================================*/
+template <typename U = Range>
+constexpr bool
 operator == (
   sentinel::readable const & _sen
 ) const {
-return this->range == _sen;
+return true;
 }
 
+/*===========================================================
+  operator ==
+===========================================================*/
 template <typename U = Range>
-bool
+constexpr bool
 operator == (
   sentinel::writable const & _sen
 ) const {
-return this->range == _sen;
+return true;
 }
 
-template <typename T>
-bool
-operator == (
-  T const & _sen
-) const {
-return this->range == _sen;
+using base_t::save;
+using base_t::position;
+using base_t::expand;
+using base_t::shrink;
+using base_t::erase;
+using base_t::erase_all;
+using base_t::operator =;
+using base_t::operator *;
+
+};
+//circular range---------------------------------------------
+
 }
-
-template <typename U = Range>
-auto
-size (
-) const -> decltype(size(this->range)) {
-return size(this->range);
+//bits-------------------------------------------------------
 }
-
-template <typename U = Range>
-auto
-position (
-) const -> decltype(this->range.position()) {
-return this->range.position();
-}
-
-Range
-disable (
-) const {
-return this->range;
-}
-
-}; /* circular range */
-
-} /* bits */ } /* range layer */
+//range layer------------------------------------------------
 #endif
 

@@ -8,7 +8,6 @@
 #include <cassert>
 #include "../include/range.hpp"
 #include "../include/iota_range.hpp"
-#include "../include/join.hpp"
 
 using range_layer::iota_range;
 using range_layer::join;

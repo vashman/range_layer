@@ -1,0 +1,221 @@
+// Traits for ranges.
+
+//          Copyright Sundeep S. Sangha 2015 - 2017.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef RANGE_LAYER_RANGE_TRAITS_FWD_HPP
+#define RANGE_LAYER_RANGE_TRAITS_FWD_HPP
+
+namespace range_layer {
+
+namespace sentinel {
+
+/*===========================================================
+  readable
+===========================================================*/
+class readable;
+
+/*===========================================================
+  writable
+===========================================================*/
+class writable;
+
+}
+//sentinel---------------------------------------------------
+
+namespace range_trait {
+
+/*===========================================================
+  is_range
+===========================================================*/
+template <typename Range>
+struct is_range;
+
+/*===========================================================
+  read_type
+===========================================================*/
+template <typename Range>
+struct read_type;
+
+/*===========================================================
+  write_type
+===========================================================*/
+template <typename Range>
+struct write_type;
+
+/*===========================================================
+  size_type
+===========================================================*/
+template <typename Range>
+struct size_type;
+
+/*===========================================================
+  has_position
+===========================================================*/
+template <typename Range>
+struct has_position;
+
+/*===========================================================
+  is_singleton
+===========================================================*/
+template <typename Range>
+struct is_singleton;
+
+/*===========================================================
+  is_output
+===========================================================*/
+template <typename Range>
+struct is_output;
+
+/*===========================================================
+  is_input
+===========================================================*/
+template <typename Range>
+struct is_input;
+
+/*===========================================================
+  is_reversable
+===========================================================*/
+template <typename Range>
+struct is_reversable;
+
+/*===========================================================
+  is_linear
+===========================================================*/
+template <typename Range>
+struct is_linear;
+
+/*===========================================================
+  is_shrinkable
+
+* When true, calling advance_shrink shrinks the size of the
+  range by removing elements from the beggining.
+* The removed elements are destroyed.
+* The ranges postion remains the same, until the element at
+  the position is removed, then the postion advances by 1.
+
+  pre:  | 0| 1|*2| 3| 4
+  n = 1
+  post: | 0| 1|*2| 3
+  n = 3
+  post: | 0| 1|*
+===========================================================*/
+template <typename Range>
+struct is_advance_shrinkable;
+
+/*===========================================================
+  is_erasable
+
+* When true, calling erase shrinks the size of the range by
+  removing the current element.
+* The removed elements are destroyed.
+* The postion does not change.
+
+  pre:  | 0| 1|*2| 3| 4
+  post: | 0| 1|*3| 4
+
+  pre:  | 0| 1| 2| 3|*4
+  post: | 0| 1| 2| 3|*
+===========================================================*/
+template <typename Range>
+struct is_erasable;
+
+/*===========================================================
+  is_all_erasable
+
+* When true, calling erase shrinks the size of the range by
+  removing the current element.
+* The removed elements are destroyed.
+* The postion advacnes by 1.
+
+  pre:  | 0| 1|*2| 3| 4
+  post: *
+===========================================================*/
+template <typename Range>
+struct is_all_erasable;
+
+/*===========================================================
+  is_expandable
+
+* When true, calling reverse_expand expands the size of the
+  range by adding to the end.
+* The postion does not change.
+
+  pre:  | 0| 1|*2| 3| 4
+  n = 1
+  post: | 0| 1|*2| 3| 4| #
+===========================================================*/
+template <typename Range>
+struct is_expandable;
+
+/*===========================================================
+  is_insertable
+
+* When true, calling insert expands the size of the range by
+  adding to the current postion with a write_type.
+* The postion changes to the inserted element.
+
+  pre:  | 0| 1|*2| 3| 4
+  post: | 0| 1|*#| 2| 3| 4
+===========================================================*/
+template <typename Range>
+struct is_insertable;
+
+/*===========================================================
+  is_finite
+===========================================================*/
+template <typename Range>
+struct is_finite;
+
+namespace input {
+
+/*===========================================================
+  is_temporary
+
+* if true, the read function performs UB when reading to
+  the same postion more than once.
+===========================================================*/
+template <typename Range>
+struct is_temporary;
+
+/*===========================================================
+  is_heterogeneous
+===========================================================*/
+template <typename Range>
+struct is_heterogeneous; 
+
+}
+//input------------------------------------------------------
+
+namespace output {
+
+/*===========================================================
+  is_heterogeneous
+===========================================================*/
+template <typename Range>
+struct is_heterogeneous; 
+
+}
+//output-----------------------------------------------------
+
+/*===========================================================
+  is_subscriptable
+
+* if true; T& range[n]
+===========================================================*/
+template <typename Range>
+struct is_subscriptable;
+
+/*===========================================================
+  is_decorator
+===========================================================*/
+template <typename Range>
+struct is_decorator;
+
+}
+//range trait------------------------------------------------
+}
+//range layer------------------------------------------------
+#endif

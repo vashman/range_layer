@@ -13,31 +13,54 @@
 namespace range_layer {
 namespace bits {
 
+/*===========================================================
+  replace_func
+===========================================================*/
 template <typename T>
 struct replace_func {
 
 T old_value;
 T new_value;
 
-T operator ()(T const & _value){
+/*===========================================================
+  operator ()
+===========================================================*/
+T
+operator ()(
+  T const & _value
+){
   if (_value == this->old_value) return this->new_value;
 return _value;
 }
 
-}; /* replace func */
+};
+//replace func-----------------------------------------------
 
+/*===========================================================
+  replace_if_func
+===========================================================*/
 template <typename Pred, typename T>
 struct replace_if_func {
 
 T new_value;
 Pred pred;
 
-T operator ()(T const & _value){
+/*===========================================================
+  operator ()
+===========================================================*/
+T
+operator ()(
+  T const & _value
+){
   if (this->pred(_value)) return this->new_value;
 return _value;
 }
 
-}; /* replace if func */
+};
+//replace if func--------------------------------------------
 
-} /* bits */ } /* range layer */
+}
+//bits-------------------------------------------------------
+}
+//range layer------------------------------------------------
 #endif
