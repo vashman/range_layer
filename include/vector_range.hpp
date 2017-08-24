@@ -10,29 +10,38 @@
 
 #include <vector>
 #include "range_traits.hpp"
-#include "bits/decor/extend_life.hpp"
+#include "bits/decorator.hpp"
 
 namespace range_layer {
 namespace bits {
 
+/*===========================================================
+  vector_range
+===========================================================*/
 template <typename T, typename Alloc>
 struct vector_range;
 
+/*===========================================================
+  range
+===========================================================*/
 template <typename T, typename Alloc>
 vector_range<T, Alloc>
 range (
   std::vector<T, Alloc> &
 );
 
+/*===========================================================
+  range
+===========================================================*/
 template <typename T, typename Alloc>
-bits::extend_life
-< vector_range<T, Alloc>
-, std::vector<T, Alloc>
->
+auto
 range (
-  std::vector<T, Alloc> &&
-);
+  std::vector<T, Alloc> && _con
+) -> decltype(range_layer::extend_range(std::move(_con)));
 
+/*===========================================================
+  vector_range
+===========================================================*/
 template <typename T, typename Alloc>
 struct vector_range {
 
@@ -46,38 +55,76 @@ public:
 using read_type = T;
 using write_type = read_type;
 
+/*===========================================================
+  ctor
+===========================================================*/
 vector_range (
   std::vector<T, Alloc> &
 );
 
+/*===========================================================
+  copy ctor
+===========================================================*/
 vector_range (vector_range const &) = default;
+
+/*===========================================================
+  move ctor
+===========================================================*/
 vector_range (vector_range &&) = default;
+
+/*===========================================================
+  copy assignment operator
+===========================================================*/
 vector_range & operator = (vector_range const &) = default;
+
+/*===========================================================
+  move assignment operator
+===========================================================*/
 vector_range & operator = (vector_range &&) = default;
+
+/*===========================================================
+  dtor
+===========================================================*/
 ~vector_range() = default;
 
+/*===========================================================
+  save
+===========================================================*/
 vector_range &
-save (){
+save (
+){
 return *this;
 }
 
+/*===========================================================
+  size
+===========================================================*/
 std::size_t
 size (
 ) const {
 return this->vec->size();
 }
 
+/*===========================================================
+  position
+===========================================================*/
 std::size_t
 position (
 ) const {
 return this->pos;
 }
 
+/*===========================================================
+  operator *
+===========================================================*/
 T const &
 operator * (){
 return *this->vec[this->pos-1];
 }
 
+/*===========================================================
+  operator =
+===========================================================*/
 void
 operator = (
   T const & _var
@@ -85,6 +132,9 @@ operator = (
 (*(this->vec))[this->pos-1] = _var;
 }
 
+/*===========================================================
+  operator ++
+===========================================================*/
 vector_range &
 operator ++ (
 ){
@@ -92,6 +142,9 @@ operator ++ (
 return *this;
 }
 
+/*===========================================================
+  operator --
+===========================================================*/
 vector_range &
 operator -- (
 ){
@@ -99,6 +152,9 @@ operator -- (
 return *this;
 }
 
+/*===========================================================
+  operator +=
+===========================================================*/
 vector_range &
 operator += (
   std::size_t const _n
@@ -107,6 +163,9 @@ this->pos += _n;
 return *this;
 }
 
+/*===========================================================
+  operator -=
+===========================================================*/
 vector_range &
 operator -= (
   std::size_t const _n
@@ -115,6 +174,9 @@ this->pos -= _n;
 return *this;
 }
 
+/*===========================================================
+  operator ==
+===========================================================*/
 bool
 operator == (
   sentinel::readable const _sen
@@ -122,6 +184,9 @@ operator == (
 return this->pos <= this->vec->size();
 }
 
+/*===========================================================
+  operator ==
+===========================================================*/
 bool
 operator == (
   sentinel::writable const _sen
@@ -184,8 +249,7 @@ this->vec->erase(this->vec->begin() + this->pos);
 return *this;
 }
 
-
-}; /* vector range */
+}; //vector range--------------------------------------------
 
 /*===========================================================
   vector_range:: ctor
@@ -198,7 +262,7 @@ vector_range<T, Alloc>::vector_range (
 , pos {1}
 {}
 
-} /* bits */
+} //bits-----------------------------------------------------
 
 /*===========================================================
   range
@@ -215,24 +279,15 @@ return bits::vector_range<T, Alloc> {_vec};
   move range
 ===========================================================*/
 template <typename T, typename Alloc>
-bits::extend_life
-< bits::vector_range<T, Alloc>
-, std::vector<T, Alloc>
->
+auto
 range (
-  std::vector<T, Alloc> && _vec
-){
-auto temp
-  = bits::extend_life
-  < bits::vector_range<T, Alloc>
-  , std::vector<T, Alloc>
-  >{bits::vector_range<T, Alloc> {_vec}, _vec};
-
-temp.set_range(bits::vector_range<T, Alloc> {_vec});
-
+  std::vector<T, Alloc> && _con
+) -> decltype(extend_life(range(_con), std::move(_con))) {
+auto temp = extend_life(range(_con), std::move(_con));
+temp.set_range(range(* std::get<0>(temp.variable).get()));
 return temp;
 }
 
-} /* range layer */
+} //range layer----------------------------------------------
 #endif
 

@@ -58,7 +58,8 @@ base_decor & operator = (base_decor &&) = default;
 ===========================================================*/
 template <typename U = Range>
 auto
-operator * () -> decltype(*this->range);
+operator * (
+) -> decltype(*std::declval<Range&>());
 
 /*===========================================================
   operator =
@@ -124,14 +125,16 @@ operator == (
 ===========================================================*/
 template <typename U = Range>
 auto
-size () const -> decltype(this->range.size());
+size (
+) const -> decltype(std::declval<Range&>().size());
 
 /*===========================================================
   position
 ===========================================================*/
 template <typename U = Range>
 auto
-position () const -> decltype(this->range.position());
+position (
+) const -> decltype(std::declval<Range&>().position());
 
 /*===========================================================
   save
@@ -181,21 +184,16 @@ expand (
   N
 );
 
-public:
-
 /*===========================================================
   disable
 ===========================================================*/
 Range
 disable () const;
 
-};
-//base decor-------------------------------------------------
+}; //base decor----------------------------------------------
 
-}
-//bits-------------------------------------------------------
-}
-//range layer------------------------------------------------
+} //bits-----------------------------------------------------
+} //range layer----------------------------------------------
 #include "base_decor.tcc"
 #endif
 

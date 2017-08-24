@@ -18,7 +18,7 @@ namespace bits {
 ===========================================================*/
 template <typename Range>
 class remove_decorator
-: protected bits::base_decor<Range, remove_decorator<Range>>
+: public bits::base_decor<Range, remove_decorator<Range>>
 {
 
 using base_t
@@ -83,11 +83,8 @@ using base_t::operator +=;
 using base_t::operator -=;
 using base_t::operator ==;
 
-};
-//remove decorator-------------------------------------------
+}; //remove decorator----------------------------------------
 
-}
-//bits-------------------------------------------------------
-}
-//range layer------------------------------------------------
+} //bits-----------------------------------------------------
+} //range layer----------------------------------------------
 #endif

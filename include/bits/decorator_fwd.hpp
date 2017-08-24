@@ -5,10 +5,11 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_DECORATOR_FWD_HPP
-#define RANGE_LAYER_DECORATOR_FWD_HPP
+#ifndef RANGE_LAYER_BITS_DECORATOR_FWD_HPP
+#define RANGE_LAYER_BITS_DECORATOR_FWD_HPP
 
 #include <type_traits>
+#include <memory>
 #include "is_detected.hpp"
 #include "range_traits_fwd.hpp"
 
@@ -96,8 +97,7 @@ class checked_range;
 template <typename Range, typename Decorator>
 class base_decor;
 
-}
-//bits-------------------------------------------------------
+} //bits-----------------------------------------------------
 
 /*===========================================================
   disable decorator
@@ -303,7 +303,7 @@ template <typename Range, typename... Ts>
 bits::extend_life<Range, Ts...>
 extend_life (
   Range
-, Ts...
+, Ts &&...
 );
 
 /*===========================================================
@@ -334,7 +334,16 @@ back_insert (
   Range
 );
 
-}
-//range layer------------------------------------------------
+/*===========================================================
+  extend_range
+===========================================================*/
+template <typename T, typename Func>
+auto
+extend_range (
+  T && _con
+, Func _func
+) -> decltype(extend_life(_func(_con), std::move(_con)));
+
+} //range layer----------------------------------------------
 #endif
 

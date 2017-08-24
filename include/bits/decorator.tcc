@@ -189,7 +189,7 @@ return bits::output_transform_range<Func, Range>
 }
 
 /*===========================================================
-  reverse_range
+  reverse range
 ===========================================================*/
 template <typename Range>
 bits::reverse_range<Range>
@@ -205,7 +205,7 @@ return bits::reverse_range<Range>{_range};
 }
 
 /*===========================================================
-  sub_range_n
+  sub range n
 ===========================================================*/
 template <typename Range, typename N>
 bits::sub_range_n<Range, N>
@@ -217,7 +217,7 @@ return bits::sub_range_n<Range, N>{_range, _n};
 }
 
 /*===========================================================
-  circular_range
+  circular range
 ===========================================================*/
 template <typename Range>
 bits::circular_range<Range>
@@ -228,7 +228,7 @@ return bits::circular_range<Range>{_range};
 }
 
 /*===========================================================
-  disable_input
+  disable input
 ===========================================================*/
 template <typename Range>
 bits::disable_input<Range>
@@ -239,7 +239,7 @@ return bits::disable_input<Range>{_range};
 }
 
 /*===========================================================
-  disable_output
+  disable output
 ===========================================================*/
 template <typename Range>
 bits::disable_output<Range>
@@ -261,19 +261,20 @@ return bits::select<Range, I> {_range};
 }
 
 /*===========================================================
-  extend_life
+  extend life
 ===========================================================*/
 template <typename Range, typename... Ts>
 bits::extend_life<Range, Ts...>
 extend_life (
   Range _range
-, Ts... _ts
+, Ts &&... _ts
 ){
-return bits::extend_life<Range, Ts...>{_range, _ts...};
+return bits::extend_life<Range, Ts...>
+  {_range, std::forward<Ts>(_ts)...};
 }
 
 /*===========================================================
-  sub_range
+  sub range
 ===========================================================*/
 template <typename Range, typename Sentinal>
 bits::sub_range<Range, Sentinal>
@@ -285,7 +286,7 @@ return bits::sub_range<Range, Sentinal>{_range, _sentinal};
 }
 
 /*===========================================================
-  checked_range
+  checked range
 ===========================================================*/
 template <typename Range>
 bits::checked_range<Range>
@@ -311,6 +312,19 @@ static_assert (
 return bits::back_insert<Range>{_range};
 }
 
+/*===========================================================
+  extend range
+===========================================================*/
+template <typename T, typename Func>
+auto
+extend_range (
+  T && _con
+, Func _func
+) -> decltype(extend_life(_func(_con), std::move(_con))){
+auto temp = extend_life(_func(_con), std::move(_con));
+temp.set_range(_func(* std::get<0>(temp.variable).get()));
+return temp;
 }
-//range layer------------------------------------------------
+
+} //range layer----------------------------------------------
 #endif

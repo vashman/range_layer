@@ -87,6 +87,7 @@ using base_t::erase_all;
 using base_t::shrink;
 using base_t::insert;
 using base_t::expand;
+using base_t::disable;
 
 };
 //back insert------------------------------------------------

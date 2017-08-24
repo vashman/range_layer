@@ -10,6 +10,9 @@
 
 namespace range_layer {
 
+/*===========================================================
+  array_range
+===========================================================*/
 template <typename T>
 class array_range {
 
@@ -22,34 +25,67 @@ public:
 using read_type = T;
 using write_type = read_type;
 
+/*===========================================================
+  ctor
+===========================================================*/
 array_range (
   T *
 , T *
 );
 
+/*===========================================================
+  copy ctor
+===========================================================*/
 array_range (array_range const &) = default;
+
+/*===========================================================
+  copy assignment operator
+===========================================================*/
 array_range & operator = (array_range const &) = default;
+
+/*===========================================================
+  move assignment operator
+===========================================================*/
 array_range & operator = (array_range &&) = default;
+
+/*===========================================================
+  move ctor
+===========================================================*/
 array_range (array_range &&) = default;
+
+/*===========================================================
+  dtor
+===========================================================*/
 ~array_range () = default;
 
 array_range &
-save (){
+save (
+){
 return *this;
 }
 
-const T&
+/*===========================================================
+  operator *
+===========================================================*/
+T const &
 operator * (
 ){
 return *this->pos;
 }
 
-void operator = (
+/*===========================================================
+  operator =
+===========================================================*/
+void
+operator = (
   T const & _var
 ){
 *this->pos = _var;
 }
 
+/*===========================================================
+  operator ++
+===========================================================*/
 array_range &
 operator ++ (
 ){
@@ -57,6 +93,9 @@ operator ++ (
 return *this;
 }
 
+/*===========================================================
+  operator +=
+===========================================================*/
 template <typename N>
 array_range &
 operator += (
@@ -66,6 +105,9 @@ this->pos += _n;
 return *this;
 }
 
+/*===========================================================
+  operator -=
+===========================================================*/
 template <typename N>
 array_range &
 operator -= (
@@ -75,6 +117,9 @@ this->pos -= _n;
 return *this;
 }
 
+/*===========================================================
+  operator --
+===========================================================*/
 array_range &
 operator -- (
 ){
@@ -82,6 +127,9 @@ operator -- (
 return *this;
 }
 
+/*===========================================================
+  operator []
+===========================================================*/
 T&
 operator [](
   int _n
@@ -89,82 +137,34 @@ operator [](
 return this->pos[_n];
 }
 
+/*===========================================================
+  operator ==
+===========================================================*/
 bool
 operator == (
   sentinel::readable const &
 ) const;
 
-bool
-operator == (
-  T const &
-) const;
-
+/*===========================================================
+  size
+===========================================================*/
 std::size_t
 size (
 ) const {
 return this->end_pos - this->pos;
 }
 
+/*===========================================================
+  position
+===========================================================*/
 std::size_t
 position (
 ) const {
 return this->array - this->end_pos;
 }
 
-}; /* array range */
+}; //array range---------------------------------------------
 
-template <typename T>
-bool
-array_range<T>::operator == (
-  sentinel::readable const & _rhs
-) const {
-return this->pos != this->end_pos;
-}
-
-template <typename T>
-bool
-operator != (
-  array_range<T> const & _lhs
-, sentinel::readable const & _rhs
-){
-return !(_lhs == _rhs);
-}
-
-template <typename T>
-bool
-operator == (
-  array_range<T> const & _lhs
-, sentinel::writable const & _rhs
-){
-return _lhs == sentinel::readable{};
-}
-
-template <typename T>
-bool
-operator != (
-  array_range<T> const & _lhs
-, sentinel::writable const & _rhs
-){
-return !(_lhs == _rhs);
-}
-
-template <typename T>
-bool
-array_range<T>::operator == (
-  T const & _rhs
-) const {
-return this->pos != &_rhs;
-}
-
-template <typename T>
-bool
-operator != (
-  array_range<T> const & _lhs
-, T const & _rhs
-){
-return !(_lhs == _rhs);
-}
-
-} /* range layer */
+} //range layer----------------------------------------------
 #endif
 

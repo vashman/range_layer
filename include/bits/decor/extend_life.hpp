@@ -9,6 +9,7 @@
 #define RANGE_LAYER_EXTEND_LIFE_RANGE_HPP
 
 #include <tuple>
+#include <memory>
 #include "base_decor.hpp"
 
 namespace range_layer {
@@ -27,8 +28,7 @@ using base_t
 
 public:
 
-// variables will need to be stored as pointers.
-std::tuple<Ts...> variables;
+std::tuple<std::shared_ptr<Ts>...> variable;
 
 using read_type
   = typename range_trait::read_type<Range>::type;
@@ -39,9 +39,10 @@ using write_type
 /*===========================================================
   ctor
 ===========================================================*/
+explicit
 extend_life (
   Range
-, Ts...
+, Ts &&...
 );
 
 /*===========================================================
@@ -84,10 +85,13 @@ using base_t::expand;
 using base_t::shrink;
 using base_t::erase;
 using base_t::erase_all;
+using base_t::disable;
 
-/* used internally to reset the range, after the container
+/*===========================================================
+  set_range
+ * used internally to reset the range, after the container
  * has moved or been copied to inside the range.
- */
+===========================================================*/
 void
 set_range (
   Range _range
@@ -95,8 +99,7 @@ set_range (
 this->range = _range;
 }
 
-};
-//extend_life------------------------------------------------
+}; //extend_life---------------------------------------------
 
 /*===========================================================
   ctor
@@ -104,15 +107,13 @@ this->range = _range;
 template <typename Range, typename... Ts>
 extend_life<Range, Ts...>::extend_life (
   Range _range
-, Ts... _ts
+, Ts &&... _ts
 )
 : extend_life<Range, Ts...>::base_t {_range}
-, variables {_ts...}
+, variable {std::make_shared<Ts>(_ts)...}
 {}
 
-}
-//bits-------------------------------------------------------
-}
-//range layer------------------------------------------------
+} //bits-----------------------------------------------------
+} //range layer----------------------------------------------
 #endif
 

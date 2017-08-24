@@ -13,7 +13,7 @@ using range_layer::circular_range;
 int main (){
 
 
-array<int, 6> arr = {5,6,7,8,9,0};
+array<int, 6> arr = {{5,6,7,8,9,0}};
 
 auto rng = circular_range (
   array_range<int>(arr.data(), arr.data()+arr.size())

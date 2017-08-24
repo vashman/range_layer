@@ -12,6 +12,12 @@
 
 using std::array;
 using range_layer::range;
+using range_layer::has_readable;
+using range_layer::has_writable;
+using range_layer::write;
+using range_layer::read;
+using range_layer::next;
+using range_layer::prev;
 
 int main (){
 auto rng = range(array<int, 5> {{0, 1, 2, 3, 4}});

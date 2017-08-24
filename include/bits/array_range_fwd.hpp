@@ -8,32 +8,43 @@
 #ifndef RANGE_LAYER_ARRAY_RANGE_FWD_HPP
 #define RANGE_LAYER_ARRAY_RANGE_FWD_HPP
 
+#include "decorator.hpp"
+
 namespace range_layer {
 
+/*===========================================================
+  array_range
+===========================================================*/
 template <typename T>
 class array_range;
 
+/*===========================================================
+  range
+===========================================================*/
 template <typename T>
 array_range <T>
 range (
   T *
 );
 
+/*===========================================================
+  range
+===========================================================*/
 template <typename T, std::size_t N>
 array_range <T>
 range (
   std::array<T, N> &
 );
 
+/*===========================================================
+  range
+===========================================================*/
 template <typename T, std::size_t N>
-bits::extend_life
-< array_range <T>
-, std::array<T, N>
->
+auto
 range (
-  std::array<T, N> &&
-);
+  std::array<T, N> && _con
+) -> decltype(extend_life(range(_con), std::move(_con)));
 
-} /* range layer */
+} //range layer----------------------------------------------
 #endif
 

@@ -28,7 +28,7 @@ template <typename Range, typename Decorator>
 template <typename U>
 auto
 base_decor<Range, Decorator>::operator * (
-) -> decltype(*this->range) {
+) -> decltype(*std::declval<Range&>()) {
 return *this->range;
 }
 
@@ -53,7 +53,7 @@ Decorator &
 base_decor<Range, Decorator>::operator ++ (
 ){
 ++this->range;
-return (Decorator&)*this;
+return static_cast<Decorator&>(*this);
 }
 
 /*===========================================================
@@ -125,7 +125,7 @@ template <typename Range, typename Decorator>
 template <typename U>
 auto
 base_decor<Range, Decorator>::size (
-) const -> decltype(this->range.size()) {
+) const -> decltype(std::declval<Range&>().size()) {
 return this->range.size();
 }
 
@@ -136,7 +136,7 @@ template <typename Range, typename Decorator>
 template <typename U>
 auto
 base_decor<Range, Decorator>::position (
-) const -> decltype(this->range.position()) {
+) const -> decltype(std::declval<Range&>().position()) {
 return this->range.position();
 }
 

@@ -22,6 +22,7 @@ read (
 )
 -> decltype (*_range)
 {
+bits::range_assert<Range>();
 bits::read_assert<Range>();
 
 return *_range;
@@ -36,6 +37,7 @@ write (
   Range & _range
 , T const & _var
 ){
+bits::range_assert<Range>();
 bits::write_assert<Range>();
 
 _range = _var;
@@ -50,6 +52,8 @@ advance (
   Range & _range
 , Ranges &... _ranges
 ){
+bits::range_assert<Range>();
+
 ++_range;
 void* list[] = {0, (static_cast<void*>(&(++_ranges)))...};
 }
@@ -63,6 +67,9 @@ reverse (
   Range & _range
 , Ranges &... _ranges
 ){
+bits::range_assert<Range>();
+bits::reversible_assert<Range>();
+
 --_range;
 void* list[] = {0, (static_cast<void*>(&(--_ranges)))...};
 }
@@ -85,6 +92,8 @@ advance_n (
   N const _n
 , Range & _range
 ){
+bits::range_assert<Range>();
+
 N count = _n;
 while (0 != count--) ++_range;
 }
@@ -105,6 +114,8 @@ advance_n (
   N const _n
 , Range & _range
 ){
+bits::range_assert<Range>();
+
 _range += _n;
 }
 
@@ -123,6 +134,9 @@ reverse_n (
   N const _n
 , Range & _range
 ){
+bits::range_assert<Range>();
+bits::reversible_assert<Range>();
+
 N count = _n;
 while (0 != count--) --_range;
 }
@@ -142,11 +156,13 @@ reverse_n (
   N const _n
 , Range & _range
 ){
+bits::range_assert<Range>();
+bits::reversible_assert<Range>();
+
 _range -= _n;
 }
 
-}
-//bits-------------------------------------------------------
+} //bits-----------------------------------------------------
 
 /*===========================================================
   advance_n
@@ -158,6 +174,8 @@ advance_n (
 , Range & _range
 , Ranges &... _ranges
 ){
+bits::range_assert<Range>();
+
 bits::advance_n(_n, _range);
 void* list[] = {0, (bits::advance_n(_n, _ranges), 0)...};
 }
@@ -172,6 +190,9 @@ reverse_n (
 , Range & _range
 , Ranges &... _ranges
 ){
+bits::range_assert<Range>();
+bits::reversible_assert<Range>();
+
 bits::reverse_n(_n, _range);
 void* list[] = {0, (bits::reverse_n(_n, _ranges),0)...};
 }
@@ -184,6 +205,8 @@ Range
 next (
   Range _range
 ){
+bits::range_assert<Range>();
+
 advance(_range);
 return _range;
 }
@@ -197,6 +220,8 @@ next (
   N _n
 , Range _range
 ){
+bits::range_assert<Range>();
+
 advance_n(_n, _range);
 return _range;
 }
@@ -209,6 +234,9 @@ Range
 prev (
   Range _range
 ){
+bits::range_assert<Range>();
+bits::reversible_assert<Range>();
+
 reverse(_range);
 return _range;
 }
@@ -222,6 +250,9 @@ prev (
   N _n
 , Range _range
 ){
+bits::range_assert<Range>();
+bits::reversible_assert<Range>();
+
 reverse_n(_n, _range);
 return _range;
 }
@@ -234,6 +265,9 @@ bool
 has_readable (
   Range const & _range
 ){
+bits::range_assert<Range>();
+bits::read_assert<Range>();
+
 return _range == sentinel::readable{};
 }
 
@@ -245,6 +279,9 @@ bool
 has_writable (
   Range const & _range
 ){
+bits::range_assert<Range>();
+bits::write_assert<Range>();
+
 return _range == sentinel::writable{};
 }
 
@@ -289,6 +326,7 @@ end_of (
   Range _range
 ){
 bits::range_assert<Range>();
+bits::finite_assert<Range>();
 
 while (has_readable(_range) || has_writable(_range))
 advance(_range);
@@ -305,6 +343,7 @@ end_of_output (
   Range _range
 ){
 bits::write_assert<Range>();
+bits::finite_assert<Range>();
 
 while (has_writable(_range)) advance(_range);
 
@@ -320,6 +359,7 @@ end_of_input (
   Range _range
 ){
 bits::range_assert<Range>();
+bits::finite_assert<Range>();
 
 while (has_readable(_range)) advance(_range);
 
@@ -383,6 +423,7 @@ advance_shrink (
 , N _n
 ){
 bits::range_assert<Range>();
+
 _range.shrink(_n);
 return _range;
 }
@@ -396,6 +437,7 @@ erase (
   Range _range
 ){
 bits::range_assert<Range>();
+
 _range.erase();
 return _range;
 }
@@ -409,6 +451,7 @@ erase_all (
   Range _range
 ){
 bits::range_assert<Range>();
+
 _range.erase_all();
 return _range;
 }
@@ -423,6 +466,7 @@ insert (
 , Args &&... _args
 ){
 bits::range_assert<Range>();
+
 static_assert (
   range_trait::is_insertable<Range>::value
 , "range.hpp 442"
@@ -441,6 +485,7 @@ expand (
 , N _n
 ){
 bits::range_assert<Range>();
+
 _range.expand(_n);
 return _range;
 }
@@ -456,6 +501,8 @@ auto
 save (
   Range _range
 ) -> decltype(_range.save()) {
+bits::range_assert<Range>();
+
 return _range.save();
 }
 
@@ -488,6 +535,5 @@ crange (
 return extend_life(range(_var), _var);
 }
 
-}
-//range layer------------------------------------------------
+} //range layer----------------------------------------------
 #endif

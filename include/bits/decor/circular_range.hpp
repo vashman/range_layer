@@ -166,6 +166,7 @@ using base_t::erase;
 using base_t::erase_all;
 using base_t::operator =;
 using base_t::operator *;
+using base_t::disable;
 
 };
 //circular range---------------------------------------------
