@@ -20,11 +20,44 @@ namespace bits {
 ===========================================================*/
 template <typename Range, typename... Ts>
 class extend_life
-: public bits::base_decor<Range, extend_life<Range, Ts...>>
+: public bits::base_decor
+  < Range
+  , extend_life<Range, Ts...>
+  , range_trait::is_linear<Range>
+  , range_trait::is_reversable<Range>
+  , range_trait::is_input<Range>
+  , range_trait::is_output<Range>
+  , range_trait::has_position<Range>
+  , range_trait::is_singleton<Range>
+  , range_trait::is_finite<Range>
+  , range_trait::is_erasable<Range>
+  , range_trait::is_all_erasable<Range>
+  , range_trait::is_shrinkable<Range>
+  , range_trait::is_expandable<Range>
+  , range_trait::is_insertable<Range>
+  , range_trait::is_subscriptable<Range>
+  , range_trait::is_decorator<Range>
+  >
 {
 
-using base_t
-  = bits::base_decor<Range, extend_life<Range, Ts...>>;
+using base_t = bits::base_decor
+  < Range
+  , extend_life<Range, Ts...>
+  , range_trait::is_linear<Range>
+  , range_trait::is_reversable<Range>
+  , range_trait::is_input<Range>
+  , range_trait::is_output<Range>
+  , range_trait::has_position<Range>
+  , range_trait::is_singleton<Range>
+  , range_trait::is_finite<Range>
+  , range_trait::is_erasable<Range>
+  , range_trait::is_all_erasable<Range>
+  , range_trait::is_shrinkable<Range>
+  , range_trait::is_expandable<Range>
+  , range_trait::is_insertable<Range>
+  , range_trait::is_subscriptable<Range>
+  , range_trait::is_decorator<Range>
+  >;
 
 public:
 
@@ -70,23 +103,6 @@ extend_life & operator = (extend_life &&) = default;
 ===========================================================*/
 ~extend_life() = default;
 
-using base_t::operator *;
-using base_t::operator =;
-using base_t::operator ++;
-using base_t::operator +=;
-using base_t::operator --;
-using base_t::operator -=;
-using base_t::operator ==;
-using base_t::save;
-using base_t::size;
-using base_t::position;
-using base_t::insert;
-using base_t::expand;
-using base_t::shrink;
-using base_t::erase;
-using base_t::erase_all;
-using base_t::disable;
-
 /*===========================================================
   set_range
  * used internally to reset the range, after the container
@@ -98,6 +114,8 @@ set_range (
 ){
 this->range = _range;
 }
+
+using base_t::operator =;
 
 }; //extend_life---------------------------------------------
 

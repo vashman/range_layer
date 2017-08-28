@@ -18,10 +18,44 @@ namespace bits {
 ===========================================================*/
 template <typename Range>
 class disable_input
-: public bits::base_decor<Range, disable_input<Range>>
+: public bits::base_decor
+  < Range
+  , disable_input<Range>
+  , range_trait::is_linear<Range>
+  , range_trait::is_reversable<Range>
+  , range_trait::is_input<Range>
+  , range_trait::is_output<Range>
+  , range_trait::has_position<Range>
+  , range_trait::is_singleton<Range>
+  , range_trait::is_finite<Range>
+  , range_trait::is_erasable<Range>
+  , range_trait::is_all_erasable<Range>
+  , range_trait::is_shrinkable<Range>
+  , range_trait::is_expandable<Range>
+  , range_trait::is_insertable<Range>
+  , range_trait::is_subscriptable<Range>
+  , range_trait::is_decorator<Range>
+  >
 {
 
-using base_t = bits::base_decor<Range, disable_input<Range>>;
+using base_t = bits::base_decor
+  < Range
+  , disable_input<Range>
+  , range_trait::is_linear<Range>
+  , range_trait::is_reversable<Range>
+  , range_trait::is_input<Range>
+  , range_trait::is_output<Range>
+  , range_trait::has_position<Range>
+  , range_trait::is_singleton<Range>
+  , range_trait::is_finite<Range>
+  , range_trait::is_erasable<Range>
+  , range_trait::is_all_erasable<Range>
+  , range_trait::is_shrinkable<Range>
+  , range_trait::is_expandable<Range>
+  , range_trait::is_insertable<Range>
+  , range_trait::is_subscriptable<Range>
+  , range_trait::is_decorator<Range>
+  >;
 
 public:
 

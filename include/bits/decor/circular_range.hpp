@@ -18,11 +18,44 @@ namespace bits {
 ===========================================================*/
 template <typename Range>
 class circular_range
-: public bits::base_decor<Range, circular_range<Range>>
+: public bits::base_decor
+  < Range
+  , circular_range<Range>
+  , range_trait::is_linear<Range>
+  , range_trait::is_reversable<Range>
+  , range_trait::is_input<Range>
+  , range_trait::is_output<Range>
+  , range_trait::has_position<Range>
+  , range_trait::is_singleton<Range>
+  , range_trait::is_finite<Range>
+  , range_trait::is_erasable<Range>
+  , range_trait::is_all_erasable<Range>
+  , range_trait::is_shrinkable<Range>
+  , range_trait::is_expandable<Range>
+  , range_trait::is_insertable<Range>
+  , range_trait::is_subscriptable<Range>
+  , range_trait::is_decorator<Range>
+  >
 {
 
-using base_t
-  = bits::base_decor<Range, circular_range<Range>>;
+using base_t = bits::base_decor
+  < Range
+  , circular_range<Range>
+  , range_trait::is_linear<Range>
+  , range_trait::is_reversable<Range>
+  , range_trait::is_input<Range>
+  , range_trait::is_output<Range>
+  , range_trait::has_position<Range>
+  , range_trait::is_singleton<Range>
+  , range_trait::is_finite<Range>
+  , range_trait::is_erasable<Range>
+  , range_trait::is_all_erasable<Range>
+  , range_trait::is_shrinkable<Range>
+  , range_trait::is_expandable<Range>
+  , range_trait::is_insertable<Range>
+  , range_trait::is_subscriptable<Range>
+  , range_trait::is_decorator<Range>
+  >;
 
 /*===========================================================
   is_end
@@ -107,36 +140,6 @@ return *this;
 }
 
 /*===========================================================
-  operator +=
-===========================================================*/
-template <typename N>
-circular_range &
-operator += (
-  N _n
-){
-  while (_n > 0){
-  this->operator ++();
-  --_n;
-  }
-return *this;
-}
-
-/*===========================================================
-  operator -=
-===========================================================*/
-template <typename N>
-circular_range &
-operator -= (
-  N _n
-){
-  while (_n > 0){
-  this->operator --();
-  --_n;
-  }
-return *this;
-}
-
-/*===========================================================
   operator ==
 ===========================================================*/
 template <typename U = Range>
@@ -158,22 +161,9 @@ operator == (
 return true;
 }
 
-using base_t::save;
-using base_t::position;
-using base_t::expand;
-using base_t::shrink;
-using base_t::erase;
-using base_t::erase_all;
-using base_t::operator =;
-using base_t::operator *;
-using base_t::disable;
+}; //circular range------------------------------------------
 
-};
-//circular range---------------------------------------------
-
-}
-//bits-------------------------------------------------------
-}
-//range layer------------------------------------------------
+} //bits-----------------------------------------------------
+} //range layer----------------------------------------------
 #endif
 

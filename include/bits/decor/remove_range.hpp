@@ -18,14 +18,45 @@ namespace bits {
 ===========================================================*/
 template <typename Range, typename Pred>
 class remove_range
-: public bits::base_decor<Range, remove_range<Range, Pred>>
+: public bits::base_decor
+  < Range
+  , remove_range<Range, Pred>
+  , range_trait::is_linear<Range>
+  , range_trait::is_reversable<Range>
+  , range_trait::is_input<Range>
+  , range_trait::is_output<Range>
+  , range_trait::has_position<Range>
+  , range_trait::is_singleton<Range>
+  , range_trait::is_finite<Range>
+  , range_trait::is_erasable<Range>
+  , range_trait::is_all_erasable<Range>
+  , range_trait::is_shrinkable<Range>
+  , range_trait::is_expandable<Range>
+  , range_trait::is_insertable<Range>
+  , range_trait::is_subscriptable<Range>
+  >
 {
 
 Pred pred;
 typename range_trait::read_type<Range>::type temp;
 
-using base_t
-  = bits::base_decor<Range, remove_range<Range, Pred>>;
+using base_t = bits::base_decor
+  < Range
+  , remove_range<Range, Pred>
+  , range_trait::is_linear<Range>
+  , range_trait::is_reversable<Range>
+  , range_trait::is_input<Range>
+  , range_trait::is_output<Range>
+  , range_trait::has_position<Range>
+  , range_trait::is_singleton<Range>
+  , range_trait::is_finite<Range>
+  , range_trait::is_erasable<Range>
+  , range_trait::is_all_erasable<Range>
+  , range_trait::is_shrinkable<Range>
+  , range_trait::is_expandable<Range>
+  , range_trait::is_insertable<Range>
+  , range_trait::is_subscriptable<Range>
+  >;
 
 public:
 
@@ -79,19 +110,6 @@ remove_range & operator = (remove_range const &) = default;
 ===========================================================*/
 ~remove_range () = default;
 
-using base_t::save;
-using base_t::size;
-using base_t::position;
-using base_t::erase;
-using base_t::erase_all;
-using base_t::shrink;
-using base_t::expand;
-using base_t::insert;
-using base_t::operator *;
-using base_t::operator =;
-using base_t::operator ==;
-using base_t::disable;
-
 /*===========================================================
   operator ++
 ===========================================================*/
@@ -122,40 +140,6 @@ operator -- (){
 return *this;
 }
 
-/*===========================================================
-  operator +=
-===========================================================*/
-template <typename N>
-remove_range &
-operator += (
-  N _n
-){
-++this->range;
-  while ((0 != _n) && (this->range == sentinel::readable{})){
-  this->temp = *this->range;
-    if (! this->pred(this->temp)) --_n;
-  ++this->range;
-  }
-return *this;
-}
-
-/*===========================================================
-  operator -=
-===========================================================*/
-template <typename N>
-remove_range &
-operator -= (
-  N _n
-){
---this->range;
-  while ((0 != _n) && (this->range == sentinel::readable{})){
-  this->temp = *this->range;
-    if (! this->pred(this->temp)) --_n;
-  --this->range;
-  }
-return *this;
-}
-
 }; //remove range--------------------------------------------
 
 /*===========================================================
@@ -177,8 +161,7 @@ operator () (
 return this->value == _lhs;
 }
 
-};
-//remove pred------------------------------------------------
+}; //remove pred---------------------------------------------
 
 } //bits-----------------------------------------------------
 } //range layer----------------------------------------------

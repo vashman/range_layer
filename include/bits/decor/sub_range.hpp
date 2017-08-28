@@ -18,11 +18,44 @@ namespace bits {
 ===========================================================*/
 template <typename Range, typename Sentinel>
 class sub_range
-: public bits::base_decor<Range, sub_range<Range, Sentinel>>
+: public bits::base_decor
+  < Range
+  , sub_range<Range, Sentinel>
+  , range_trait::is_linear<Range>
+  , range_trait::is_reversable<Range>
+  , range_trait::is_input<Range>
+  , range_trait::is_output<Range>
+  , range_trait::has_position<Range>
+  , range_trait::is_singleton<Range>
+  , range_trait::is_finite<Range>
+  , range_trait::is_erasable<Range>
+  , range_trait::is_all_erasable<Range>
+  , range_trait::is_shrinkable<Range>
+  , range_trait::is_expandable<Range>
+  , range_trait::is_insertable<Range>
+  , range_trait::is_subscriptable<Range>
+  , range_trait::is_decorator<Range>
+  >
 {
 
-using base_t
-  = bits::base_decor<Range, sub_range<Range, Sentinel>>;
+using base_t = bits::base_decor
+  < Range
+  , sub_range<Range, Sentinel>
+  , range_trait::is_linear<Range>
+  , range_trait::is_reversable<Range>
+  , range_trait::is_input<Range>
+  , range_trait::is_output<Range>
+  , range_trait::has_position<Range>
+  , range_trait::is_singleton<Range>
+  , range_trait::is_finite<Range>
+  , range_trait::is_erasable<Range>
+  , range_trait::is_all_erasable<Range>
+  , range_trait::is_shrinkable<Range>
+  , range_trait::is_expandable<Range>
+  , range_trait::is_insertable<Range>
+  , range_trait::is_subscriptable<Range>
+  , range_trait::is_decorator<Range>
+  >;
 
 public:
 
@@ -48,12 +81,6 @@ return (this->sen == this->temp);
 
 public:
 
-using base_t::operator =;
-using base_t::operator *;
-using base_t::size;
-using base_t::position;
-using base_t::disable;
-
 /*===========================================================
   ctor
 ===========================================================*/
@@ -61,7 +88,7 @@ sub_range (
   Range _range
 , Sentinel _sentinel
 )
-: bits::base_decor<Range, sub_range<Range, Sentinel>>{_range}
+: base_t {_range}
 , sen {_sentinel}
 , temp {*_range}
 {}
@@ -90,6 +117,8 @@ sub_range & operator = (sub_range &&) = default;
   dtor
 ===========================================================*/
 ~sub_range() = default;
+
+using base_t::operator =;
 
 /*===========================================================
   operator ++

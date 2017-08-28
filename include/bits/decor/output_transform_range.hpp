@@ -140,7 +140,7 @@ position (
 return this->range.position();
 }
 
-}; /* output transform range */
+}; // output transform range---------------------------------
 
 } /* bits */ } /* range layer */
 #endif

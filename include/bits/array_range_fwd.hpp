@@ -45,6 +45,16 @@ range (
   std::array<T, N> && _con
 ) -> decltype(extend_life(range(_con), std::move(_con)));
 
+/*===========================================================
+  operator ==
+===========================================================*/
+template <typename T>
+bool
+operator == (
+  array_range<T> const &
+, sentinel::writable const &
+);
+
 } //range layer----------------------------------------------
 #endif
 

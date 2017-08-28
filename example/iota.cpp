@@ -15,7 +15,6 @@ int main (int arc, char** argv){
 iota_range<int> rng {65};
 
 assert(has_readable(rng));
-
 int temp = read(rng);
 rng = next(rng);
 assert(temp == 65);
@@ -24,10 +23,12 @@ temp = read(rng);
 assert(temp == 66);
 
 rng = next(100, rng);
+assert(has_readable(rng));
 temp = read(rng);
 assert(temp == 166);
 
 rng = prev (rng);
+assert(has_readable(rng));
 temp = read(rng);
 assert(temp == 165);
 

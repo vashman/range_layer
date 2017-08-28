@@ -18,17 +18,51 @@ namespace bits {
 ===========================================================*/
 template <typename Range, typename S>
 class sub_range_n
-: public bits::base_decor<Range, sub_range_n<Range, S>>
+: public bits::base_decor
+  < Range
+  , sub_range_n<Range, S>
+  , range_trait::is_linear<Range>
+  , range_trait::is_reversable<Range>
+  , range_trait::is_input<Range>
+  , range_trait::is_output<Range>
+  , range_trait::has_position<Range>
+  , range_trait::is_singleton<Range>
+  , range_trait::is_finite<Range>
+  , range_trait::is_erasable<Range>
+  , range_trait::is_all_erasable<Range>
+  , range_trait::is_shrinkable<Range>
+  , range_trait::is_expandable<Range>
+  , range_trait::is_insertable<Range>
+  , range_trait::is_subscriptable<Range>
+  , range_trait::is_decorator<Range>
+  >
 {
 
-using base_t =
-  bits::base_decor<Range, sub_range_n<Range, S>>;
+using base_t = bits::base_decor
+  < Range
+  , sub_range_n<Range, S>
+  , range_trait::is_linear<Range>
+  , range_trait::is_reversable<Range>
+  , range_trait::is_input<Range>
+  , range_trait::is_output<Range>
+  , range_trait::has_position<Range>
+  , range_trait::is_singleton<Range>
+  , range_trait::is_finite<Range>
+  , range_trait::is_erasable<Range>
+  , range_trait::is_all_erasable<Range>
+  , range_trait::is_shrinkable<Range>
+  , range_trait::is_expandable<Range>
+  , range_trait::is_insertable<Range>
+  , range_trait::is_subscriptable<Range>
+  , range_trait::is_decorator<Range>
+  >;
 
 S pos;
 S count;
 
 bool
-is_end () const {
+is_end (
+) const {
 return (this->pos > this->count) || (this->pos == 0);
 }
 
@@ -40,11 +74,7 @@ using read_type
 using write_type
   = typename range_trait::write_type<Range>::type;
 
-using base_t::position;
-using base_t::save;
-using base_t::operator *;
 using base_t::operator =;
-using base_t::disable;
 
 /*===========================================================
   size
@@ -62,7 +92,7 @@ sub_range_n (
   Range _range
 , S _count
 )
-: bits::base_decor<Range, sub_range_n<Range, S>> {_range}
+: base_t {_range}
 , pos {1}
 , count {_count}
 {}
@@ -85,7 +115,7 @@ sub_range_n (sub_range_n &&) = default;
 /*===========================================================
   move assignment operator
 ===========================================================*/
-sub_range_n& operator = (sub_range_n &&) = default;
+sub_range_n & operator = (sub_range_n &&) = default;
 
 /*===========================================================
   dtor

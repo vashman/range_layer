@@ -94,7 +94,8 @@ class extend_life;
 template <typename Range>
 class checked_range;
 
-template <typename Range, typename Decorator>
+template
+  <typename Range, typename Decorator, typename... Traits>
 class base_decor;
 
 } //bits-----------------------------------------------------

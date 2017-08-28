@@ -28,8 +28,7 @@ class readable {};
 ===========================================================*/
 class writable {};
 
-}
-//sentinel---------------------------------------------------
+} //sentinel-------------------------------------------------
 
 namespace bits {
 namespace trait_bits {
@@ -70,7 +69,7 @@ using read_sen_t = decltype (
 
 template <typename T>
 using write_t = decltype (
-  std::declval<T&>().operator =(std::declval<int>()));
+  std::declval<T&>().operator =(std::declval<int const&>()));
 
 template <typename T>
 using write_sen_t = decltype (
@@ -158,7 +157,8 @@ using type = decltype(std::declval<Range&>().size());
 
 };
 
-} /* trait bits */ } /* bits */
+} // trait bits----------------------------------------------
+} // bits----------------------------------------------------
 
 namespace range_trait {
 
@@ -208,9 +208,7 @@ using type
 ===========================================================*/
 template <typename Range>
 struct size_type {
-using type
-  = typename bits
-  ::trait_bits::size_type
+using type = typename bits::trait_bits::size_type
   < Range
   , bits::is_detected<bits::trait_bits::rsize_t, Range>
     ::value
@@ -229,22 +227,30 @@ static_assert (
 };
 
 /*===========================================================
+  is_finite
+===========================================================*/
+template <typename Range>
+struct is_finite {
+static constexpr bool value
+  = bits::is_detected<bits::trait_bits::rsize_t, Range>
+  ::value;
+};
+
+/*===========================================================
   has_position
 ===========================================================*/
 template <typename Range>
 struct has_position {
 static constexpr bool value
-  = bits
-  ::is_detected<bits::trait_bits::rpos, Range>
-  ::value;
+  = bits::is_detected<bits::trait_bits::rpos, Range>::value;
 
-static_assert (
+/*static_assert (
   std::is_same
   < typename size_type<Range>::type
   , decltype(std::declval<Range&>().position())
   >::value
 , "Range postion and Size must return same type."
-);
+);*/
 
 };
 
@@ -333,7 +339,7 @@ static constexpr bool value
   post: | 0| 1|*
 ===========================================================*/
 template <typename Range>
-struct is_advance_shrinkable {
+struct is_shrinkable {
 static constexpr bool value
   = bits::is_detected<bits::trait_bits::shrink_t, Range>
   ::value;
@@ -413,16 +419,6 @@ static constexpr bool value
   ::value;
 };
 
-/*===========================================================
-  is_finite
-===========================================================*/
-template <typename Range>
-struct is_finite {
-static constexpr bool value
-  = bits::is_detected<bits::trait_bits::rsize_t, Range>
-  ::value;
-};
-
 namespace input {
 
 /*===========================================================
@@ -463,7 +459,7 @@ static constexpr bool value
     ::value;
 }; 
 
-} /* input */
+} // input---------------------------------------------------
 
 namespace output {
 
@@ -483,8 +479,7 @@ static constexpr bool value
   ::value;
 }; 
 
-}
-//output-----------------------------------------------------
+} // output--------------------------------------------------
 
 /*===========================================================
   is_subscriptable
@@ -515,9 +510,7 @@ static constexpr bool value
   ::is_detected<bits::trait_bits::disable_t, Range>::value;
 };
 
-}
-//range trait------------------------------------------------
-}
-//range layer------------------------------------------------
+} //range trait----------------------------------------------
+} //range layer----------------------------------------------
 #endif
 

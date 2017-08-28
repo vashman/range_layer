@@ -73,18 +73,6 @@ return this->pos != this->end_pos;
 }
 
 /*===========================================================
-  operator !=
-===========================================================*/
-template <typename T>
-bool
-operator != (
-  array_range<T> const & _lhs
-, sentinel::readable const & _rhs
-){
-return !(_lhs == _rhs);
-}
-
-/*===========================================================
   operator ==
 ===========================================================*/
 template <typename T>
@@ -94,18 +82,6 @@ operator == (
 , sentinel::writable const & _rhs
 ){
 return _lhs == sentinel::readable{};
-}
-
-/*===========================================================
-  operator !=
-===========================================================*/
-template <typename T>
-bool
-operator != (
-  array_range<T> const & _lhs
-, sentinel::writable const & _rhs
-){
-return !(_lhs == _rhs);
 }
 
 } //range layer----------------------------------------------
