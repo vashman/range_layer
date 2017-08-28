@@ -199,7 +199,8 @@ using type
   = typename bits::trait_bits::is_typelist
   < typename bits
   ::detected_or
-    < void
+    <   bits::detected_or<void, bits::trait_bits::read_t>
+      ::type
     , bits::trait_bits::rtype, Range
     >::type
   >::type;
@@ -213,8 +214,11 @@ struct write_type {
 using type
   = typename bits::trait_bits::is_typelist
   < typename bits
-    ::detected_or<void, bits::trait_bits::wtype, Range>
-    ::type
+  ::detected_or
+    <   bits::detected_or<void, bits::trait_bits::write_t>
+      ::type
+    , bits::trait_bits::wtype, Range
+    >::type
   >::type;
 };
 
