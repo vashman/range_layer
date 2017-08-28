@@ -211,9 +211,8 @@ template
 , typename = enable_range_if_t
     <range_trait::is_finite, R, Traits...>
 >
-auto
-size (
-) const -> decltype(std::declval<Range&>().size());
+typename range_trait::size_type<Range>::type
+size () const;
 
 /*===========================================================
   position
@@ -223,9 +222,8 @@ template
 , typename = enable_range_if_t
     <range_trait::has_position, R, Traits...>
 >
-auto
-position (
-) const -> decltype(std::declval<Range&>().position());
+typename range_trait::diffrence_type<Range>::type
+position () const;
 
 /*===========================================================
   save

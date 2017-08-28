@@ -59,6 +59,8 @@ using base_t = bits::base_decor
 
 public:
 
+using read_type
+  = typename range_trait::read_type<Range>::type;
 using write_type
   = typename range_trait::write_type<Range>::type;
 
@@ -101,7 +103,6 @@ back_insert & operator = (back_insert &&) = default;
 /*===========================================================
   operator ++
 ===========================================================*/
-template <typename U = Range>
 back_insert &
 operator ++ (
 ){
@@ -110,25 +111,11 @@ expand(this->range, 1);
 return *this;
 }
 
-using base_t::size;
-using base_t::position;
-using base_t::save;
-using base_t::operator *;
 using base_t::operator =;
-using base_t::operator ==;
-using base_t::erase;
-using base_t::erase_all;
-using base_t::shrink;
-using base_t::insert;
-using base_t::expand;
-using base_t::disable;
 
-};
-//back insert------------------------------------------------
+}; //back insert---------------------------------------------
 
-}
-//bits-------------------------------------------------------
-}
-//range layer------------------------------------------------
+} //bits-----------------------------------------------------
+} //range layer----------------------------------------------
 #endif
 

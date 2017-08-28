@@ -16,11 +16,11 @@ namespace bits {
 /*===========================================================
   sub_range_n
 ===========================================================*/
-template <typename Range, typename S>
+template <typename Range>
 class sub_range_n
 : public bits::base_decor
   < Range
-  , sub_range_n<Range, S>
+  , sub_range_n<Range>
   , range_trait::is_linear<Range>
   , range_trait::is_reversable<Range>
   , range_trait::is_input<Range>
@@ -40,7 +40,7 @@ class sub_range_n
 
 using base_t = bits::base_decor
   < Range
-  , sub_range_n<Range, S>
+  , sub_range_n<Range>
   , range_trait::is_linear<Range>
   , range_trait::is_reversable<Range>
   , range_trait::is_input<Range>
@@ -57,8 +57,8 @@ using base_t = bits::base_decor
   , range_trait::is_decorator<Range>
   >;
 
-S pos;
-S count;
+typename range_trait::size_type<Range>::type pos;
+typename range_trait::size_type<Range>::type count;
 
 bool
 is_end (
@@ -79,7 +79,7 @@ using base_t::operator =;
 /*===========================================================
   size
 ===========================================================*/
-S
+typename range_trait::size_type<Range>::type
 size (
 ) const {
 return this->count;
@@ -90,7 +90,7 @@ return this->count;
 ===========================================================*/
 sub_range_n (
   Range _range
-, S _count
+, typename range_trait::size_type<Range>::type _count
 )
 : base_t {_range}
 , pos {1}

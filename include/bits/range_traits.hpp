@@ -157,6 +157,19 @@ using type = decltype(std::declval<Range&>().size());
 
 };
 
+template <typename Range, bool HasDiff>
+struct difference_type;
+
+template <typename Range>
+struct difference_type<Range, false>{
+using type = std::size_t;
+};
+
+template <typename Range>
+struct difference_type<Range, true>{
+using type = decltype(std::declval<Range&>().position());
+};
+
 } // trait bits----------------------------------------------
 } // bits----------------------------------------------------
 
@@ -185,8 +198,10 @@ struct read_type {
 using type
   = typename bits::trait_bits::is_typelist
   < typename bits
-  ::detected_or<void, bits::trait_bits::rtype, Range>
-  ::type
+  ::detected_or
+    < void
+    , bits::trait_bits::rtype, Range
+    >::type
   >::type;
 };
 
@@ -210,7 +225,7 @@ template <typename Range>
 struct size_type {
 using type = typename bits::trait_bits::size_type
   < Range
-  , bits::is_detected<bits::trait_bits::rsize_t, Range>
+  ,   bits::is_detected<bits::trait_bits::rsize_t, Range>
     ::value
   >::type;
 
@@ -222,6 +237,28 @@ static_assert (
 static_assert (
   std::numeric_limits<type>::is_integer
 , "Range size must be a interger type."
+);
+
+};
+
+/*===========================================================
+  diffrence type
+===========================================================*/
+template <typename Range>
+struct diffrence_type {
+using type = typename bits::trait_bits::difference_type
+  < Range
+  , bits::is_detected<bits::trait_bits::rpos, Range>::value
+  >::type;
+
+static_assert (
+  std::is_unsigned<type>::value
+, "Range differnce must be a unsigned type."
+);
+
+static_assert (
+  std::numeric_limits<type>::is_integer
+, "Range differnce must be a interger type."
 );
 
 };

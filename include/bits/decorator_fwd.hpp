@@ -40,7 +40,7 @@ class output_transform_range;
 template <typename Range>
 class reverse_range;
 
-template <typename Range, typename S = std::size_t>
+template <typename Range>
 class sub_range_n;
 
 template <typename Range, typename Sentinel>
@@ -254,11 +254,11 @@ reverse_range (
 /*===========================================================
   sub_range_n
 ===========================================================*/
-template <typename Range, typename N>
-bits::sub_range_n<Range, N>
+template <typename Range>
+bits::sub_range_n<Range>
 sub_range_n (
   Range
-, N
+, typename range_trait::size_type<Range>::type
 );
 
 /*===========================================================

@@ -207,13 +207,13 @@ return bits::reverse_range<Range>{_range};
 /*===========================================================
   sub range n
 ===========================================================*/
-template <typename Range, typename N>
-bits::sub_range_n<Range, N>
+template <typename Range>
+bits::sub_range_n<Range>
 sub_range_n (
   Range _range
-, N _n
+, typename range_trait::size_type<Range>::type _n
 ){
-return bits::sub_range_n<Range, N>{_range, _n};
+return bits::sub_range_n<Range>{_range, _n};
 }
 
 /*===========================================================
@@ -305,7 +305,8 @@ back_insert (
   Range _range
 ){
 static_assert (
-  range_trait::is_expandable<Range>::value
+   range_trait::is_expandable<Range>::value
+&& range_trait::is_range<Range>::value
 , "Range must be expandable to insert into the end."
 );
 

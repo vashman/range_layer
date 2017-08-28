@@ -90,7 +90,8 @@ return static_cast<Decorator&>(*this);
 /*===========================================================
   operator -=
 ===========================================================*/
-template <typename Range, typename Decorator, typename... Traits>
+template
+  <typename Range, typename Decorator, typename... Traits>
 template <typename N, typename, typename>
 Decorator &
 base_decor<Range, Decorator, Traits...>::operator -= (
@@ -103,7 +104,8 @@ return static_cast<Decorator&>(*this);
 /*===========================================================
   operator ==
 ===========================================================*/
-template <typename Range, typename Decorator, typename... Traits>
+template
+  <typename Range, typename Decorator, typename... Traits>
 template <typename, typename>
 bool
 base_decor<Range, Decorator, Traits...>::operator == (
@@ -131,27 +133,29 @@ return this->range == _sen;
 template
   <typename Range, typename Decorator, typename... Traits>
 template <typename, typename>
-auto
+typename range_trait::size_type<Range>::type
 base_decor<Range, Decorator, Traits...>::size (
-) const -> decltype(std::declval<Range&>().size()) {
+) const {
 return this->range.size();
 }
 
 /*===========================================================
   position
 ===========================================================*/
-template <typename Range, typename Decorator, typename... Traits>
+template
+  <typename Range, typename Decorator, typename... Traits>
 template <typename, typename>
-auto
+typename range_trait::diffrence_type<Range>::type
 base_decor<Range, Decorator, Traits...>::position (
-) const -> decltype(std::declval<Range&>().position()) {
+) const {
 return this->range.position();
 }
 
 /*===========================================================
   save
 ===========================================================*/
-template <typename Range, typename Decorator, typename... Traits>
+template
+  <typename Range, typename Decorator, typename... Traits>
 template <typename, typename>
 Decorator
 base_decor<Range, Decorator, Traits...>::save (
@@ -164,7 +168,8 @@ return temp;
 /*===========================================================
   erase
 ===========================================================*/
-template <typename Range, typename Decorator, typename... Traits>
+template
+  <typename Range, typename Decorator, typename... Traits>
 template <typename, typename>
 void
 base_decor<Range, Decorator, Traits...>::erase (
@@ -175,7 +180,8 @@ this->range->erase();
 /*===========================================================
   erase all
 ===========================================================*/
-template <typename Range, typename Decorator, typename... Traits>
+template
+  <typename Range, typename Decorator, typename... Traits>
 template <typename, typename>
 void
 base_decor<Range, Decorator, Traits...>::erase_all (
@@ -186,7 +192,8 @@ this->range->erase_all();
 /*===========================================================
   shrink
 ===========================================================*/
-template <typename Range, typename Decorator, typename... Traits>
+template
+  <typename Range, typename Decorator, typename... Traits>
 template <typename N, typename, typename>
 void
 base_decor<Range, Decorator, Traits...>::shrink (
@@ -198,7 +205,8 @@ this->range->shrink(_n);
 /*===========================================================
   insert
 ===========================================================*/
-template <typename Range, typename Decorator, typename... Traits>
+template
+  <typename Range, typename Decorator, typename... Traits>
 template <typename... Args, typename, typename>
 void
 base_decor<Range, Decorator, Traits...>::insert (
