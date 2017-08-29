@@ -222,7 +222,7 @@ template
 , typename = enable_range_if_t
     <range_trait::has_position, R, Traits...>
 >
-typename range_trait::diffrence_type<Range>::type
+typename range_trait::size_type<Range>::type
 position () const;
 
 /*===========================================================

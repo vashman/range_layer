@@ -23,7 +23,7 @@ range_layer::execution_policy::sequenced seq{};
 array<int, 7> arr {{0, 1, 2, 3, 4, 9, 10}};
 
 auto rng = sub_range(range(arr), 4);
-static_assert (
+/*static_assert (
   range_layer::range_trait::has_position<decltype(rng)>::value
 , "error here"
 );
@@ -34,7 +34,7 @@ static_assert (
 static_assert (
   range_layer::range_trait::is_decorator<decltype(rng)>::value
 , "error here"
-);
+);*/
 
 for (int i = 0; has_readable(rng); ++i){
 assert (read(rng) == i);

@@ -39,7 +39,7 @@ struct detector<Default, void_t<Op<Args...>>, Op, Args...> {
   using type = Op<Args...>;
 };
  
-} // namespace detail
+} // detail----------------------------------------------
  
 template <template<class...> class Op, class... Args>
 using is_detected = typename
@@ -52,5 +52,7 @@ template <
 using detected_or
   = detail::detector<Default, void, Op, Args...>;
 
-} /* bits */ } /* range layer */
+} // bits---------------------------------------------
+} // range layer--------------------------------------
 #endif
+

@@ -146,28 +146,8 @@ template <typename Range, bool HasSize>
 struct size_type;
 
 template <typename Range>
-struct size_type<Range, false> {
-using type = std::size_t;
-};
-
-template <typename Range>
 struct size_type<Range, true> {
-
 using type = decltype(std::declval<Range&>().size());
-
-};
-
-template <typename Range, bool HasDiff>
-struct difference_type;
-
-template <typename Range>
-struct difference_type<Range, false>{
-using type = std::size_t;
-};
-
-template <typename Range>
-struct difference_type<Range, true>{
-using type = decltype(std::declval<Range&>().position());
 };
 
 } // trait bits----------------------------------------------
@@ -197,11 +177,10 @@ template <typename Range>
 struct read_type {
 using type
   = typename bits::trait_bits::is_typelist
-  < typename bits
-  ::detected_or
-    <   bits::detected_or<void, bits::trait_bits::read_t>
-      ::type
-    , bits::trait_bits::rtype, Range
+  < typename bits::detected_or
+    < typename bits::detected_or<void, bits::trait_bits::read_t, Range>::type
+    , bits::trait_bits::rtype
+    , Range
     >::type
   >::type;
 };
@@ -213,25 +192,34 @@ template <typename Range>
 struct write_type {
 using type
   = typename bits::trait_bits::is_typelist
-  < typename bits
-  ::detected_or
-    <   bits::detected_or<void, bits::trait_bits::write_t>
-      ::type
-    , bits::trait_bits::wtype, Range
+  < typename bits::detected_or
+    < typename bits::detected_or<void, bits::trait_bits::write_t, Range>::type
+    , bits::trait_bits::wtype
+    , Range
     >::type
   >::type;
 };
 
 /*===========================================================
-  size_type
+  is_finite
+===========================================================*/
+template <typename Range>
+struct is_finite {
+static constexpr bool value
+  = bits::is_detected<bits::trait_bits::rsize_t, Range>
+  ::value;
+};
+
+/*===========================================================
+  size type
 ===========================================================*/
 template <typename Range>
 struct size_type {
-using type = typename bits::trait_bits::size_type
-  < Range
-  ,   bits::is_detected<bits::trait_bits::rsize_t, Range>
-    ::value
-  >::type;
+using type = typename bits::detected_or
+< void
+, bits::trait_bits::rsize_t
+, Range
+>::type;
 
 static_assert (
   std::is_unsigned<type>::value
@@ -246,38 +234,6 @@ static_assert (
 };
 
 /*===========================================================
-  diffrence type
-===========================================================*/
-template <typename Range>
-struct diffrence_type {
-using type = typename bits::trait_bits::difference_type
-  < Range
-  , bits::is_detected<bits::trait_bits::rpos, Range>::value
-  >::type;
-
-static_assert (
-  std::is_unsigned<type>::value
-, "Range differnce must be a unsigned type."
-);
-
-static_assert (
-  std::numeric_limits<type>::is_integer
-, "Range differnce must be a interger type."
-);
-
-};
-
-/*===========================================================
-  is_finite
-===========================================================*/
-template <typename Range>
-struct is_finite {
-static constexpr bool value
-  = bits::is_detected<bits::trait_bits::rsize_t, Range>
-  ::value;
-};
-
-/*===========================================================
   has_position
 ===========================================================*/
 template <typename Range>
@@ -285,13 +241,18 @@ struct has_position {
 static constexpr bool value
   = bits::is_detected<bits::trait_bits::rpos, Range>::value;
 
-/*static_assert (
+static_assert (
+ ! value || (value && is_finite<Range>::value)
+, "Range with position also must have size."
+);
+
+static_assert (
   std::is_same
-  < typename size_type<Range>::type
-  , decltype(std::declval<Range&>().position())
+  < decltype(std::declval<Range&>.position())
+  , typename size_type<Range>::type
   >::value
-, "Range postion and Size must return same type."
-);*/
+, "Size and Position type must be the same."
+);
 
 };
 

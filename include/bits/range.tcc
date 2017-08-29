@@ -292,11 +292,12 @@ return _range == sentinel::writable{};
   range. Otherwise the range is invalidated.
 ===========================================================*/
 template <typename Range>
-auto
+typename range_trait::size_type<Range>::type
 size (
   Range const & _range
-) -> decltype(_range.size()) {
+){
 bits::range_assert<Range>();
+bits::finite_assert<Range>();
 
 return _range.size();
 }
@@ -308,10 +309,10 @@ return _range.size();
 * The position starts at zero.
 ===========================================================*/
 template <typename Range>
-auto
+typename range_trait::size_type<Range>::type
 position (
   Range const & _range
-) -> decltype (_range.position()) {
+){
 bits::range_assert<Range>();
 
 return _range.position();
@@ -327,6 +328,8 @@ end_of (
 ){
 bits::range_assert<Range>();
 bits::finite_assert<Range>();
+bits::write_assert<Range>();
+bits::read_assert<Range>();
 
 while (has_readable(_range) || has_writable(_range))
 advance(_range);
@@ -344,6 +347,7 @@ end_of_output (
 ){
 bits::write_assert<Range>();
 bits::finite_assert<Range>();
+bits::write_assert<Range>();
 
 while (has_writable(_range)) advance(_range);
 
@@ -360,6 +364,7 @@ end_of_input (
 ){
 bits::range_assert<Range>();
 bits::finite_assert<Range>();
+bits::read_assert<Range>();
 
 while (has_readable(_range)) advance(_range);
 
@@ -375,6 +380,10 @@ start_of (
   Range _range
 ){
 bits::range_assert<Range>();
+bits::write_assert<Range>();
+bits::read_assert<Range>();
+bits::reversible_assert<Range>();
+bits::position_assert<Range>();
 
 while (has_readable(_range) || has_writable(_range))
 reverse(_range);
@@ -391,6 +400,9 @@ start_of_output (
   Range _range
 ){
 bits::write_assert<Range>();
+bits::write_assert<Range>();
+bits::reversible_assert<Range>();
+bits::position_assert<Range>();
 
 while (has_writable(_range)) reverse(_range);
 
@@ -406,6 +418,9 @@ start_of_input (
   Range _range
 ){
 bits::range_assert<Range>();
+bits::read_assert<Range>();
+bits::reversible_assert<Range>();
+bits::position_assert<Range>();
 
 while (has_readable(_range))
 reverse(_range);
@@ -418,11 +433,12 @@ return _range;
 ===========================================================*/
 template <typename Range, typename N>
 Range
-advance_shrink (
+shrink (
   Range _range
 , N _n
 ){
 bits::range_assert<Range>();
+bits::shrinkable_assert<Range>();
 
 _range.shrink(_n);
 return _range;
@@ -437,6 +453,7 @@ erase (
   Range _range
 ){
 bits::range_assert<Range>();
+bits::erase_assert<Range>();
 
 _range.erase();
 return _range;
@@ -445,7 +462,11 @@ return _range;
 /*===========================================================
   erase_all
 ===========================================================*/
-template <typename Range>
+template
+< typename Range
+, typename = typename std::enable_if
+  <range_trait::is_all_erasable<Range>::value, void>::type
+>
 Range
 erase_all (
   Range _range
@@ -455,6 +476,27 @@ bits::range_assert<Range>();
 _range.erase_all();
 return _range;
 }
+
+/*===========================================================
+  erase_all
+===========================================================*/
+/*template
+< typename Range
+, typename = typename std::enable_if
+  <range_trait::is_erasable<Range>::value, void>::type
+>
+Range
+erase_all (
+  Range _range
+){
+bits::range_assert<Range>();
+bits::erase_assert<Range>();
+
+while (has_readable(_range) || has_writable(_range)){
+_range.erase();
+}
+return _range;
+}*/
 
 /*===========================================================
   insert
@@ -492,16 +534,19 @@ return _range;
 
 /*===========================================================
   save
-
-* Does not gurantee the returned type will be the same as the
-  range passed in, or convertable to it.
 ===========================================================*/
 template <typename Range>
-auto
+Range
 save (
   Range _range
-) -> decltype(_range.save()) {
+){
 bits::range_assert<Range>();
+bits::not_singleton_assert<Range>();
+
+static_assert(
+  std::is_same<Range, decltype(_range.save())>::value
+, "Saved range must be the same type as orginal."
+);
 
 return _range.save();
 }

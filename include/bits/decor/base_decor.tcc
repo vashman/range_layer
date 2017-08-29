@@ -145,7 +145,7 @@ return this->range.size();
 template
   <typename Range, typename Decorator, typename... Traits>
 template <typename, typename>
-typename range_trait::diffrence_type<Range>::type
+typename range_trait::size_type<Range>::type
 base_decor<Range, Decorator, Traits...>::position (
 ) const {
 return this->range.position();

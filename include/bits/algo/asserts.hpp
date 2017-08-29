@@ -10,6 +10,13 @@
 
 namespace range_layer {
 namespace bits {
+namespace assert_err {
+
+//constexpr char* const
+//  assert_head = "Range Layer Error: ";
+//, not_range = assert_head ;
+
+} // assert err----------------------------------------------
 
 /*===========================================================
   range assert
@@ -80,6 +87,54 @@ constexpr int finite_assert (){
 static_assert (
   range_trait::is_finite<Range>::value
 , "Not a finite range."
+);
+return 0;
+}
+
+/*===========================================================
+  position assert
+===========================================================*/
+template <typename Range>
+constexpr int position_assert (){
+static_assert (
+  range_trait::has_position<Range>::value
+, "Range elements do not have a postion."
+);
+return 0;
+}
+
+/*===========================================================
+  shrinkable assert
+===========================================================*/
+template <typename Range>
+constexpr int shrinkable_assert (){
+static_assert (
+  range_trait::is_shrinkable<Range>::value
+, "Range is not shrinkable."
+);
+return 0;
+}
+
+/*===========================================================
+  singleton assert
+===========================================================*/
+template <typename Range>
+constexpr int singleton_assert (){
+static_assert (
+  range_trait::is_singleton<Range>::value
+, "Range is not singleton."
+);
+return 0;
+}
+
+/*===========================================================
+  not singleton assert
+===========================================================*/
+template <typename Range>
+constexpr int not_singleton_assert (){
+static_assert (
+  ! range_trait::is_singleton<Range>::value
+, "Range cannot be a singleton."
 );
 return 0;
 }

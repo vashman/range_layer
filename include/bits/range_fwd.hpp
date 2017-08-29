@@ -208,10 +208,10 @@ has_writable (
   range. Otherwise the range is invalidated.
 ===========================================================*/
 template <typename Range>
-auto
+typename range_trait::size_type<Range>::type
 size (
   Range const & _range
-) -> decltype(_range.size());
+);
 
 /*===========================================================
   position
@@ -220,10 +220,10 @@ size (
 * The position starts at zero.
 ===========================================================*/
 template <typename Range>
-auto
+typename range_trait::size_type<Range>::type
 position (
   Range const & _range
-) -> decltype(_range.position());
+);
 
 /*===========================================================
   end_of
@@ -334,10 +334,10 @@ expand (
   range passed in, or convertable to it.
 ===========================================================*/
 template <typename Range>
-auto
+Range
 save (
   Range _range
-) -> decltype(_range.save());
+);
 
 /*===========================================================
   const range

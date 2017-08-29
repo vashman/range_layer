@@ -52,12 +52,6 @@ template <typename Range>
 struct size_type;
 
 /*===========================================================
-  diffrence type
-===========================================================*/
-template <typename Range>
-struct diffrence_type;
-
-/*===========================================================
   has_position
 ===========================================================*/
 template <typename Range>
