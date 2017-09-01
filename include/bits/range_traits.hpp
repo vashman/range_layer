@@ -174,16 +174,6 @@ struct if_read_type<Range, true> {
 using type = decltype(std::declval<Range&>().operator*());
 };
 
-template <typename Range, bool>
-struct if_write_type {
-using type = void;
-};
-
-template <typename Range>
-struct if_write_type<Range, true> {
-//using type = 
-};
-
 } // trait bits----------------------------------------------
 } // bits----------------------------------------------------
 
