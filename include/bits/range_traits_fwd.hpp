@@ -22,8 +22,7 @@ class readable;
 ===========================================================*/
 class writable;
 
-}
-//sentinel---------------------------------------------------
+} //sentinel-------------------------------------------------
 
 namespace range_trait {
 
@@ -186,8 +185,7 @@ struct is_temporary;
 template <typename Range>
 struct is_heterogeneous; 
 
-}
-//input------------------------------------------------------
+} //input----------------------------------------------------
 
 namespace output {
 
@@ -197,8 +195,7 @@ namespace output {
 template <typename Range>
 struct is_heterogeneous; 
 
-}
-//output-----------------------------------------------------
+} //output---------------------------------------------------
 
 /*===========================================================
   is_subscriptable
@@ -214,8 +211,7 @@ struct is_subscriptable;
 template <typename Range>
 struct is_decorator;
 
-}
-//range trait------------------------------------------------
-}
-//range layer------------------------------------------------
+} // range trait---------------------------------------------
+} // range layer---------------------------------------------
 #endif
+

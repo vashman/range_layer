@@ -143,11 +143,45 @@ using type = typename typelist<Tuple, T>::type;
 };
 
 template <typename Range, bool HasSize>
-struct size_type;
+struct size_type {
+using type = void;
+};
 
 template <typename Range>
 struct size_type<Range, true> {
 using type = decltype(std::declval<Range&>().size());
+};
+
+template <typename Range, bool>
+struct pos_type {
+using type = typename std::result_of
+<decltype(&Range::position)()>::type;
+
+};
+
+template <typename Range>
+struct pos_type<Range, false> {
+using type = void;
+};
+
+template <typename Range, bool>
+struct if_read_type {
+using type = void;
+};
+
+template <typename Range>
+struct if_read_type<Range, true> {
+using type = decltype(std::declval<Range&>().operator*());
+};
+
+template <typename Range, bool>
+struct if_write_type {
+using type = void;
+};
+
+template <typename Range>
+struct if_write_type<Range, true> {
+//using type = 
 };
 
 } // trait bits----------------------------------------------
@@ -168,102 +202,6 @@ static constexpr bool value
   && std::is_copy_assignable<Range>::value
   && std::is_move_constructible<Range>::value
   && std::is_move_assignable<Range>::value;
-};
-
-/*===========================================================
-  read_type
-===========================================================*/
-template <typename Range>
-struct read_type {
-using type
-  = typename bits::trait_bits::is_typelist
-  < typename bits::detected_or
-    < typename bits::detected_or<void, bits::trait_bits::read_t, Range>::type
-    , bits::trait_bits::rtype
-    , Range
-    >::type
-  >::type;
-};
-
-/*===========================================================
-  write_type
-===========================================================*/
-template <typename Range>
-struct write_type {
-using type
-  = typename bits::trait_bits::is_typelist
-  < typename bits::detected_or
-    < typename bits::detected_or<void, bits::trait_bits::write_t, Range>::type
-    , bits::trait_bits::wtype
-    , Range
-    >::type
-  >::type;
-};
-
-/*===========================================================
-  is_finite
-===========================================================*/
-template <typename Range>
-struct is_finite {
-static constexpr bool value
-  = bits::is_detected<bits::trait_bits::rsize_t, Range>
-  ::value;
-};
-
-/*===========================================================
-  size type
-===========================================================*/
-template <typename Range>
-struct size_type {
-using type = typename bits::detected_or
-< void
-, bits::trait_bits::rsize_t
-, Range
->::type;
-
-static_assert (
-  std::is_unsigned<type>::value
-, "Range size must be a unsigned type."
-);
-
-static_assert (
-  std::numeric_limits<type>::is_integer
-, "Range size must be a interger type."
-);
-
-};
-
-/*===========================================================
-  has_position
-===========================================================*/
-template <typename Range>
-struct has_position {
-static constexpr bool value
-  = bits::is_detected<bits::trait_bits::rpos, Range>::value;
-
-static_assert (
- ! value || (value && is_finite<Range>::value)
-, "Range with position also must have size."
-);
-
-static_assert (
-  std::is_same
-  < decltype(std::declval<Range&>.position())
-  , typename size_type<Range>::type
-  >::value
-, "Size and Position type must be the same."
-);
-
-};
-
-/*===========================================================
-  is_singleton
-===========================================================*/
-template <typename Range>
-struct is_singleton {
-static constexpr bool value
-  = ! bits
-  ::is_detected<bits::trait_bits::save_t, Range>::value;
 };
 
 /*===========================================================
@@ -293,6 +231,105 @@ static constexpr bool value
   ::is_detected<bits::trait_bits::read_sen_t, Range>
   ::value;
 };
+
+/*===========================================================
+  read_type
+
+* When not input type is void.
+===========================================================*/
+template <typename Range>
+struct read_type {
+using type = typename bits::trait_bits::is_typelist
+< typename bits::detected_or
+    < typename bits::trait_bits::if_read_type<Range, is_input<Range>::value>::type
+    , bits::trait_bits::rtype
+    , Range
+    >::type
+  >::type;
+};
+
+/*===========================================================
+  write_type
+
+* When not output type is void.
+===========================================================*/
+template <typename Range>
+struct write_type {
+using type
+  = typename bits::trait_bits::is_typelist
+  < typename bits::detected_or
+    < void
+    , bits::trait_bits::wtype
+    , Range
+    >::type
+  >::type;
+};
+
+/*===========================================================
+  is_finite
+===========================================================*/
+template <typename Range>
+struct is_finite {
+static constexpr bool value
+  = bits::is_detected<bits::trait_bits::rsize_t, Range>
+  ::value;
+};
+
+/*===========================================================
+  size type
+===========================================================*/
+template <typename Range>
+struct size_type {
+using type = typename bits::detected_or
+<void, bits::trait_bits::rsize_t, Range>::type;
+
+static_assert (
+  std::is_same<type, void>::value
+  || std::is_unsigned<type>::value
+, "Range size must be a unsigned type."
+);
+
+static_assert (
+  std::is_same<type, void>::value
+  || std::numeric_limits<type>::is_integer
+, "Range size must be a interger type."
+);
+
+};
+
+/*===========================================================
+  has_position
+===========================================================*/
+template <typename Range>
+struct has_position {
+static constexpr bool value
+  = bits::is_detected<bits::trait_bits::rpos, Range>::value;
+
+static_assert (
+ ! value || (value && is_finite<Range>::value)
+, "Range with position also must have size."
+);
+
+static_assert (
+  std::is_same
+  < typename bits::trait_bits::pos_type<Range, value>::type
+  , typename size_type<Range>::type
+  >::value
+, "Size and Position type must be the same."
+);
+
+};
+
+/*===========================================================
+  is_singleton
+===========================================================*/
+template <typename Range>
+struct is_singleton {
+static constexpr bool value
+  = ! bits
+  ::is_detected<bits::trait_bits::save_t, Range>::value;
+};
+
 
 /*===========================================================
   is_reversable
