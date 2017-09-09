@@ -39,10 +39,22 @@ template <typename Range>
 struct read_type;
 
 /*===========================================================
-  write_type
+  read_type_t
+===========================================================*/
+template <typename Range>
+using read_type_t = typename read_type<Range>::type;
+
+/*===========================================================
+  write type
 ===========================================================*/
 template <typename Range>
 struct write_type;
+
+/*===========================================================
+  write_type_t
+===========================================================*/
+template <typename Range>
+using write_type_t = typename write_type<Range>::type;
 
 /*===========================================================
   size_type

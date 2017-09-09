@@ -305,8 +305,8 @@ expand (
 ===========================================================*/
 template
 < typename R = Range
-, typename = typename std::enable_if
-    <! range_trait::is_decorator<R>::value, void>::type
+, typename = enable_range_if_t
+    <range_trait::is_decorator, R, Traits...>
 >
 Range
 disable () const;

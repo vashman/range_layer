@@ -559,13 +559,15 @@ auto
 crange (
   T const & _var
 ) -> decltype (
-  remove_decorator ( disable_output (
-    range(const_cast<T&>(_var))
+  remove_decorator (
+  disable_output (
+  range(const_cast<T&>(_var))
   ))
 ){
 return
-remove_decorator ( disable_output (
-  range(const_cast<T&>(_var))
+remove_decorator (
+disable_output (
+range(const_cast<T&>(_var))
 ));
 }
 

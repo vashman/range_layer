@@ -1,14 +1,13 @@
-//
+// Range for single typed c++ containers.
 
 //          Copyright Sundeep S. Sangha 2015 - 2017.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_VECTOR_RANGE_HPP
-#define RANGE_LAYER_VECTOR_RANGE_HPP
+#ifndef RANGE_LAYER_CONTAINER_HPP
+#define RANGE_LAYER_CONTAINER_HPP
 
-#include <vector>
 #include "range_traits.hpp"
 #include "bits/decorator.hpp"
 
@@ -19,17 +18,15 @@ namespace bits {
   vector_range
 ===========================================================*/
 template <typename T, typename Alloc>
-struct vector_range;
+struct container;
 
 /*===========================================================
   vector_range
 ===========================================================*/
-template <typename T, typename Alloc>
-struct vector_range {
+template <typename Con>
+class container {
 
-private:
-
-std::vector<T, Alloc> * vec;
+Con * con;
 std::size_t pos;
 
 public:
@@ -40,39 +37,39 @@ using write_type = read_type;
 /*===========================================================
   ctor
 ===========================================================*/
-vector_range (
-  std::vector<T, Alloc> &
+container (
+  Con &
 );
 
 /*===========================================================
   copy ctor
 ===========================================================*/
-vector_range (vector_range const &) = default;
+container (container const &) = default;
 
 /*===========================================================
   move ctor
 ===========================================================*/
-vector_range (vector_range &&) = default;
+container (container &&) = default;
 
 /*===========================================================
   copy assignment operator
 ===========================================================*/
-vector_range & operator = (vector_range const &) = default;
+container & operator = (container const &) = default;
 
 /*===========================================================
   move assignment operator
 ===========================================================*/
-vector_range & operator = (vector_range &&) = default;
+container & operator = (container &&) = default;
 
 /*===========================================================
   dtor
 ===========================================================*/
-~vector_range() = default;
+~container() = default;
 
 /*===========================================================
   save
 ===========================================================*/
-vector_range &
+container &
 save (
 ){
 return *this;
@@ -117,7 +114,7 @@ operator = (
 /*===========================================================
   operator ++
 ===========================================================*/
-vector_range &
+container &
 operator ++ (
 ){
 ++this->pos;
@@ -127,7 +124,7 @@ return *this;
 /*===========================================================
   operator --
 ===========================================================*/
-vector_range &
+container &
 operator -- (
 ){
 --this->pos;
@@ -137,7 +134,7 @@ return *this;
 /*===========================================================
   operator +=
 ===========================================================*/
-vector_range &
+container &
 operator += (
   std::size_t const _n
 ){
@@ -148,7 +145,7 @@ return *this;
 /*===========================================================
   operator -=
 ===========================================================*/
-vector_range &
+container &
 operator -= (
   std::size_t const _n
 ){
@@ -179,7 +176,7 @@ return *this == sentinel::readable{};
 /*===========================================================
   expand
 ===========================================================*/
-vector_range
+container
 expand (
   std::size_t _n
 ){
@@ -191,117 +188,81 @@ return *this;
 /*===========================================================
   shrink
 ===========================================================*/
-vector_range
+container &
 shrink (
   std::size_t _n
 ){
-_n = this->vec->size() - _n;
-this->vec->resize(_n);
+_n = this->con->size() - _n;
+this->con->resize(_n);
 return *this;
 }
 
 /*===========================================================
   insert
 ===========================================================*/
-vector_range
+container &
 insert (
-  write_type const & _var
-){
-this->vec->insert(this->vec->begin() + this->pos, _var);
-return *this;
-}
+  write_type_t<Range> const & _var
+);
 
 /*===========================================================
   erase_all
 ===========================================================*/
-vector_range &
+container &
 erase_all ();
 
 /*===========================================================
   erase
 ===========================================================*/
-vector_range &
+container &
 erase ();
 
-}; //vector range--------------------------------------------
+}; //container-----------------------------------------------
 
 /*===========================================================
-  vector_range:: ctor
+  container:: ctor
 ===========================================================*/
-template <typename T, typename Alloc>
-vector_range<T, Alloc>::vector_range (
-  std::vector<T, Alloc> & _vec
+template <typename Con>
+container<Con>::container (
+  Con & _con
 )
-: vec {&_vec}
+: con {&_con}
 , pos {1}
 {}
 
 /*===========================================================
-  vector_range:: erase
+  container:: erase
 ===========================================================*/
-template <typename T, typename Alloc>
-vector_range<T, Alloc> &
-vector_range<T, Alloc>::erase (
+template <typename Con>
+container &
+container<Con>::erase (
 ){
-this->vec->erase(this->vec->begin() + this->pos);
+this->con->erase(this->con->begin() + this->pos);
 return *this;
 }
 
 /*===========================================================
-  vector_range:: erase_all
+  container:: erase_all
 ===========================================================*/
-template <typename T, typename Alloc>
-vector_range<T, Alloc> &
-vector_range<T, Alloc>::erase_all (
+container &
+erase_all (
 ){
-this->vec->clear();
+this->con->clear();
+return *this;
+}
+
+/*===========================================================
+  container:: insert
+===========================================================*/
+container &
+insert (
+  write_type const & _var
+){
+this->con->insert(this->con->begin() + this->pos, _var);
 return *this;
 }
 
 } //bits-----------------------------------------------------
-
-/*===========================================================
-  range
-===========================================================*/
-template <typename T, typename Alloc>
-bits::vector_range<T, Alloc>
-range (
-  std::vector<T, Alloc> &
-);
-
-/*===========================================================
-  range
-===========================================================*/
-template <typename T, typename Alloc>
-auto
-range (
-  std::vector<T, Alloc> && _con
-) -> decltype(range_layer::extend_range(std::move(_con)));
-
-/*===========================================================
-  range
-===========================================================*/
-template <typename T, typename Alloc>
-bits::vector_range<T, Alloc>
-range (
-  std::vector<T, Alloc> & _vec
-){
-return bits::vector_range<T, Alloc> {_vec};
-}
-
-/*===========================================================
-  move range
-===========================================================*/
-template <typename T, typename Alloc>
-auto
-range (
-  std::vector<T, Alloc> && _con
-) -> decltype(extend_life(range(_con), std::move(_con))) {
-auto temp = extend_life(range(_con), std::move(_con));
-temp.set_range(range(* std::get<0>(temp.variable).get()));
-return temp;
-}
-
 } //range layer----------------------------------------------
 #endif
 

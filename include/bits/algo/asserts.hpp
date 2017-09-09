@@ -44,6 +44,18 @@ return 0;
 }
 
 /*===========================================================
+  not read assert
+===========================================================*/
+template <typename Range>
+constexpr int not_read_assert (){
+static_assert (
+  ! range_trait::is_input<Range>::value
+, "Cannot be a input range."
+);
+return 0;
+}
+
+/*===========================================================
   write assert
 ===========================================================*/
 template <typename Range>
@@ -51,6 +63,18 @@ constexpr int write_assert (){
 static_assert (
   range_trait::is_output<Range>::value
 , "Not a output range."
+);
+return 0;
+}
+
+/*===========================================================
+  not write assert
+===========================================================*/
+template <typename Range>
+constexpr int not_write_assert (){
+static_assert (
+  ! range_trait::is_output<Range>::value
+, "Cannot be a output range."
 );
 return 0;
 }
@@ -135,6 +159,42 @@ constexpr int not_singleton_assert (){
 static_assert (
   ! range_trait::is_singleton<Range>::value
 , "Range cannot be a singleton."
+);
+return 0;
+}
+
+/*===========================================================
+  not decorator assert
+===========================================================*/
+template <typename Range>
+constexpr int not_decorator_assert (){
+static_assert (
+  ! range_trait::is_decorator<Range>::value
+, "Range cannot be a decorator."
+);
+return 0;
+}
+
+/*===========================================================
+  decorator assert
+===========================================================*/
+template <typename Range>
+constexpr int decorator_assert (){
+static_assert (
+  range_trait::is_decorator<Range>::value
+, "Range must be a decorator."
+);
+return 0;
+}
+
+/*===========================================================
+  expandable assert
+===========================================================*/
+template <typename Range>
+constexpr int expandable_assert (){
+static_assert (
+  range_trait::is_expandable<Range>::value
+, "Range must be expandable."
 );
 return 0;
 }

@@ -11,7 +11,7 @@
 namespace range_layer {
 
 /*===========================================================
-  find if
+  find if #4
 ===========================================================*/
 template <typename Range, typename Pred>
 Range
@@ -26,7 +26,82 @@ return _range;
 }
 
 /*===========================================================
-  find if not
+  find if #3
+===========================================================*/
+template <typename Range, typename Pred>
+Range
+find_if (
+  execution_policy::parallel
+, Range _range
+, Pred _pred
+){
+}
+
+/*===========================================================
+  find if #2
+===========================================================*/
+template <typename Range, typename Pred>
+Range
+find_if (
+  execution_policy::parallel_unsequenced
+, Range _range
+, Pred _pred
+){
+}
+
+/*===========================================================
+  find if #1
+===========================================================*/
+template <typename Range, typename Pred>
+Range
+find_if (
+  Range _range
+, Pred _pred
+){
+return find_if
+(execution_policy::default_policy{}, _range, _pred);
+}
+
+/*===========================================================
+  find if not #4
+===========================================================*/
+template <typename Range, typename Pred>
+Range
+find_if_not (
+  execution_policy::parallel_unsequenced
+, Range
+, Pred
+){
+
+}
+
+/*===========================================================
+  find if not #3
+===========================================================*/
+template <typename Range, typename Pred>
+Range
+find_if_not (
+  execution_policy::parallel
+, Range _range
+, Pred _pred
+){
+
+}
+
+/*===========================================================
+  find if not #2
+===========================================================*/
+template <typename Range, typename Pred>
+Range
+find_if_not (
+  Range _range
+, Pred _pred
+){
+
+}
+
+/*===========================================================
+  find if not #1
 ===========================================================*/
 template <typename Range, typename Pred>
 Range
@@ -41,12 +116,12 @@ return _range;
 }
 
 /*===========================================================
-  find
+  find #4
 ===========================================================*/
-template <typename Range, typename T, typename Policy>
+template <typename Range, typename T>
 Range
 find (
-  Policy _policy
+  execution_policy::sequenced _policy
 , Range _range
 , T const & _value
 ){
@@ -56,6 +131,55 @@ return find_if
 (_policy, _range, [=](type _v){return _v == _value;});
 }
 
+/*===========================================================
+  find #3
+===========================================================*/
+template <typename Range, typename T>
+Range
+find (
+  execution_policy::parallel _policy
+, Range _range
+, T const & _value
+){
+using type = decltype(read(_range));
+
+return find_if
+(_policy, _range, [=](type _v){return _v == _value;});
 }
-//range layer------------------------------------------------
+
+/*===========================================================
+  find #2
+===========================================================*/
+template <typename Range, typename T>
+Range
+find (
+  execution_policy::parallel_unsequenced _policy
+, Range _range
+, T const & _value
+){
+using type = decltype(read(_range));
+
+return find_if
+(_policy, _range, [=](type _v){return _v == _value;});
+}
+
+/*===========================================================
+  find #1
+===========================================================*/
+template <typename Range, typename T>
+Range
+find (
+  Range _range
+, T const & _value
+){
+using type = decltype(read(_range));
+
+return find_if (
+  execution_policy::default_policy{}
+, _range
+, [=](type _v){return _v == _value;}
+);
+}
+
+} //range layer----------------------------------------------
 #endif

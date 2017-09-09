@@ -82,7 +82,7 @@ return make_iterator_range (
 }
 
 /*===========================================================
-  move range istream
+  move range (istream)
 ===========================================================*/
 template <typename CharT, typename Traits>
 iterator_range<std::istream_iterator<CharT, CharT, Traits>>
@@ -133,7 +133,6 @@ temp.set_range ( make_iterator_range (
 return temp;
 }
 
-}
-//range layer------------------------------------------------
+} //range layer----------------------------------------------
 #endif
 

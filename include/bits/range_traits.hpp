@@ -180,7 +180,7 @@ using type = decltype(std::declval<Range&>().operator*());
 namespace range_trait {
 
 /*===========================================================
-  is_range
+  is range
 ===========================================================*/
 template <typename Range>
 struct is_range {

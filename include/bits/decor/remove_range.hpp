@@ -14,7 +14,7 @@ namespace range_layer {
 namespace bits {
 
 /*===========================================================
-  remove range
+  remove_range
 ===========================================================*/
 template <typename Range, typename Pred>
 class remove_range
@@ -38,7 +38,7 @@ class remove_range
 {
 
 Pred pred;
-typename range_trait::read_type<Range>::type temp;
+typename range_trait::read_type_t<Range> temp;
 
 using base_t = bits::base_decor
   < Range

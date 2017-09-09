@@ -23,7 +23,6 @@
 #include "decor/extend_life.hpp"
 #include "decor/checked_range.hpp"
 #include "decor/back_insert.hpp"
-
 #include "decor/transform_range.hpp"
 #include "decor/input_transform_range.hpp"
 #include "decor/output_transform_range.hpp"

@@ -11,6 +11,7 @@
 #include "decor/transform_range.tcc"
 #include "decor/input_transform_range.tcc"
 #include "decor/output_transform_range.tcc"
+#include "algo/asserts.hpp"
 
 namespace range_layer {
 
@@ -27,6 +28,9 @@ auto
 disable_decorator (
   Range _range
 ) -> decltype (disable_decorator(_range.disable())) {
+bits::range_assert<Range>();
+bits::decorator_assert<Range>();
+
 return disable_decorator(_range.disable());
 }
 
@@ -43,6 +47,9 @@ Range
 disable_decorator (
   Range _range
 ){
+bits::range_assert<Range>();
+bits::not_decorator_assert<Range>();
+
 return _range;
 }
 
@@ -54,6 +61,10 @@ bits::remove_decorator<Range>
 remove_decorator (
   Range _range
 ){
+bits::range_assert<Range>();
+bits::range_assert<bits::remove_decorator<Range>>();
+bits::not_decorator_assert<bits::remove_decorator<Range>>();
+
 return bits::remove_decorator<Range>(_range);
 }
 
@@ -66,6 +77,9 @@ remove_if_range (
   Range _range
 , Pred _pred
 ){
+bits::range_assert<Range>();
+bits::range_assert<bits::remove_range<Range, Pred>>();
+
 return bits::remove_range<Range, Pred>{_range, _pred};
 }
 
@@ -78,8 +92,12 @@ remove_range (
   Range _range
 , T _value
 ){
+bits::range_assert<Range>();
+bits::range_assert
+  <bits::remove_range<Range, bits::remove_pred<T>>>();
+
 return bits::remove_range<Range, bits::remove_pred<T>>
-{_range, bits::remove_pred<T>{_value}};
+  {_range, bits::remove_pred<T>{_value}};
 }
 
 /*===========================================================
@@ -95,6 +113,9 @@ input_replace_range (
 -> decltype (input_transform_range
   (_range, bits::replace_func<T>{_old_value, _new_value}))
 {
+bits::range_assert<Range>();
+bits::read_assert<Range>();
+
 return input_transform_range
   (_range, bits::replace_func<T>{_old_value, _new_value});
 }
@@ -112,6 +133,9 @@ output_replace_range (
 -> decltype (output_transform_range (
   _range, bits::replace_func<T>{_old_value, _new_value}))
 {
+bits::range_assert<Range>();
+bits::write_assert<Range>();
+
 return output_transform_range (
   _range, bits::replace_func<T>{_old_value, _new_value});
 }
@@ -129,6 +153,9 @@ input_replace_if_range (
 -> decltype (input_transform_range
   (_range, bits::replace_if_func<T,Pred>{_new_value, _pred}))
 {
+bits::range_assert<Range>();
+bits::read_assert<Range>();
+
 return input_transform_range
   (_range, bits::replace_if_func<T,Pred>{_new_value, _pred});
 }
@@ -146,6 +173,9 @@ output_replace_if_range (
 -> decltype (output_transform_range (
   _range, bits::replace_if_func<T,Pred>{_new_value, _pred}))
 {
+bits::range_assert<Range>();
+bits::write_assert<Range>();
+
 return output_transform_range (
   _range, bits::replace_if_func<T, Pred>{_new_value, _pred});
 }
@@ -159,6 +189,9 @@ transform_range (
   Range _range
 , Func _func
 ){
+bits::range_assert<Range>();
+bits::range_assert<bits::transform_range<Func, Range>>();
+
 return bits::transform_range<Func, Range>{_range, _func};
 }
 
@@ -171,6 +204,13 @@ input_transform_range (
   Range _range
 , Func _func
 ){
+bits::range_assert<Range>();
+bits::read_assert<Range>();
+bits::range_assert
+  <bits::input_transform_range<Func, Range>>();
+bits::read_assert
+  <bits::input_transform_range<Func, Range>>();
+
 return bits::input_transform_range<Func, Range>
   {_range, _func};
 }
@@ -184,6 +224,13 @@ output_transform_range (
   Range _range
 , Func _func
 ){
+bits::range_assert<Range>();
+bits::write_assert<Range>();
+bits::range_assert
+  <bits::output_transform_range<Func, Range>>();
+bits::write_assert
+  <bits::output_transform_range<Func, Range>>();
+
 return bits::output_transform_range<Func, Range>
   {_range, _func};
 }
@@ -196,10 +243,9 @@ bits::reverse_range<Range>
 reverse_range (
   Range _range
 ){
-static_assert(
-  range_trait::is_reversable<Range>::value
-, "Cannot reverse range"
-);
+bits::range_assert<Range>();
+bits::reversible_assert<Range>();
+bits::range_assert<bits::reverse_range<Range>>();
 
 return bits::reverse_range<Range>{_range};
 }
@@ -213,6 +259,9 @@ sub_range_n (
   Range _range
 , typename range_trait::size_type<Range>::type _n
 ){
+bits::range_assert<Range>();
+bits::range_assert<bits::sub_range_n<Range>>();
+
 return bits::sub_range_n<Range>{_range, _n};
 }
 
@@ -224,6 +273,9 @@ bits::circular_range<Range>
 circular_range (
   Range _range
 ){
+bits::range_assert<Range>();
+bits::range_assert<bits::circular_range<Range>>();
+
 return bits::circular_range<Range>{_range};
 }
 
@@ -235,6 +287,10 @@ bits::disable_input<Range>
 disable_input (
   Range _range
 ){
+bits::range_assert<Range>();
+bits::range_assert<bits::disable_input<Range>>();
+bits::not_read_assert<bits::disable_input<Range>>();
+
 return bits::disable_input<Range>{_range};
 }
 
@@ -246,6 +302,10 @@ bits::disable_output<Range>
 disable_output (
   Range _range
 ){
+bits::range_assert<Range>();
+bits::range_assert<bits::disable_output<Range>>();
+bits::not_write_assert<bits::disable_output<Range>>();
+
 return bits::disable_output<Range>{_range};
 }
 
@@ -257,6 +317,9 @@ bits::select<Range, I>
 select (
   Range _range
 ){
+bits::range_assert<Range>();
+bits::range_assert<bits::select<Range, I>>();
+
 return bits::select<Range, I> {_range};
 }
 
@@ -269,6 +332,9 @@ extend_life (
   Range _range
 , Ts &&... _ts
 ){
+bits::range_assert<Range>();
+bits::range_assert<bits::extend_life<Range, Ts...>>();
+
 return bits::extend_life<Range, Ts...>
   {_range, std::forward<Ts>(_ts)...};
 }
@@ -282,6 +348,9 @@ sub_range (
   Range _range
 , Sentinal _sentinal
 ){
+bits::range_assert<Range>();
+bits::range_assert<bits::sub_range<Range, Sentinal>>();
+
 return bits::sub_range<Range, Sentinal>{_range, _sentinal};
 }
 
@@ -293,6 +362,9 @@ bits::checked_range<Range>
 checked_range (
   Range _range
 ){
+bits::range_assert<Range>();
+bits::range_assert<bits::checked_range<Range>>();
+
 return bits::checked_range<Range>{_range};
 }
 
@@ -304,11 +376,9 @@ bits::back_insert<Range>
 back_insert (
   Range _range
 ){
-static_assert (
-   range_trait::is_expandable<Range>::value
-&& range_trait::is_range<Range>::value
-, "Range must be expandable to insert into the end."
-);
+bits::range_assert<Range>();
+bits::range_assert<bits::back_insert<Range>>();
+bits::expandable_assert<Range>();
 
 return bits::back_insert<Range>{_range};
 }
