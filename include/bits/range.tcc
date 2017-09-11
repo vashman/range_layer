@@ -551,36 +551,5 @@ static_assert(
 return _range.save();
 }
 
-/*===========================================================
-  const range
-===========================================================*/
-template <typename T>
-auto
-crange (
-  T const & _var
-) -> decltype (
-  remove_decorator (
-  disable_output (
-  range(const_cast<T&>(_var))
-  ))
-){
-return
-remove_decorator (
-disable_output (
-range(const_cast<T&>(_var))
-));
-}
-
-/*===========================================================
-  const move crange
-===========================================================*/
-template <typename T>
-auto
-crange (
-  T const && _var
-) ->decltype(extend_life(range(_var), _var)) {
-return extend_life(range(_var), _var);
-}
-
 } //range layer----------------------------------------------
 #endif

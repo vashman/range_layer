@@ -29,6 +29,7 @@ temp = read(rng);
 rng = next(rng);
 assert(temp == 0);
 
+assert(has_readable(rng));
 temp = read(rng);
 rng = prev (rng);
 assert(temp == 1);
@@ -39,8 +40,8 @@ temp = read(rng);
 assert(temp == 9);
 
 assert(has_readable(rng));
-auto r = next(2, rng);
-temp = read(r);
+advance_n(2, rng);
+temp = read(rng);
 assert(temp == 2);
 
 return 0;

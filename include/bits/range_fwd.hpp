@@ -339,26 +339,6 @@ save (
   Range _range
 );
 
-/*===========================================================
-  const range
-===========================================================*/
-template <typename T>
-auto
-crange (
-  T const & _var
-) -> decltype ( remove_decorator ( disable_output (
-  range(const_cast<T&>(_var))
-)));
-
-/*===========================================================
-  const move crange
-===========================================================*/
-template <typename T>
-auto
-crange (
-  T const && _var
-) ->decltype(extend_life(range(_var), _var));
-
 }
 //range layer------------------------------------------------
 #endif

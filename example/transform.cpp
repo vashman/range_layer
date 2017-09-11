@@ -15,9 +15,9 @@
 using std::string;
 using std::array;
 using range_layer::iota_range;
-using range_layer::array_range;
-using range_layer::input_transform_range;
-using range_layer::output_transform_range;
+using range_layer::range;
+using range_layer::input_transform;
+using range_layer::output_transform;
 
 char
 func1 (string _str);
@@ -36,28 +36,21 @@ return temp += _c;
 
 int main (){
 
-auto range = input_transform_range (
-  iota_range<char>{'a'}
-, func2
-);
+auto rng = input_transform (iota_range<char>{'a'}, func2);
 
-while (has_readable(range)){
-assert((read(range)).compare("a"));
-range = next(range);
+while (has_readable(rng)){
+assert((read(rng)).compare("a"));
+rng = next(rng);
 }
 
 array<char, 5> arr {{'5', 'b' , 'c', 'd', 'e'}};
-
-auto range2 = output_transform_range (
-  array_range<char> {arr.data(), arr.data()+arr.size()}
-, func1
-);
+auto rng2 = output_transform (range(arr), func1);
 
 string ss {"FGHKI"};
-  while (has_writable(range2)){
-  write (range2, ss);
-  assert(read(range2) == ss[0]);
-  range2 = next(range2);
+  while (has_writable(rng2)){
+  write (rng2, ss);
+  assert(read(rng2) == ss[0]);
+  rng2 = next(rng2);
   ss.erase(0,1);
   }
 

@@ -69,123 +69,122 @@ return bits::remove_decorator<Range>(_range);
 }
 
 /*===========================================================
-  remove_if_range
+  remove_if
 ===========================================================*/
 template <typename Range, typename Pred>
 bits::remove_range<Range, Pred>
-remove_if_range (
+remove_if (
   Range _range
 , Pred _pred
 ){
+using type = bits::remove_range<Range, Pred>;
 bits::range_assert<Range>();
-bits::range_assert<bits::remove_range<Range, Pred>>();
+bits::predicate_assert<Pred>();
+bits::range_assert<type>();
 
 return bits::remove_range<Range, Pred>{_range, _pred};
 }
 
 /*===========================================================
-  remove_range
-===========================================================*/
-template <typename Range, typename T>
-bits::remove_range<Range, bits::remove_pred<T>>
-remove_range (
-  Range _range
-, T _value
-){
-bits::range_assert<Range>();
-bits::range_assert
-  <bits::remove_range<Range, bits::remove_pred<T>>>();
-
-return bits::remove_range<Range, bits::remove_pred<T>>
-  {_range, bits::remove_pred<T>{_value}};
-}
-
-/*===========================================================
-  input_replace_range
+  remove
 ===========================================================*/
 template <typename Range, typename T>
 auto
-input_replace_range (
+remove (
+  Range _range
+, T _value
+) -> decltype (
+  remove_if(_range, bits::remove_pred<T>{_value})
+){
+return remove_if(_range, bits::remove_pred<T>{_value});
+}
+
+/*===========================================================
+  input_replace
+===========================================================*/
+template <typename Range, typename T>
+auto
+input_replace (
   Range _range
 , T _old_value
 , T _new_value
 )
--> decltype (input_transform_range
+-> decltype (input_transform
   (_range, bits::replace_func<T>{_old_value, _new_value}))
 {
 bits::range_assert<Range>();
 bits::read_assert<Range>();
 
-return input_transform_range
+return input_transform
   (_range, bits::replace_func<T>{_old_value, _new_value});
 }
 
 /*===========================================================
-  output_replace_range
+  output_replace
 ===========================================================*/
 template <typename Range, typename T>
 auto
-output_replace_range (
+output_replace (
   Range _range
 , T _old_value
 , T _new_value
 )
--> decltype (output_transform_range (
+-> decltype (output_transform (
   _range, bits::replace_func<T>{_old_value, _new_value}))
 {
 bits::range_assert<Range>();
 bits::write_assert<Range>();
 
-return output_transform_range (
+return output_transform (
   _range, bits::replace_func<T>{_old_value, _new_value});
 }
 
 /*===========================================================
-  input_replace_if_range
+  input_replace_if
 ===========================================================*/
 template <typename Range, typename T, typename Pred>
 auto
-input_replace_if_range (
+input_replace_if (
   Range _range
 , Pred _pred
 , T _new_value
 )
--> decltype (input_transform_range
+-> decltype (input_transform
   (_range, bits::replace_if_func<T,Pred>{_new_value, _pred}))
 {
 bits::range_assert<Range>();
 bits::read_assert<Range>();
 
-return input_transform_range
+return input_transform
   (_range, bits::replace_if_func<T,Pred>{_new_value, _pred});
 }
 
 /*===========================================================
-  output_replace_if_range
+  output_replace_if
 ===========================================================*/
 template <typename Range, typename T, typename Pred>
 auto
-output_replace_if_range (
+output_replace_if (
   Range _range
 , Pred _pred
 , T _new_value
 )
--> decltype (output_transform_range (
+-> decltype (output_transform (
   _range, bits::replace_if_func<T,Pred>{_new_value, _pred}))
 {
 bits::range_assert<Range>();
 bits::write_assert<Range>();
 
-return output_transform_range (
+return output_transform (
   _range, bits::replace_if_func<T, Pred>{_new_value, _pred});
 }
 
 /*===========================================================
-  transform_range
+  transform
 ===========================================================*/
 template <typename Range, typename Func>
 bits::transform_range<Func, Range>
-transform_range (
+transform (
   Range _range
 , Func _func
 ){
@@ -196,11 +195,11 @@ return bits::transform_range<Func, Range>{_range, _func};
 }
 
 /*===========================================================
-  input_transform_range
+  input_transform
 ===========================================================*/
 template <typename Range, typename Func>
 bits::input_transform_range<Func, Range>
-input_transform_range (
+input_transform (
   Range _range
 , Func _func
 ){
@@ -216,11 +215,11 @@ return bits::input_transform_range<Func, Range>
 }
 
 /*===========================================================
-  output_transform_range
+  output_transform
 ===========================================================*/
 template <typename Range, typename Func>
 bits::output_transform_range<Func, Range>
-output_transform_range (
+output_transform (
   Range _range
 , Func _func
 ){
@@ -236,11 +235,11 @@ return bits::output_transform_range<Func, Range>
 }
 
 /*===========================================================
-  reverse range
+  backward
 ===========================================================*/
 template <typename Range>
 bits::reverse_range<Range>
-reverse_range (
+backward (
   Range _range
 ){
 bits::range_assert<Range>();

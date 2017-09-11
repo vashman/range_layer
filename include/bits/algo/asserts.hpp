@@ -199,6 +199,30 @@ static_assert (
 return 0;
 }
 
+/*===========================================================
+  linear assert
+===========================================================*/
+template <typename Range>
+constexpr int linear_assert (){
+static_assert (
+  range_trait::is_linear<Range>::value
+, "Range must be linear."
+);
+return 0;
+}
+
+/*===========================================================
+  predicate assert
+===========================================================*/
+template <typename Pred>
+constexpr int predicate_assert (){
+static_assert (
+  std::is_copy_constructible<Pred>::value
+, "Predicate must be copy constructible."
+);
+return 0;
+}
+
 } //bits-----------------------------------------------------
 } //range layer----------------------------------------------
 #endif

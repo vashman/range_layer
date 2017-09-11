@@ -11,42 +11,48 @@
 #include "../include/range.hpp"
 
 using range_layer::iota_range;
-using range_layer::array_range;
-using range_layer::input_replace_range;
-using range_layer::input_replace_if_range;
-using range_layer::output_replace_range;
-using range_layer::output_replace_if_range;
+using range_layer::range;
+using range_layer::input_replace;
+using range_layer::input_replace_if;
+using range_layer::output_replace;
+using range_layer::output_replace_if;
+using range_layer::advance;
+using range_layer::reverse;
 
 int main (){
 
-auto rng = input_replace_range (
-  iota_range<int> {2}
-, 4
-, 999
-);
+auto rng = input_replace (iota_range<int> {2}, 4, 999);
 
+assert (has_readable(rng));
 assert (read(rng) == 2);
 advance(rng);
+
+assert (has_readable(rng));
 assert (read(rng) == 3);
 advance(rng);
+
+assert (has_readable(rng));
 assert (read(rng) == 999);
 
 int arr [5] = {10, 11, 12, 13, 14};
 
-auto rng2 = output_replace_range (
-  array_range<int> {arr, arr+5}
-, 888
-, 999
-);
+auto rng2 = output_replace (range(arr, 5), 888, 999);
 
+assert (has_readable(rng2));
 assert (read(rng2) == 10);
 advance(rng2);
+
+assert (has_readable(rng2));
 assert (read(rng2) == 11);
 reverse(rng2);
+
+assert (has_writable(rng2));
 write (rng2, 888);
+
+assert (has_readable(rng2));
 assert (read(rng2) == 999);
 
-/*auto rng3 = output_replace_if_range (
+/*auto rng3 = output_replace_if (
   array_range<int> {arr, arr+5}
 , [](int _value){return (_value%2)==0;}
 , 999

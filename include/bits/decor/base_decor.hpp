@@ -57,7 +57,7 @@ using enable_range_if_not_t = typename enable_range_if_not
   <T, R, range_trait::is_range<R>, Ts...>::type;
 
 /*===========================================================
-  base decor
+  base_decor
 ===========================================================*/
 template
   <typename Range, typename Decorator, typename... Traits>

@@ -141,113 +141,113 @@ remove_decorator (
 );
 
 /*===========================================================
-  remove if range
+  remove if
 ===========================================================*/
 template <typename Range, typename Pred>
 bits::remove_range<Range, Pred>
-remove_if_range (
+remove_if (
   Range
 , Pred
 );
 
 /*===========================================================
-  remove range
+  remove
 ===========================================================*/
 template <typename Range, typename T>
 bits::remove_range<Range, bits::remove_pred<T>>
-remove_range (
+remove (
   Range
 , T
 );
 
 /*===========================================================
-  input_replace_range
+  input replace
 ===========================================================*/
 template <typename Range, typename T>
 auto
-input_replace_range (
+input_replace (
   Range _range
 , T _old_value
 , T _new_value
 )
--> decltype (input_transform_range
+-> decltype (input_transform
   (_range, bits::replace_func<T>{_old_value, _new_value}));
 
 /*===========================================================
-  output_replace_range
+  output replace
 ===========================================================*/
 template <typename Range, typename T>
 auto
-output_replace_range (
+output_replace (
   Range _range
 , T _old_value
 , T _new_value
 )
--> decltype (output_transform_range (
+-> decltype (output_transform (
   _range, bits::replace_func<T>{_old_value, _new_value}));
 
 /*===========================================================
-  input_replace if range
+  input_replace if
 ===========================================================*/
 template <typename Range, typename T, typename Pred>
 auto
-input_replace_if_range (
+input_replace_if (
   Range _range
 , Pred _pred
 , T _new_value
 )
--> decltype (input_transform_range (
+-> decltype (input_transform (
   _range, bits::replace_if_func<T,Pred>{_new_value, _pred}));
 
 /*===========================================================
-  output_replace if range
+  output_replace if
 ===========================================================*/
 template <typename Range, typename T, typename Pred>
 auto
-output_replace_if_range (
+output_replace_if (
   Range _range
 , Pred _pred
 , T _new_value
 )
--> decltype (output_transform_range (
+-> decltype (output_transform (
   _range, bits::replace_if_func<T,Pred>{_new_value, _pred}));
 
 /*===========================================================
-  output_transform_range
+  output_transform
 ===========================================================*/
 template <typename Range, typename Func>
 bits::output_transform_range<Func, Range>
-output_transform_range (
+output_transform (
   Range
 , Func
 );
 
 /*===========================================================
-  input_transform_range
+  input_transform
 ===========================================================*/
 template <typename Range, typename Func>
 bits::input_transform_range<Func, Range>
-input_transform_range (
+input_transform (
   Range
 , Func
 );
 
 /*===========================================================
-  transform_range
+  transform
 ===========================================================*/
 template <typename Range, typename Func>
 bits::transform_range<Func, Range>
-transform_range (
+transform (
   Range
 , Func
 );
 
 /*===========================================================
-  reverse_range
+  backward
 ===========================================================*/
 template <typename Range>
 bits::reverse_range<Range>
-reverse_range (
+backward (
   Range
 );
 
@@ -262,11 +262,11 @@ sub_range_n (
 );
 
 /*===========================================================
-  circular_range
+  circular
 ===========================================================*/
 template <typename Range>
 bits::circular_range<Range>
-circular_range (
+circular (
   Range
 );
 

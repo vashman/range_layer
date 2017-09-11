@@ -231,11 +231,19 @@ template <typename Range>
 struct read_type {
 using type = typename bits::trait_bits::is_typelist
 < typename bits::detected_or
-    < typename bits::trait_bits::if_read_type<Range, is_input<Range>::value>::type
-    , bits::trait_bits::rtype
-    , Range
+  < typename bits::trait_bits::if_read_type
+    < Range
+    , is_input<Range>::value
     >::type
-  >::type;
+  , bits::trait_bits::rtype
+  , Range
+  >::type
+>::type;
+
+static_assert (
+  std::is_default_constructible<type>::value
+, "Input type must be default constructible."
+);
 };
 
 /*===========================================================
@@ -245,14 +253,13 @@ using type = typename bits::trait_bits::is_typelist
 ===========================================================*/
 template <typename Range>
 struct write_type {
-using type
-  = typename bits::trait_bits::is_typelist
-  < typename bits::detected_or
-    < void
-    , bits::trait_bits::wtype
-    , Range
-    >::type
-  >::type;
+using type = typename bits::trait_bits::is_typelist
+< typename bits::detected_or
+  < void
+  , bits::trait_bits::wtype
+  , Range
+  >::type
+>::type;
 };
 
 /*===========================================================

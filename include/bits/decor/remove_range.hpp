@@ -33,12 +33,12 @@ class remove_range
   , range_trait::is_shrinkable<Range>
   , range_trait::is_expandable<Range>
   , range_trait::is_insertable<Range>
-  , range_trait::is_subscriptable<Range>
   >
 {
 
 Pred pred;
 typename range_trait::read_type_t<Range> temp;
+bool fetched;
 
 using base_t = bits::base_decor
   < Range
@@ -55,8 +55,23 @@ using base_t = bits::base_decor
   , range_trait::is_shrinkable<Range>
   , range_trait::is_expandable<Range>
   , range_trait::is_insertable<Range>
-  , range_trait::is_subscriptable<Range>
   >;
+
+/*===========================================================
+  get var
+===========================================================*/
+void
+get_next (
+){
+  while (
+     (this->range == sentinel::readable{})
+  && ! this->fetched
+  ){
+  this->temp = *this->range;
+    if (! this->pred(this->temp)) this->fetched = true;
+  ++this->range;
+  }
+}
 
 public:
 
@@ -74,16 +89,10 @@ remove_range (
 , Pred _pred
 )
 : base_t {_range}
-, pred {_pred}
-, temp ()
-{
-// Should not transverse the range in the ctor!
-  while (this->range == sentinel::readable{}){
-  this->temp = *this->range;
-    if (! this->pred(this->temp)) break;
-  ++this->range;
-  }
-}
+, pred {}
+, temp {}
+, fetched {false}
+{}
 
 /*===========================================================
   copy ctor
@@ -116,19 +125,15 @@ remove_range & operator = (remove_range const &) = default;
 template <typename U = Range>
 remove_range &
 operator ++ (){
-++this->range;
-  while (this->range == sentinel::readable{}){
-  this->temp = *this->range;
-    if (! this->pred(this->temp)) break;
-  ++this->range;
-  }
+this->fetched = false;
+this->get_next();
 return *this;
 }
 
 /*===========================================================
   operator --
 ===========================================================*/
-template <typename U = Range>
+/*template <typename U = Range>
 remove_range &
 operator -- (){
 --this->range;
@@ -138,6 +143,16 @@ operator -- (){
   --this->range;
   }
 return *this;
+}*/
+
+/*===========================================================
+  operator *
+===========================================================*/
+read_type
+operator * (
+){
+get_next();
+return this->temp;
 }
 
 }; //remove range--------------------------------------------

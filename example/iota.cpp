@@ -12,25 +12,26 @@
 using range_layer::iota_range;
 
 int main (int arc, char** argv){
-iota_range<int> rng {65};
+iota_range<int> rng {0};
 
 assert(has_readable(rng));
 int temp = read(rng);
 rng = next(rng);
-assert(temp == 65);
+assert(temp == 0);
 
-temp = read(rng);
-assert(temp == 66);
-
-rng = next(100, rng);
 assert(has_readable(rng));
 temp = read(rng);
-assert(temp == 166);
+assert(temp == 1);
+rng = next(100, rng);
+
+assert(has_readable(rng));
+temp = read(rng);
+assert(temp == 101);
 
 rng = prev (rng);
 assert(has_readable(rng));
 temp = read(rng);
-assert(temp == 165);
+assert(temp == 100);
 
 return 0;
 }
