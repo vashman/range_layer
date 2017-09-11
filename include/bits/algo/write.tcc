@@ -160,10 +160,11 @@ write (
 , IRange & _input
 ){
 bits::read_assert<IRange>();
+bits::write_assert<ORange>();
 
-using range_layer::advance;
-
-  while (has_writable(_output) && has_readable(_input)){
+  while (
+     range_layer::has_writable(_output)
+  && range_layer::has_readable(_input)){
   range_layer::write(_output, read(_input));
   range_layer::advance(_output, _input);
   }
@@ -185,9 +186,7 @@ write (
 , ORange & _output // Modify the output range.
 , T & _variable
 ){
-using range_layer::advance;
-
-  if (has_writable(_output)){
+  if (range_layer::has_writable(_output)){
   range_layer::write(_output, _variable);
   range_layer::advance(_output);
   }

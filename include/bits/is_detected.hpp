@@ -9,7 +9,7 @@
 namespace range_layer {
 namespace bits {
 
-template<typename... > using void_t = void;
+template<typename... > using void_tt = void;
 
 struct nonesuch {
 nonesuch() = delete;
@@ -34,7 +34,7 @@ template <
   typename Default
 , template<class...> class Op
 , typename... Args >
-struct detector<Default, void_t<Op<Args...>>, Op, Args...> {
+struct detector<Default, void_tt<Op<Args...>>, Op, Args...> {
   using value_t = std::true_type;
   using type = Op<Args...>;
 };

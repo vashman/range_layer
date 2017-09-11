@@ -25,9 +25,7 @@ struct vector_range;
   vector_range
 ===========================================================*/
 template <typename T, typename Alloc>
-struct vector_range {
-
-private:
+class vector_range {
 
 std::vector<T, Alloc> * vec;
 std::size_t pos;
@@ -73,19 +71,13 @@ vector_range & operator = (vector_range &&) = default;
   save
 ===========================================================*/
 vector_range &
-save (
-){
-return *this;
-}
+save ();
 
 /*===========================================================
   size
 ===========================================================*/
 std::size_t
-size (
-) const {
-return this->vec->size();
-}
+size () const;
 
 /*===========================================================
   position
@@ -101,7 +93,7 @@ return this->pos;
 ===========================================================*/
 T const &
 operator * (){
-return *this->vec[this->pos-1];
+return (*this->vec)[this->pos-1];
 }
 
 /*===========================================================
@@ -258,6 +250,26 @@ this->vec->clear();
 return *this;
 }
 
+/*===========================================================
+  vector_range:: size
+===========================================================*/
+template <typename T, typename Alloc>
+std::size_t
+vector_range<T, Alloc>::size (
+) const {
+return this->vec->size();
+}
+
+/*===========================================================
+  vector_range:: save
+===========================================================*/
+template <typename T, typename Alloc>
+vector_range<T, Alloc> &
+vector_range<T, Alloc>::save (
+){
+return *this;
+}
+
 } //bits-----------------------------------------------------
 
 /*===========================================================
@@ -286,7 +298,15 @@ bits::vector_range<T, Alloc>
 range (
   std::vector<T, Alloc> & _vec
 ){
-return bits::vector_range<T, Alloc> {_vec};
+using type = bits::vector_range<T, Alloc>;
+bits::range_assert<type>();
+bits::read_assert<type>();
+bits::write_assert<type>();
+bits::not_decorator_assert<type>();
+bits::shrinkable_assert<type>();
+bits::erase_assert<type>();
+
+return type{_vec};
 }
 
 /*===========================================================

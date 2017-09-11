@@ -31,6 +31,9 @@ class writable {};
 } //sentinel-------------------------------------------------
 
 namespace bits {
+
+using void_t = void*;
+
 namespace trait_bits {
 
 template <typename T>
@@ -38,78 +41,6 @@ using rtype = typename T::read_type;
 
 template <typename T>
 using wtype = typename T::write_type;
-
-template <typename T>
-using sing_t = decltype(T::is_singleton);
-
-template <typename T>
-using read_t = decltype(std::declval<T&>().operator *());
-
-template <typename T>
-using rsize_t = decltype(std::declval<T&>().size());
-
-template <typename T>
-using rpos = decltype(std::declval<T&>().position());
-
-template <typename T>
-using advance_t = decltype(std::declval<T&>().operator ++());
-
-template <typename T>
-using reverse_t = decltype(std::declval<T&>().operator --());
-
-template <typename T>
-using subscript_t = decltype (
-  std::declval<T&>().operator [](std::declval<int>()) );
-
-template <typename T>
-using read_sen_t = decltype (
-     std::declval<T&>()
-  == std::declval<const sentinel::readable>()
-);
-
-template <typename T>
-using write_t = decltype (
-  std::declval<T&>().operator =(std::declval<int const&>()));
-
-template <typename T>
-using write_sen_t = decltype (
-   std::declval<T&>()
-== std::declval<const sentinel::writable>()
-);
-
-template <typename T>
-using linear_fwd_t = decltype (
-  std::declval<T&>().operator +=(std::declval<int>()) );
-
-template <typename T>
-using linear_bck_t = decltype (
-  std::declval<T&>().operator -=(std::declval<int>()) );
-
-template <typename T>
-using expand_t = decltype (
-  std::declval<T&>().expand(std::declval<int>()) );
-
-template <typename T>
-using insert_t = decltype (
-  std::declval<T&>().insert(std::declval<int>()) );
-
-template <typename T>
-using shrink_t = decltype (
-  std::declval<T&>().shrink(std::declval<int>()) );
-
-template <typename T>
-using erase_all_t = decltype (
-  std::declval<T&>().erase_all(std::declval<int>()) );
-
-template <typename T>
-using erase_t = decltype (
-  std::declval<T&>().erase(std::declval<int>()) );
-
-template <typename T>
-using disable_t = decltype (std::declval<T&>().disable());
-
-template <typename T>
-using save_t = decltype(std::declval<T&>().save());
 
 template <typename Range, bool flag>
 struct single_value;
@@ -144,7 +75,7 @@ using type = typename typelist<Tuple, T>::type;
 
 template <typename Range, bool HasSize>
 struct size_type {
-using type = void;
+using type = void_t;
 };
 
 template <typename Range>
@@ -161,12 +92,12 @@ using type = typename std::result_of
 
 template <typename Range>
 struct pos_type<Range, false> {
-using type = void;
+using type = void_t;
 };
 
 template <typename Range, bool>
 struct if_read_type {
-using type = void;
+using type = void_t;
 };
 
 template <typename Range>
@@ -185,26 +116,69 @@ namespace range_trait {
 template <typename Range>
 struct is_range {
 
+private:
+
+template <typename T>
+using func_t = decltype(std::declval<T&>().operator ++());
+
+public:
+
 static constexpr bool value
-  = bits
-    ::is_detected<bits::trait_bits::advance_t, Range>::value
-  && std::is_copy_constructible<Range>::value
-  && std::is_copy_assignable<Range>::value
-  && std::is_move_constructible<Range>::value
-  && std::is_move_assignable<Range>::value;
+  = bits::is_detected<func_t, Range>::value
+&& std::is_copy_constructible<Range>::value
+&& std::is_copy_assignable<Range>::value
+&& std::is_move_constructible<Range>::value
+&& std::is_move_assignable<Range>::value;
 };
+
+/*===========================================================
+  write_type
+
+* When the range is not an output type, write type is void.
+===========================================================*/
+template <typename Range>
+struct write_type {
+using type = typename bits::trait_bits::is_typelist
+< typename bits::detected_or
+  < bits::void_t
+  , bits::trait_bits::wtype
+  , Range
+  >::type
+>::type;
+};
+
+/*===========================================================
+  write_type_t
+===========================================================*/
+template <typename Range>
+using write_type_t = typename write_type<Range>::type;
 
 /*===========================================================
   is_output
 ===========================================================*/
 template <typename Range>
 struct is_output {
+
+private:
+
+template <typename T>
+using func_t = decltype (
+  std::declval<T&>().operator = (
+    std::declval<write_type_t<Range> const &>()
+  )
+);
+
+template <typename T>
+using comp_t = decltype (
+   std::declval<T&>()
+== std::declval<const sentinel::writable>()
+);
+
+public:
+
 static constexpr bool value
-  = bits
-  ::is_detected<bits::trait_bits::write_t, Range>::value
-&&  bits
-  ::is_detected<bits::trait_bits::write_sen_t, Range>
-  ::value;
+  = bits::is_detected<func_t, Range>::value
+&&  bits::is_detected<comp_t, Range>::value;
 };
 
 /*===========================================================
@@ -212,14 +186,23 @@ static constexpr bool value
 ===========================================================*/
 template <typename Range>
 struct is_input {
+
+private:
+
+template <typename T>
+using func_t = decltype(std::declval<T&>().operator *());
+
+template <typename T>
+using comp_t = decltype (
+     std::declval<T&>()
+  == std::declval<const sentinel::readable>()
+);
+
+public:
+
 static constexpr bool value
-  = bits
-  ::is_detected<bits::trait_bits::read_t, Range>
-  ::value
-&&
-    bits
-  ::is_detected<bits::trait_bits::read_sen_t, Range>
-  ::value;
+  = bits::is_detected<func_t, Range>::value
+&& bits::is_detected<comp_t, Range>::value;
 };
 
 /*===========================================================
@@ -247,29 +230,26 @@ static_assert (
 };
 
 /*===========================================================
-  write_type
-
-* When not output type is void.
+  read_type_t
 ===========================================================*/
 template <typename Range>
-struct write_type {
-using type = typename bits::trait_bits::is_typelist
-< typename bits::detected_or
-  < void
-  , bits::trait_bits::wtype
-  , Range
-  >::type
->::type;
-};
+using read_type_t = typename read_type<Range>::type;
 
 /*===========================================================
   is_finite
 ===========================================================*/
 template <typename Range>
 struct is_finite {
+
+private:
+
+template <typename T>
+using func_t = decltype(std::declval<T&>().size());
+
+public:
+
 static constexpr bool value
-  = bits::is_detected<bits::trait_bits::rsize_t, Range>
-  ::value;
+  = bits::is_detected<func_t, Range>::value;
 };
 
 /*===========================================================
@@ -277,30 +257,52 @@ static constexpr bool value
 ===========================================================*/
 template <typename Range>
 struct size_type {
-using type = typename bits::detected_or
-<void, bits::trait_bits::rsize_t, Range>::type;
+
+private:
+
+template <typename T>
+using func_t = decltype(std::declval<T&>().size());
+
+public:
+
+using type
+  = typename bits::detected_or<bits::void_t, func_t, Range>::type;
 
 static_assert (
-  std::is_same<type, void>::value
-  || std::is_unsigned<type>::value
+   std::is_same<type, void>::value
+|| std::is_unsigned<type>::value
 , "Range size must be a unsigned type."
 );
 
 static_assert (
-  std::is_same<type, void>::value
-  || std::numeric_limits<type>::is_integer
+   std::is_same<type, void>::value
+|| std::numeric_limits<type>::is_integer
 , "Range size must be a interger type."
 );
 
 };
 
 /*===========================================================
+  size_type_t
+===========================================================*/
+template <typename Range>
+using size_type_t = typename size_type<Range>::type;
+
+/*===========================================================
   has_position
 ===========================================================*/
 template <typename Range>
 struct has_position {
+
+private:
+
+template <typename T>
+using func_t = decltype(std::declval<T&>().position());
+
+public:
+
 static constexpr bool value
-  = bits::is_detected<bits::trait_bits::rpos, Range>::value;
+  = bits::is_detected<func_t, Range>::value;
 
 static_assert (
  ! value || (value && is_finite<Range>::value)
@@ -322,9 +324,16 @@ static_assert (
 ===========================================================*/
 template <typename Range>
 struct is_singleton {
+
+private:
+
+template <typename T>
+using func_t = decltype(std::declval<T&>().save());
+
+public:
+
 static constexpr bool value
-  = ! bits
-  ::is_detected<bits::trait_bits::save_t, Range>::value;
+  = ! bits::is_detected<func_t, Range>::value;
 };
 
 
@@ -333,9 +342,16 @@ static constexpr bool value
 ===========================================================*/
 template <typename Range>
 struct is_reversable {
+
+private:
+
+template <typename T>
+using func_t = decltype(std::declval<T&>().operator --());
+
+public:
+
 static constexpr bool value
-  = bits
-  ::is_detected<bits::trait_bits::reverse_t, Range>::value;
+  = bits::is_detected<func_t, Range>::value;
 };
 
 /*===========================================================
@@ -343,20 +359,27 @@ static constexpr bool value
 ===========================================================*/
 template <typename Range>
 struct is_linear {
-static constexpr bool value
-  = !(bits
-  ::is_detected<bits::trait_bits::linear_fwd_t, Range>
-  ::value
-&& ((
-        bits
-      ::is_detected <bits::trait_bits::linear_bck_t, Range>
-      ::value
 
-   && is_reversable<Range>::value
-   )
-  || ! is_reversable<Range>::value
+private:
+
+template <typename T>
+using fwdfunc_t = decltype (
+  std::declval<T&>().operator +=(std::declval<int>()) );
+
+template <typename T>
+using bckfunc_t = decltype (
+  std::declval<T&>().operator -=(std::declval<int>()) );
+
+public:
+
+static constexpr bool value
+  = !(bits::is_detected<fwdfunc_t, Range>::value
+&& (! is_reversable<Range>::value
+  || (bits::is_detected <bckfunc_t, Range>::value
+    && is_reversable<Range>::value
     )
-  );
+  )
+);
 };
 
 /*===========================================================
@@ -376,9 +399,19 @@ static constexpr bool value
 ===========================================================*/
 template <typename Range>
 struct is_shrinkable {
+
+private:
+
+template <typename T>
+using func_t = decltype (
+  std::declval<T&>().shrink
+  (std::declval<size_type_t<Range>>())
+);
+
+public:
+
 static constexpr bool value
-  = bits::is_detected<bits::trait_bits::shrink_t, Range>
-  ::value;
+  = bits::is_detected<func_t, Range>::value;
 };
 
 /*===========================================================
@@ -397,9 +430,16 @@ static constexpr bool value
 ===========================================================*/
 template <typename Range>
 struct is_erasable {
+
+private:
+
+template <typename T>
+using func_t = decltype (std::declval<T&>().erase());
+
+public:
+
 static constexpr bool value
-  = bits
-  ::is_detected<bits::trait_bits::erase_t, Range>::value;
+  = bits::is_detected<func_t, Range>::value;
 };
 
 /*===========================================================
@@ -415,9 +455,16 @@ static constexpr bool value
 ===========================================================*/
 template <typename Range>
 struct is_all_erasable {
+
+private:
+
+template <typename T>
+using func_t = decltype(std::declval<T&>().erase_all());
+
+public:
+
 static constexpr bool value
-  = bits
-  ::is_detected<bits::trait_bits::erase_all_t, Range>::value;
+  = bits::is_detected<func_t, Range>::value;
 };
 
 /*===========================================================
@@ -433,9 +480,19 @@ static constexpr bool value
 ===========================================================*/
 template <typename Range>
 struct is_expandable {
+
+private:
+
+template <typename T>
+using func_t = decltype (
+  std::declval<T&>().expand
+  (std::declval<size_type_t<Range>>())
+);
+
+public:
+
 static constexpr bool value
-   = bits::is_detected<bits::trait_bits::expand_t, Range>
-  ::value;
+  = bits::is_detected<func_t, Range>::value;
 };
 
 /*===========================================================
@@ -450,9 +507,17 @@ static constexpr bool value
 ===========================================================*/
 template <typename Range>
 struct is_insertable {
+
+private:
+
+template <typename T>
+using func_t = decltype (
+  std::declval<T&>().insert(std::declval<int>()) );
+
+public:
+
 static constexpr bool value
-  = bits::is_detected<bits::trait_bits::insert_t, Range>
-  ::value;
+  = bits::is_detected<func_t, Range>::value;
 };
 
 namespace input {
@@ -489,7 +554,7 @@ static constexpr bool value
     ::trait_bits
     ::is_typelist <
       typename bits
-      ::detected_or<void, bits::trait_bits::rtype, Range>
+      ::detected_or<bits::void_t, bits::trait_bits::rtype, Range>
       ::type
       >
     ::value;
@@ -509,7 +574,7 @@ static constexpr bool value
   ::trait_bits
   ::is_typelist
   <   typename bits
-    ::detected_or<void, bits::trait_bits::wtype, Range>
+    ::detected_or<bits::void_t, bits::trait_bits::wtype, Range>
     ::type
   >
   ::value;
@@ -524,26 +589,41 @@ static constexpr bool value
 ===========================================================*/
 template <typename Range>
 struct is_subscriptable {
+
+private:
+
+template <typename T>
+using func_t = decltype (
+  std::declval<T&>().operator []
+  (std::declval<size_type_t<Range>>())
+);
+
+public:
+
 static constexpr bool value
   = is_reversable<Range>::value
 && is_input<Range>::value
 && is_output<Range>::value
 && (is_linear<Range>::value == false)
 && is_finite<Range>::value
-&&  bits
-  ::is_detected<bits::trait_bits::subscript_t, Range>
-  ::value;
+&& bits::is_detected<func_t, Range>::value;
 };
-
 
 /*===========================================================
   is_decorator
 ===========================================================*/
 template <typename Range>
 struct is_decorator {
+
+private:
+
+template <typename T>
+using func_t = decltype (std::declval<T&>().disable());
+
+public:
+
 static constexpr bool value
-  = bits
-  ::is_detected<bits::trait_bits::disable_t, Range>::value;
+  = bits::is_detected<func_t, Range>::value;
 };
 
 } //range trait----------------------------------------------

@@ -89,7 +89,7 @@ remove_range (
 , Pred _pred
 )
 : base_t {_range}
-, pred {}
+, pred (_pred)
 , temp {}
 , fetched {false}
 {}

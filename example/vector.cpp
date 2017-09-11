@@ -6,17 +6,37 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 
+#include <cassert>
+#include <string>
 #include <vector>
 #include "../include/vector_range.hpp"
 #include "../include/algorithm.hpp"
 
 using std::vector;
 using range_layer::fill;
+using range_layer::has_readable;
+using range_layer::has_writable;
+using range_layer::advance;
+using range_layer::reverse;
 using range_layer::range;
 using range_layer::execution_policy::sequenced;
+using range_layer::read;
+using range_layer::write;
 
 int main (){
-fill(sequenced{}, range(vector<int>{10}), 99);
+auto rng = range(vector<int>{10});
+fill(sequenced{}, rng, 99);
+
+while (has_readable(rng)){
+assert (99 == read(rng));
+advance(rng);
+}
+
+reverse(rng);
+assert (has_writable(rng));
+write(rng, 400);
+
+auto r_string = range(vector<std::string>{"testing"});
 
 return 0;
 }
