@@ -396,5 +396,19 @@ temp.set_range(_func(* std::get<0>(temp.variable).get()));
 return temp;
 }
 
+/*===========================================================
+  as range
+===========================================================*/
+template <typename Range, typename Func>
+bits::as_range<Range, Func>
+as_range (
+  Range && _range
+, Func _func
+){
+bits::range_assert<Range>();
+
+return bits::as_range<Range, Func>{_range, _func};
+}
+
 } //range layer----------------------------------------------
 #endif

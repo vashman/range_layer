@@ -10,8 +10,8 @@
 
 #include "rangefwd.hpp"
 #include "range_traits.hpp"
+#include "bits/range.hpp"
 #include "bits/decorator.hpp"
 #include "bits/adapter.hpp"
-#include "bits/range.hpp"
 
 #endif

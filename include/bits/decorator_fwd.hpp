@@ -98,6 +98,9 @@ template
   <typename Range, typename Decorator, typename... Traits>
 class base_decor;
 
+template <typename Range, typename Func>
+class as_range;
+
 } //bits-----------------------------------------------------
 
 /*===========================================================

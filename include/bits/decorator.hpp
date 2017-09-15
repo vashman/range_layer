@@ -26,6 +26,7 @@
 #include "decor/transform_range.hpp"
 #include "decor/input_transform_range.hpp"
 #include "decor/output_transform_range.hpp"
+#include "decor/as_range.hpp"
 
 #include "decorator.tcc"
 

@@ -19,7 +19,7 @@ template
 base_decor<Range, Decorator, Traits...>::base_decor (
   Range _range
 )
-: range {_range}
+: rng {_range}
 {}
 
 /*===========================================================
@@ -31,7 +31,7 @@ template<typename, typename>
 auto
 base_decor<Range, Decorator, Traits...>::operator * (
 ) -> decltype(*std::declval<Range&>()) {
-return *this->range;
+return *this->rng;
 }
 
 /*===========================================================
@@ -44,7 +44,7 @@ void
 base_decor<Range, Decorator, Traits...>::operator = (
   T const & _var
 ){
-this->range = _var;
+this->rng = _var;
 }
 
 /*===========================================================
@@ -56,7 +56,7 @@ template <typename, typename>
 Decorator &
 base_decor<Range, Decorator, Traits...>::operator ++ (
 ){
-++this->range;
+++this->rng;
 return static_cast<Decorator&>(*this);
 }
 
@@ -70,7 +70,7 @@ Decorator &
 base_decor<Range, Decorator, Traits...>::operator += (
   N _n
 ){
-this->range += _n;
+this->rng += _n;
 return static_cast<Decorator&>(*this);
 }
 
@@ -83,7 +83,7 @@ template <typename, typename>
 Decorator &
 base_decor<Range, Decorator, Traits...>::operator -- (
 ){
---this->range;
+--this->rng;
 return static_cast<Decorator&>(*this);
 }
 
@@ -97,7 +97,7 @@ Decorator &
 base_decor<Range, Decorator, Traits...>::operator -= (
   N _n
 ){
-this->range -= _n;
+this->rng -= _n;
 return static_cast<Decorator&>(*this);
 }
 
@@ -111,7 +111,7 @@ bool
 base_decor<Range, Decorator, Traits...>::operator == (
   sentinel::readable const & _sen
 ) const {
-return this->range == _sen;
+return this->rng == _sen;
 }
 
 /*===========================================================
@@ -124,7 +124,7 @@ bool
 base_decor<Range, Decorator, Traits...>::operator == (
   sentinel::writable const & _sen
 ) const {
-return this->range == _sen;
+return this->rng == _sen;
 }
 
 /*===========================================================
@@ -136,7 +136,7 @@ template <typename, typename>
 typename range_trait::size_type<Range>::type
 base_decor<Range, Decorator, Traits...>::size (
 ) const {
-return this->range.size();
+return this->rng.size();
 }
 
 /*===========================================================
@@ -148,7 +148,7 @@ template <typename, typename>
 typename range_trait::size_type<Range>::type
 base_decor<Range, Decorator, Traits...>::position (
 ) const {
-return this->range.position();
+return this->rng.position();
 }
 
 /*===========================================================
@@ -161,7 +161,7 @@ Decorator
 base_decor<Range, Decorator, Traits...>::save (
 ){
 Decorator temp{static_cast<Decorator&>(*this)};
-temp.range = this->range.save();
+temp.rng = this->rng.save();
 return temp;
 }
 
@@ -174,7 +174,7 @@ template <typename, typename>
 void
 base_decor<Range, Decorator, Traits...>::erase (
 ){
-this->range->erase();
+this->rng->erase();
 }
 
 /*===========================================================
@@ -186,7 +186,7 @@ template <typename, typename>
 void
 base_decor<Range, Decorator, Traits...>::erase_all (
 ){
-this->range->erase_all();
+this->rng->erase_all();
 }
 
 /*===========================================================
@@ -199,7 +199,7 @@ void
 base_decor<Range, Decorator, Traits...>::shrink (
   N _n
 ){
-this->range->shrink(_n);
+this->rng->shrink(_n);
 }
 
 /*===========================================================
@@ -212,7 +212,7 @@ void
 base_decor<Range, Decorator, Traits...>::insert (
   Args &&... _args
 ){
-this->range->insert(std::forward<Args...>(_args...));
+this->rng->insert(std::forward<Args...>(_args...));
 }
 
 /*===========================================================
@@ -225,7 +225,7 @@ void
 base_decor<Range, Decorator, Traits...>::expand (
   N _n
 ){
-this->range->expand(_n);
+this->rng->expand(_n);
 }
 
 /*===========================================================
@@ -237,7 +237,7 @@ template <typename, typename>
 Range
 base_decor<Range, Decorator, Traits...>::disable (
 ) const {
-return this->range;
+return this->rng;
 }
 
 } // bits----------------------------------------------------

@@ -65,7 +65,7 @@ class base_decor {
 
 protected:
 
-Range range;
+Range rng;
 
 /*===========================================================
   ctor
