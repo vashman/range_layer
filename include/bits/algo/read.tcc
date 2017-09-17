@@ -177,6 +177,9 @@ return count_if_until (
 );
 }
 
+/*===========================================================
+  for_each
+===========================================================*/
 template <typename Range, typename Operation>
 Range
 for_each (
@@ -184,6 +187,7 @@ for_each (
 , Range _range
 , Operation _op
 ){
+bits::range_assert<Range>();
 bits::read_assert<Range>();
 
   while (has_readable(_range)){

@@ -64,12 +64,12 @@ void
 get_next (
 ){
   while (
-     (this->range == sentinel::readable{})
+     (this->rng == sentinel::readable{})
   && ! this->fetched
   ){
-  this->temp = *this->range;
+  this->temp = *this->rng;
     if (! this->pred(this->temp)) this->fetched = true;
-  ++this->range;
+  ++this->rng;
   }
 }
 
