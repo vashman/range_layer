@@ -6,8 +6,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <cassert>
-#include "../include/iota_range.hpp"
-#include "../include/array_range.hpp"
+#include "../include/array.hpp"
 #include "../include/range.hpp"
 
 using range_layer::iota_range;

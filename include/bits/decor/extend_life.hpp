@@ -112,7 +112,7 @@ void
 set_range (
   Range _range
 ){
-this->range = _range;
+this->rng = _range;
 }
 
 using base_t::operator =;

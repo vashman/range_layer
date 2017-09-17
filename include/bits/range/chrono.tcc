@@ -8,10 +8,11 @@
 #ifndef RANGE_LAYER_BITS_CHRONO_TCC
 #define RANGE_LAYER_BITS_CHRONO_TCC
 
-#include <chrono>
-
 namespace range_layer {
 
+/*===========================================================
+  range
+===========================================================*/
 template <typename Clock>
 bits::clock_range<Clock>
 range (

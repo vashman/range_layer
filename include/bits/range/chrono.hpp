@@ -8,7 +8,6 @@
 #ifndef RANGE_LAYER_BITS_CHRONO_HPP
 #define RANGE_LAYER_BITS_CHRONO_HPP
 
-#include <chrono>
 #include "../range.hpp"
 #include "chrono_fwd.hpp"
 
@@ -98,10 +97,9 @@ operator == (
 return true;
 }
 
-}; // clock range-------------------------------------------
-
-} // bits---------------------------------------------------
-} // range layer--------------------------------------------
+}; //---------------------------------------------clock range
+} //-----------------------------------------------------bits
+} //----------------------------------------------range layer
 #endif
 #include "chrono.tcc"
 

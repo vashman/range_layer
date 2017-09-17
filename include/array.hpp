@@ -12,8 +12,6 @@
 #include <array>
 #include "range_traits.hpp"
 #include "bits/decor/extend_life.hpp"
-#include "bits/array_range_fwd.hpp"
-#include "bits/array_range.hpp"
-#include "bits/array_range.tcc"
+#include "bits/range/array_range.hpp"
 
 #endif

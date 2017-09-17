@@ -8,9 +8,10 @@
 #ifndef RANGE_LAYER_ARRAY_RANGE_TCC
 #define RANGE_LAYER_ARRAY_RANGE_TCC
 
-#include "decorator.hpp"
+#include "../decorator.hpp"
 
 namespace range_layer {
+namespace bits {
 
 /*===========================================================
   ctor
@@ -24,42 +25,6 @@ array_range<T>::array_range (
 , pos {_array}
 , end_pos {_end}
 {}
-
-/*===========================================================
-  range
-===========================================================*/
-template <typename T>
-array_range <T>
-range (
-  T * _ptr
-, std::size_t _size
-){
-return array_range<T>{_ptr, _ptr + _size};
-}
-
-/*===========================================================
-  range
-===========================================================*/
-template <typename T, std::size_t N>
-array_range <T>
-range (
-  std::array<T, N> & _arr
-){
-return array_range<T>{_arr.data(), _arr.data() + N};
-}
-
-/*===========================================================
-  move range
-===========================================================*/
-template <typename T, std::size_t N>
-auto
-range (
-  std::array<T, N> && _con
-) -> decltype(extend_life(range(_con), std::move(_con))) {
-auto temp = extend_life(range(_con), std::move(_con));
-temp.set_range(range(* std::get<0>(temp.variable).get()));
-return temp;
-}
 
 /*===========================================================
   operator ==
@@ -84,6 +49,44 @@ operator == (
 return _lhs == sentinel::readable{};
 }
 
-} //range layer----------------------------------------------
+} //-----------------------------------------------------bits
+
+/*===========================================================
+  range
+===========================================================*/
+template <typename T>
+bits::array_range <T>
+range (
+  T * _ptr
+, std::size_t _size
+){
+return bits::array_range<T>{_ptr, _ptr + _size};
+}
+
+/*===========================================================
+  range
+===========================================================*/
+template <typename T, std::size_t N>
+bits::array_range <T>
+range (
+  std::array<T, N> & _arr
+){
+return bits::array_range<T>{_arr.data(), _arr.data() + N};
+}
+
+/*===========================================================
+  move range
+===========================================================*/
+template <typename T, std::size_t N>
+auto
+range (
+  std::array<T, N> && _con
+) -> decltype(extend_life(range(_con), std::move(_con))) {
+auto temp = extend_life(range(_con), std::move(_con));
+temp.set_range(range(* std::get<0>(temp.variable).get()));
+return temp;
+}
+
+} //----------------------------------------------range layer
 #endif
 

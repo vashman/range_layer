@@ -9,8 +9,8 @@
 #define RANGE_LAYER_VECTOR_RANGE_HPP
 
 #include <vector>
-#include "range_traits.hpp"
-#include "bits/decorator.hpp"
+#include "../../range_traits.hpp"
+#include "../decorator.hpp"
 
 namespace range_layer {
 namespace bits {
@@ -215,7 +215,7 @@ erase_all ();
 vector_range &
 erase ();
 
-}; //vector range--------------------------------------------
+}; //--------------------------------------------vector range
 
 /*===========================================================
   vector_range:: ctor
@@ -270,7 +270,7 @@ vector_range<T, Alloc>::save (
 return *this;
 }
 
-} //bits-----------------------------------------------------
+} //-----------------------------------------------------bits
 
 /*===========================================================
   range
@@ -322,6 +322,6 @@ temp.set_range(range(* std::get<0>(temp.variable).get()));
 return temp;
 }
 
-} //range layer----------------------------------------------
+} //----------------------------------------------range layer
 #endif
 

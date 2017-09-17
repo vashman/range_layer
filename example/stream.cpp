@@ -6,7 +6,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <cassert>
-#include "../include/array_range.hpp"
+#include "../include/array.hpp"
 #include "../include/stream.hpp"
 #include "../include/range.hpp"
 #include "../include/algorithm.hpp"

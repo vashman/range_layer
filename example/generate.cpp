@@ -6,10 +6,13 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <cassert>
-#include "../include/generate_range.hpp"
 #include "../include/range.hpp"
 
-using range_layer::make_generate_range;
+using range_layer::range;
+using range_layer::has_readable;
+using range_layer::read;
+using range_layer::next;
+using range_layer::make_generator;
 
 struct gen {
 
@@ -20,7 +23,7 @@ int operator ()(){return this->temp++;}
 
 int main (){
 
-auto rng = make_generate_range<int> (gen());
+auto rng = range(make_generator(gen()));
 
 static_assert (
   ! range_layer

@@ -27,13 +27,13 @@ fill (
 , Count
 );
 
-template<typename Range, typename Generator>
+/*template<typename Range, typename Generator>
 Range
 generate (
   execution_policy::sequenced
 , Range
 , Generator
-);
+);*/
 
 } /* range layer */
 #include "write.tcc"

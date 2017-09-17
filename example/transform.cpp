@@ -7,10 +7,8 @@
 
 #include <cassert>
 #include <string>
-#include <array>
 #include "../include/range.hpp"
-#include "../include/iota_range.hpp"
-#include "../include/array_range.hpp"
+#include "../include/array.hpp"
 
 using std::string;
 using std::array;

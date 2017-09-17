@@ -7,14 +7,13 @@
 
 #include <cassert>
 #include "../include/range.hpp"
-#include "../include/iota_range.hpp"
 
-using range_layer::iota_range;
+using range_layer::iota;
 using range_layer::join;
 using std::get;
 
 int main (int arc, char** argv){
-auto rng = join (iota_range<int> {65}, iota_range<int> {0});
+/*auto rng = join (iota_range<int> {65}, iota_range<int> {0});
 
 assert(has_readable(rng));
 
@@ -35,7 +34,7 @@ assert(get<1>(temp) == 101);
 rng = prev (rng);
 temp = read(rng);
 assert(get<0>(temp) == 165);
-assert(get<1>(temp) == 100);
+assert(get<1>(temp) == 100);*/
 
 return 0;
 }

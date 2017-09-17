@@ -107,9 +107,9 @@ operator = (input_transform_range const &) = default;
 /*===========================================================
   read
 ===========================================================*/
-read_type
+auto
 operator * (
-){
+) -> decltype(this->func(*this->rng)) {
 return this->func(*this->rng);
 }
 

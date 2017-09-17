@@ -2,22 +2,20 @@
 
 #include <iostream>
 #include <cassert>
-#include <array>
 #include "../include/range.hpp"
-#include "../include/array_range.hpp"
+#include "../include/array.hpp"
 
 using std::array;
-using range_layer::array_range;
+using range_layer::range;
 using range_layer::circular_range;
+using range_layer::read;
 
 int main (){
 
 
 array<int, 6> arr = {{5,6,7,8,9,0}};
 
-auto rng = circular_range (
-  array_range<int>(arr.data(), arr.data()+arr.size())
-);
+auto rng = circular_range (range(arr));
 
 advance_n (3, rng);
 assert(read(rng) == 8);

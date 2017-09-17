@@ -58,7 +58,7 @@ return _range;
 /*===========================================================
   generate
 ===========================================================*/
-template<typename Range, typename Generator>
+/*template<typename Range, typename Generator>
 Range
 generate (
   execution_policy::sequenced
@@ -72,7 +72,7 @@ bits::write_assert<Range>();
   range_layer::advance(_range);
   }
 return _range;
-}
+}*/
 
 /*===========================================================
   generate n

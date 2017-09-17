@@ -8,7 +8,10 @@
 #ifndef RANGE_LAYER_BITS_ARRAY_RANGE_HPP
 #define RANGE_LAYER_BITS_ARRAY_RANGE_HPP
 
+#include "array_range_fwd.hpp"
+
 namespace range_layer {
+namespace bits {
 
 /*===========================================================
   array_range
@@ -157,8 +160,9 @@ position (
 return this->array - this->end_pos;
 }
 
-}; //array range---------------------------------------------
-
-} //range layer----------------------------------------------
+}; //---------------------------------------------array range
+} //-----------------------------------------------------bits
+} //----------------------------------------------range layer
 #endif
+#include "array_range.tcc"
 

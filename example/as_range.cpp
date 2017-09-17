@@ -8,7 +8,7 @@
 
 #include <iostream>
 #include <functional>
-#include "../include/vector_range.hpp"
+#include "../include/vector.hpp"
 #include "../include/string.hpp"
 #include "../include/algorithm.hpp"
 #include "../include/stream.hpp"
@@ -23,11 +23,11 @@ using range_layer::execution_policy::sequenced;
 int main (){
 
 vector<string> vec{"test: A", "test: B", "Test: c"};
-
+/*
 function<decltype(range(vec))(vector<string>&)> func
   = static_cast<decltype(range(vec))(vector<string>&)>(range_layer::range);
 auto output = range(std::cout);
-auto input = as_range(range(vec), func);
+auto input = as_range(range(vec), func);*/
 
 //write (sequenced{}, ,);
 

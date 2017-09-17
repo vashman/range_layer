@@ -129,7 +129,7 @@ template <typename U = Range>
 sub_range_n &
 operator ++ (){
 ++this->pos;
-++this->range;
+++this->rng;
 return *this;
 }
 
@@ -140,7 +140,7 @@ template <typename U = Range>
 sub_range_n &
 operator -- (){
 --this->pos;
---this->range;
+--this->rng;
 return *this;
 }
 
@@ -153,7 +153,7 @@ operator += (
   N _n
 ){
 this->pos += _n;
-this->range += _n;
+this->rng += _n;
 return *this;
 }
 
@@ -166,7 +166,7 @@ operator -= (
   N _n
 ){
 this->pos -= _n;
-this->range -= _n;
+this->rng -= _n;
 return *this;
 }
 
@@ -177,7 +177,7 @@ bool
 operator == (
   sentinel::readable const & _sen
 ) const {
-return this->range == _sen && !this->is_end();
+return this->rng == _sen && !this->is_end();
 }
 
 /*===========================================================
@@ -188,12 +188,11 @@ bool
 operator == (
   sentinel::writable const & _sen
 ) const {
-return this->range == _sen && !this->is_end();
+return this->rng == _sen && !this->is_end();
 }
 
-}; //sub_range_n---------------------------------------------
-
-} //bits-----------------------------------------------------
-} //range layer----------------------------------------------
+}; //---------------------------------------------sub_range_n
+} //-----------------------------------------------------bits
+} //----------------------------------------------range layer
 #endif
 

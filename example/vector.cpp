@@ -8,8 +8,7 @@
 
 #include <cassert>
 #include <string>
-#include <vector>
-#include "../include/vector_range.hpp"
+#include "../include/vector.hpp"
 #include "../include/algorithm.hpp"
 
 using std::vector;

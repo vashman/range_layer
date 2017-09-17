@@ -7,12 +7,16 @@
 
 #include <cassert>
 #include "../include/range.hpp"
-#include "../include/iota_range.hpp"
 
-using range_layer::iota_range;
+using range_layer::range;
+using range_layer::iota;
+using range_layer::has_readable;
+using range_layer::read;
+using range_layer::next;
+using range_layer::prev;
 
 int main (int arc, char** argv){
-iota_range<int> rng {0};
+auto rng = range(iota<int>{0});
 
 assert(has_readable(rng));
 int temp = read(rng);

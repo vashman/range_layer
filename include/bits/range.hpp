@@ -11,4 +11,7 @@
 #include "range_fwd.hpp"
 #include "range.tcc"
 
+#include "range/iota_range.hpp"
+#include "range/generate_range.hpp"
+
 #endif

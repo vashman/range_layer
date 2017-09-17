@@ -8,9 +8,10 @@
 #ifndef RANGE_LAYER_ARRAY_RANGE_FWD_HPP
 #define RANGE_LAYER_ARRAY_RANGE_FWD_HPP
 
-#include "decorator.hpp"
+//#include "../decorator.hpp"
 
 namespace range_layer {
+namespace bits {
 
 /*===========================================================
   array_range
@@ -19,19 +20,32 @@ template <typename T>
 class array_range;
 
 /*===========================================================
+  operator ==
+===========================================================*/
+template <typename T>
+bool
+operator == (
+  array_range<T> const &
+, sentinel::writable const &
+);
+
+} //-----------------------------------------------------bits
+
+/*===========================================================
   range
 ===========================================================*/
 template <typename T>
-array_range <T>
+bits::array_range <T>
 range (
   T *
+, std::size_t _size
 );
 
 /*===========================================================
   range
 ===========================================================*/
 template <typename T, std::size_t N>
-array_range <T>
+bits::array_range <T>
 range (
   std::array<T, N> &
 );
@@ -44,16 +58,6 @@ auto
 range (
   std::array<T, N> && _con
 ) -> decltype(extend_life(range(_con), std::move(_con)));
-
-/*===========================================================
-  operator ==
-===========================================================*/
-template <typename T>
-bool
-operator == (
-  array_range<T> const &
-, sentinel::writable const &
-);
 
 } //range layer----------------------------------------------
 #endif

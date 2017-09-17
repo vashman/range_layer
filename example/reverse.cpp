@@ -8,21 +8,20 @@
 #include <cassert>
 #include <limits>
 #include "../include/range.hpp"
-#include "../include/iota_range.hpp"
 
 using std::numeric_limits;
-using range_layer::iota_range;
+using range_layer::iota;
 using range_layer::backward;
 using range_layer::advance;
 
 int main (){
 
 int count = numeric_limits<int>::min() + 10;
-auto range = backward (iota_range<int>{count});
+auto rng = backward (range (iota<int>{count}));
 
-while (has_readable(range)){
-assert(read(range) == count);
-advance(range);
+while (has_readable(rng)){
+assert(read(rng) == count);
+advance(rng);
 --count;
 }
 

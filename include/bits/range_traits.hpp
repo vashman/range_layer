@@ -28,7 +28,7 @@ class readable {};
 ===========================================================*/
 class writable {};
 
-} //sentinel-------------------------------------------------
+} //-------------------------------------------------sentinel
 
 namespace bits {
 
@@ -105,8 +105,8 @@ struct if_read_type<Range, true> {
 using type = decltype(std::declval<Range&>().operator*());
 };
 
-} // trait bits----------------------------------------------
-} // bits----------------------------------------------------
+} //-----------------------------------------------trait bits
+} //-----------------------------------------------------bits
 
 namespace range_trait {
 
@@ -201,8 +201,8 @@ using comp_t = decltype (
 public:
 
 static constexpr bool value
-  = bits::is_detected<func_t, Range>::value
-&& bits::is_detected<comp_t, Range>::value;
+  =  bits::is_detected<func_t, Range>::value
+  && bits::is_detected<comp_t, Range>::value;
 };
 
 /*===========================================================
@@ -223,10 +223,10 @@ using type = typename bits::trait_bits::is_typelist
   >::type
 >::type;
 
-static_assert (
+/*static_assert (
   std::is_default_constructible<type>::value
 , "Input type must be default constructible."
-);
+);*/
 };
 
 /*===========================================================
@@ -266,7 +266,8 @@ using func_t = decltype(std::declval<T&>().size());
 public:
 
 using type
-  = typename bits::detected_or<bits::void_t, func_t, Range>::type;
+  = typename bits::detected_or<bits::void_t, func_t, Range>
+  ::type;
 
 static_assert (
    std::is_same<type, void>::value
