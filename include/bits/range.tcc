@@ -162,7 +162,7 @@ bits::reversible_assert<Range>();
 _range -= _n;
 }
 
-} //bits-----------------------------------------------------
+} //-----------------------------------------------------bits
 
 /*===========================================================
   advance_n
@@ -551,5 +551,38 @@ static_assert(
 return _range.save();
 }
 
-} //range layer----------------------------------------------
+/*===========================================================
+  xrange
+===========================================================*/
+template <typename Range, typename Decor, typename... Ts>
+auto
+xrange (
+  Range _range
+, Decor _decor
+, Ts &&... _ts
+)
+-> decltype (xrange(_decor.range(_range), _ts...))
+{
+bits::range_assert<Range>();
+
+return xrange(_decor.range(_range), _ts...);
+}
+
+/*===========================================================
+  xrange
+===========================================================*/
+template <typename Range, typename Decor>
+auto
+xrange (
+  Range _range
+, Decor _decor
+)
+-> decltype (_decor.range(_range))
+{
+bits::range_assert<Range>();
+
+return _decor.range(_range);
+}
+
+} //----------------------------------------------range layer
 #endif

@@ -111,7 +111,7 @@ template
 >
 auto
 operator * (
-) -> decltype(*std::declval<Range&>());
+) -> decltype(std::declval<Range&>().operator *());
 
 /*===========================================================
   operator =

@@ -22,23 +22,16 @@ RhsRange rhs_range;
 
 public:
 
-using read_type = typelist_cat_t
-<   typename bits
-  ::detected_or<void, bits::trait_bits::rtype, LhsRange>
-  ::type
-,   typename bits
-  ::detected_or<void, bits::trait_bits::rtype, RhsRange>
-  ::type
->;
-
-using write_type = typelist_cat_t
+/*using write_type = typelist_cat_t
 <   typename bits
   ::detected_or<void, bits::trait_bits::wtype, LhsRange>
   ::type
 ,   typename bits
   ::detected_or<void, bits::trait_bits::wtype, RhsRange>
   ::type
->;
+>;*/
+
+using write_type = int*;
 
 /*===========================================================
   ctor
@@ -62,9 +55,11 @@ join & operator = (join const &) = default;
 ~join () = default;
 
 template <typename U = LhsRange>
-typename read_type::type
+auto
 operator * (
-){
+)
+-> decltype(std::make_tuple(*this->lhs_range, *this->rhs_range))
+{
 return std::make_tuple(*this->lhs_range, *this->rhs_range);
 }
 

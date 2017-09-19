@@ -37,7 +37,12 @@ class remove_range
 {
 
 Pred pred;
-typename range_trait::read_type_t<Range> temp;
+
+typename  std::remove_cv
+< typename std::remove_reference
+  <range_trait::read_type_t<Range>
+>::type>::type temp;
+
 bool fetched;
 
 using base_t = bits::base_decor
@@ -74,9 +79,6 @@ get_next (
 }
 
 public:
-
-using read_type
-  = typename range_trait::read_type<Range>::type;
 
 using write_type
   = typename range_trait::write_type<Range>::type;
@@ -122,7 +124,7 @@ remove_range & operator = (remove_range const &) = default;
 /*===========================================================
   operator ++
 ===========================================================*/
-template <typename U = Range>
+//template <typename U = Range>
 remove_range &
 operator ++ (){
 this->fetched = false;
@@ -148,7 +150,7 @@ return *this;
 /*===========================================================
   operator *
 ===========================================================*/
-read_type
+range_trait::read_type_t<Range>
 operator * (
 ){
 get_next();

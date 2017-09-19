@@ -30,7 +30,7 @@ template
 template<typename, typename>
 auto
 base_decor<Range, Decorator, Traits...>::operator * (
-) -> decltype(*std::declval<Range&>()) {
+) -> decltype(std::declval<Range&>().operator*()) {
 return *this->rng;
 }
 

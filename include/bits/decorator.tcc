@@ -14,9 +14,24 @@
 #include "algo/asserts.hpp"
 
 namespace range_layer {
+namespace bits {
 
 /*===========================================================
-  disable_decorator
+  decor_tag_base:: range
+===========================================================*/
+template <template <typename> class Decor>
+template <typename Range>
+Decor<Range>
+decor_tag_base<Decor>::range (
+  Range _range
+){
+return Decor<Range>{_range};
+}
+
+} //-----------------------------------------------------bits
+
+/*===========================================================
+  disable_decorator_func
 ===========================================================*/
 template
 < typename Range
@@ -25,7 +40,7 @@ template
   ::type
 >
 auto
-disable_decorator (
+disable_decorator_func (
   Range _range
 ) -> decltype (disable_decorator(_range.disable())) {
 bits::range_assert<Range>();
@@ -35,7 +50,7 @@ return disable_decorator(_range.disable());
 }
 
 /*===========================================================
-  disable_decorator
+  disable_decorator_func
 ===========================================================*/
 template
 < typename Range
@@ -44,7 +59,7 @@ template
   ::type
 >
 Range
-disable_decorator (
+disable_decorator_func (
   Range _range
 ){
 bits::range_assert<Range>();
@@ -54,154 +69,231 @@ return _range;
 }
 
 /*===========================================================
-  remove_decorator
+  disable_decorator:: range
 ===========================================================*/
 template <typename Range>
-bits::remove_decorator<Range>
-remove_decorator (
+auto
+disable_decorator::range (
   Range _range
-){
-bits::range_assert<Range>();
-bits::range_assert<bits::remove_decorator<Range>>();
-bits::not_decorator_assert<bits::remove_decorator<Range>>();
-
-return bits::remove_decorator<Range>(_range);
+) -> decltype(disable_decorator_func(_range)){
+return disable_decorator_func(_range);
 }
 
 /*===========================================================
-  remove_if
+  remove_if<Pred>:: remove if
 ===========================================================*/
-template <typename Range, typename Pred>
+template <typename Pred>
+template <typename Range>
 bits::remove_range<Range, Pred>
-remove_if (
+remove_if<Pred>::range (
   Range _range
-, Pred _pred
 ){
 using type = bits::remove_range<Range, Pred>;
 bits::range_assert<Range>();
 bits::predicate_assert<Pred>();
 bits::range_assert<type>();
 
-return bits::remove_range<Range, Pred>{_range, _pred};
+return bits::remove_range<Range, Pred>{_range, this->pred};
 }
 
-/*===========================================================
-  remove
-===========================================================*/
-template <typename Range, typename T>
-auto
-remove (
-  Range _range
-, T _value
-) -> decltype (
-  remove_if(_range, bits::remove_pred<T>{_value})
+template <typename Pred>
+remove_if<Pred>
+make_remove_if (
+  Pred _pred
 ){
-return remove_if(_range, bits::remove_pred<T>{_value});
+return remove_if<Pred>{_pred};
 }
 
 /*===========================================================
-  input_replace
+  remove<T>:: remove
 ===========================================================*/
-template <typename Range, typename T>
-auto
-input_replace (
+template <typename T>
+template <typename Range>
+bits::remove_range<Range, bits::remove_pred<T>>
+remove<T>::range (
   Range _range
-, T _old_value
-, T _new_value
+){
+return bits::remove_range<Range, bits::remove_pred<T>>
+  {_range, bits::remove_pred<T>{this->var}};
+}
+
+template <typename T>
+remove<T>
+make_remove (
+  T _var
+){
+return remove_if<T>{_var};
+}
+
+/*===========================================================
+  replace_read<T>:: replace_read
+===========================================================*/
+template <typename T>
+template <typename Range>
+auto
+replace_read<T>::range (
+  Range _range
 )
--> decltype (input_transform
-  (_range, bits::replace_func<T>{_old_value, _new_value}))
-{
+-> decltype (
+xrange (
+  _range
+, make_transform_read
+  (bits::replace_func<T>{this->old_value, this->new_value})
+)
+){
 bits::range_assert<Range>();
 bits::read_assert<Range>();
 
-return input_transform
-  (_range, bits::replace_func<T>{_old_value, _new_value});
+return xrange (
+  _range
+, make_transform_read
+  (bits::replace_func<T>{this->old_value, this->new_value})
+);
+}
+
+template <typename T>
+replace_read<T>
+make_replace_read (
+  T _old_value
+, T _new_value
+){
+return replace_read<T>{_old_value, _new_value};
 }
 
 /*===========================================================
-  output_replace
+  replace_write<T>:: replace_write
 ===========================================================*/
-template <typename Range, typename T>
+template <typename T>
+template <typename Range>
 auto
-output_replace (
+replace_write<T>::range (
   Range _range
-, T _old_value
-, T _new_value
 )
--> decltype (output_transform (
-  _range, bits::replace_func<T>{_old_value, _new_value}))
-{
+-> decltype (
+xrange (
+  _range
+, make_transform_write
+  (bits::replace_func<T>{this->old_value, this->new_value})
+)
+){
 bits::range_assert<Range>();
 bits::write_assert<Range>();
 
-return output_transform (
-  _range, bits::replace_func<T>{_old_value, _new_value});
+return xrange (
+  _range
+, make_transform_write
+  (bits::replace_func<T>{this->old_value, this->new_value})
+);
+}
+
+template <typename T>
+replace_write<T>
+make_replace_write (
+  T _old_value
+, T _new_value
+){
+return replace_write<T>{_old_value, _new_value};
 }
 
 /*===========================================================
-  input_replace_if
+  replace_if_read<T, Pred>:: range
 ===========================================================*/
-template <typename Range, typename T, typename Pred>
+template <typename T, typename Pred>
+template <typename Range>
 auto
-input_replace_if (
+replace_if_read<T, Pred>::range (
   Range _range
-, Pred _pred
-, T _new_value
+) -> decltype (
+xrange (
+  _range
+, make_transform_read
+  (bits::replace_if_func<T, Pred>{this->new_value, this->pred})
 )
--> decltype (input_transform
-  (_range, bits::replace_if_func<T,Pred>{_new_value, _pred}))
-{
+){
 bits::range_assert<Range>();
 bits::read_assert<Range>();
 
-return input_transform
-  (_range, bits::replace_if_func<T,Pred>{_new_value, _pred});
+return xrange (
+  _range
+, make_transform_read
+  (bits::replace_if_func<T, Pred>{this->new_value, this->pred})
+);
+}
+
+template <typename T, typename Pred>
+replace_if_read<T, Pred>
+make_replace_if_read (
+  T _new_value
+, Pred _pred
+){
+return replace_if_read<T, Pred>{_new_value, _pred};
 }
 
 /*===========================================================
-  output_replace_if
+ replace_if_write<T, Pred>:: range
 ===========================================================*/
-template <typename Range, typename T, typename Pred>
+template <typename T, typename Pred>
+template <typename Range>
 auto
-output_replace_if (
+replace_if_write<T, Pred>::range (
   Range _range
-, Pred _pred
-, T _new_value
+) -> decltype (
+xrange (
+  _range
+, make_transform_write
+  (bits::replace_if_func<T, Pred>{this->new_value, this->pred})
 )
--> decltype (output_transform (
-  _range, bits::replace_if_func<T,Pred>{_new_value, _pred}))
-{
+){
 bits::range_assert<Range>();
 bits::write_assert<Range>();
 
-return output_transform (
-  _range, bits::replace_if_func<T, Pred>{_new_value, _pred});
+return xrange (
+  _range
+, make_transform_write
+  (bits::replace_if_func<T, Pred>{this->new_value, this->pred})
+);
+}
+
+template <typename T, typename Pred>
+replace_if_write<T, Pred>
+make_replace_if_write (
+  T _new_value
+, Pred _pred
+){
+return replace_if_write<T, Pred>{_new_value, _pred};
 }
 
 /*===========================================================
-  transform
+  transform<Func>:: range
 ===========================================================*/
-template <typename Range, typename Func>
+template <typename Func>
+template <typename Range>
 bits::transform_range<Func, Range>
-transform (
+transform<Func>::range (
   Range _range
-, Func _func
 ){
 bits::range_assert<Range>();
 bits::range_assert<bits::transform_range<Func, Range>>();
 
-return bits::transform_range<Func, Range>{_range, _func};
+return bits::transform_range<Func,Range>{_range, this->func};
+}
+
+template <typename Func>
+transform<Func>
+make_transform (
+  Func _func
+){
+return transform<Func>{_func};
 }
 
 /*===========================================================
-  input_transform
+  transform_read<Func>:: range
 ===========================================================*/
-template <typename Range, typename Func>
+template <typename Func>
+template <typename Range>
 bits::input_transform_range<Func, Range>
-input_transform (
+transform_read<Func>::range (
   Range _range
-, Func _func
 ){
 bits::range_assert<Range>();
 bits::read_assert<Range>();
@@ -211,17 +303,25 @@ bits::read_assert
   <bits::input_transform_range<Func, Range>>();
 
 return bits::input_transform_range<Func, Range>
-  {_range, _func};
+  {_range, this->func};
+}
+
+template <typename Func>
+transform_read<Func>
+make_transform_read (
+  Func _func
+){
+return transform_read<Func>{_func};
 }
 
 /*===========================================================
-  output_transform
+  transform_write<Func>:: range
 ===========================================================*/
-template <typename Range, typename Func>
+template <typename Func>
+template <typename Range>
 bits::output_transform_range<Func, Range>
-output_transform (
+transform_write<Func>::range (
   Range _range
-, Func _func
 ){
 bits::range_assert<Range>();
 bits::write_assert<Range>();
@@ -231,74 +331,86 @@ bits::write_assert
   <bits::output_transform_range<Func, Range>>();
 
 return bits::output_transform_range<Func, Range>
-  {_range, _func};
+  {_range, this->func};
 }
 
-/*===========================================================
-  backward
-===========================================================*/
-template <typename Range>
-bits::reverse_range<Range>
-backward (
-  Range _range
+template <typename Func>
+transform_write<Func>
+make_transform_write (
+  Func _func
 ){
-bits::range_assert<Range>();
-bits::reversible_assert<Range>();
-bits::range_assert<bits::reverse_range<Range>>();
-
-return bits::reverse_range<Range>{_range};
+return transform_write<Func>{_func};
 }
 
 /*===========================================================
-  sub range n
+  sub_range_n<N>:: range
 ===========================================================*/
+template <typename N>
 template <typename Range>
 bits::sub_range_n<Range>
-sub_range_n (
+sub_range_n<N>::range (
   Range _range
-, typename range_trait::size_type<Range>::type _n
 ){
 bits::range_assert<Range>();
 bits::range_assert<bits::sub_range_n<Range>>();
 
-return bits::sub_range_n<Range>{_range, _n};
+auto n
+  = static_cast<range_trait::size_type_t<Range>>(this->size);
+return bits::sub_range_n<Range>{_range, n};
+}
+
+template <typename N>
+sub_range_n<N>
+make_sub_range_n (
+  N _n
+){
+return sub_range_n<N>{_n};
 }
 
 /*===========================================================
-  circular range
+  sub_range<Sentinal>:: range
 ===========================================================*/
+template <typename Sentinal>
 template <typename Range>
-bits::circular_range<Range>
-circular_range (
+bits::sub_range<Range, Sentinal>
+sub_range<Sentinal>::range (
   Range _range
 ){
 bits::range_assert<Range>();
-bits::range_assert<bits::circular_range<Range>>();
+bits::range_assert<bits::sub_range_n<Range>>();
 
-return bits::circular_range<Range>{_range};
+return bits::sub_range<Range, Sentinal>{_range, this->sen};
+}
+
+template <typename Sentinal>
+sub_range<Sentinal>
+make_sub_range (
+  Sentinal _sen
+){
+return sub_range<Sentinal>{_sen};
 }
 
 /*===========================================================
-  disable input
+  disable_read:: range
 ===========================================================*/
 template <typename Range>
 bits::disable_input<Range>
-disable_input (
+disable_read::range (
   Range _range
 ){
 bits::range_assert<Range>();
 bits::range_assert<bits::disable_input<Range>>();
 bits::not_read_assert<bits::disable_input<Range>>();
 
-return bits::disable_input<Range>{_range};
+return bits::disable_input<Range> {_range};
 }
 
 /*===========================================================
-  disable output
+  disable_write:: range
 ===========================================================*/
 template <typename Range>
 bits::disable_output<Range>
-disable_output (
+disable_write::range (
   Range _range
 ){
 bits::range_assert<Range>();
@@ -309,17 +421,18 @@ return bits::disable_output<Range>{_range};
 }
 
 /*===========================================================
-  select
+  select<I>:: range
 ===========================================================*/
-template <std::size_t I, typename Range>
+template <std::size_t I>
+template <typename Range>
 bits::select<Range, I>
-select (
+select<I>::range (
   Range _range
 ){
 bits::range_assert<Range>();
 bits::range_assert<bits::select<Range, I>>();
 
-return bits::select<Range, I> {_range};
+return bits::select<Range, I>{_range};
 }
 
 /*===========================================================
@@ -336,50 +449,6 @@ bits::range_assert<bits::extend_life<Range, Ts...>>();
 
 return bits::extend_life<Range, Ts...>
   {_range, std::forward<Ts>(_ts)...};
-}
-
-/*===========================================================
-  sub range
-===========================================================*/
-template <typename Range, typename Sentinal>
-bits::sub_range<Range, Sentinal>
-sub_range (
-  Range _range
-, Sentinal _sentinal
-){
-bits::range_assert<Range>();
-bits::range_assert<bits::sub_range<Range, Sentinal>>();
-
-return bits::sub_range<Range, Sentinal>{_range, _sentinal};
-}
-
-/*===========================================================
-  checked range
-===========================================================*/
-template <typename Range>
-bits::checked_range<Range>
-checked_range (
-  Range _range
-){
-bits::range_assert<Range>();
-bits::range_assert<bits::checked_range<Range>>();
-
-return bits::checked_range<Range>{_range};
-}
-
-/*===========================================================
-  back_insert
-===========================================================*/
-template <typename Range>
-bits::back_insert<Range>
-back_insert (
-  Range _range
-){
-bits::range_assert<Range>();
-bits::range_assert<bits::back_insert<Range>>();
-bits::expandable_assert<Range>();
-
-return bits::back_insert<Range>{_range};
 }
 
 /*===========================================================

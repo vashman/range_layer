@@ -59,9 +59,6 @@ using base_t = bits::base_decor
 
 public:
 
-using read_type
-  = typename range_trait::read_type<Range>::type;
-
 using write_type
   = typename range_trait::write_type<Range>::type;
 
@@ -106,7 +103,7 @@ operator = (reverse_range const &) = default;
 ===========================================================*/
 reverse_range &
 operator ++ (){
---this->range;
+--this->rng;
 return *this;
 }
 
@@ -116,7 +113,7 @@ return *this;
 template <typename U = Range>
 reverse_range &
 operator -- (){
-++this->range;
+++this->rng;
 return *this;
 }
 
@@ -128,7 +125,7 @@ reverse_range &
 operator += (
   N _n
 ){
-this->range -= _n;
+this->rng -= _n;
 return *this;
 }
 
@@ -140,13 +137,12 @@ reverse_range &
 operator -= (
   N _n
 ){
-this->range += _n;
+this->rng += _n;
 return *this;
 }
 
-}; // reverse range------------------------------------------
-
-} // bits----------------------------------------------------
-} //range layer----------------------------------------------
+}; //-------------------------------------------reverse range
+} //-----------------------------------------------------bits
+} //----------------------------------------------range layer
 #endif
 

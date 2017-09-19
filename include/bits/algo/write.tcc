@@ -56,46 +56,6 @@ return _range;
 }
 
 /*===========================================================
-  generate
-===========================================================*/
-/*template<typename Range, typename Generator>
-Range
-generate (
-  execution_policy::sequenced
-, Range _range
-, Generator _gen
-){
-bits::write_assert<Range>();
-
-  while (has_writable(_range)){
-  write(_range, _gen());
-  range_layer::advance(_range);
-  }
-return _range;
-}*/
-
-/*===========================================================
-  generate n
-===========================================================*/
-template<typename Range, typename Generator, typename N>
-Range
-generate_n (
-  execution_policy::sequenced
-, Range _range
-, N _n
-, Generator _gen
-){
-bits::write_assert<Range>();
-
-  while (has_writable(_range) && (0 != _n)){
-  write(_range, _gen());
-  range_layer::advance(_range);
-  --_n;
-  }
-return _range;
-}
-
-/*===========================================================
   copy
 ===========================================================*/
 template <typename IRange, typename ORange>
@@ -192,8 +152,7 @@ write (
   }
 return static_cast<void*>(0);
 }
-}
-//bits-------------------------------------------------------
+} //-----------------------------------------------------bits
 
 /*===========================================================
   write
@@ -204,13 +163,12 @@ write (
   execution_policy::sequenced _policy
 , ORange _output
 , T _var
-, Ts... _ts
+, Ts &&... _ts
 ){
 bits::write_assert<ORange>();
-bits::write(_policy, _output, _var);
 
-void* list[]
-  = {0, bits::write(_policy, _output, _ts)...};
+bits::write(_policy, _output, _var);
+void* list[] = {0, bits::write(_policy, _output, _ts)...};
 return _output;
 }
 

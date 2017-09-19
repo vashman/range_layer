@@ -59,16 +59,14 @@ using base_t = bits::base_decor
 
 public:
 
-using read_type
-  = typename range_trait::read_type<Range>::type;
-
 using write_type
   = typename range_trait::write_type<Range>::type;
 
 private:
 
 Sentinel sen;
-read_type temp;
+  typename std::remove_cv<range_trait::read_type_t<Range>>
+::type temp;
 
 /*===========================================================
   is_end
@@ -127,8 +125,8 @@ template <typename U = Range>
 sub_range &
 operator ++ (
 ){
-++this->range;
-this->temp = *this->range;
+++this->rng;
+this->temp = *this->rng;
 return *this;
 }
 
@@ -152,7 +150,7 @@ bool
 operator == (
   sentinel::readable const & _sen
 ) const {
-return this->range == _sen && !this->is_end();
+return this->rng == _sen && !this->is_end();
 }
 
 /*===========================================================
@@ -163,12 +161,11 @@ bool
 operator == (
   sentinel::writable const & _sen
 ) const {
-return this->range == _sen && !this->is_end();
+return this->rng == _sen && !this->is_end();
 }
 
-}; //sub_range-----------------------------------------------
-
-} //bits-----------------------------------------------------
-} //range layer----------------------------------------------
+}; //-----------------------------------------------sub_range
+} //-----------------------------------------------------bits
+} //----------------------------------------------range layer
 #endif
 

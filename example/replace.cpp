@@ -9,18 +9,26 @@
 #include "../include/array.hpp"
 #include "../include/range.hpp"
 
-using range_layer::iota_range;
+using range_layer::iota;
 using range_layer::range;
-using range_layer::input_replace;
-using range_layer::input_replace_if;
-using range_layer::output_replace;
-using range_layer::output_replace_if;
+using range_layer::xrange;
+using range_layer::make_replace_read;
+using range_layer::make_replace_if_read;
+using range_layer::make_replace_write;
+using range_layer::make_replace_if_write;
 using range_layer::advance;
 using range_layer::reverse;
+using range_layer::has_readable;
+using range_layer::has_writable;
+using range_layer::read;
+using range_layer::write;
 
 int main (){
 
-auto rng = input_replace (iota_range<int> {2}, 4, 999);
+auto rng = xrange (
+  range(iota<int> {2})
+, make_replace_read (4, 999)
+);
 
 assert (has_readable(rng));
 assert (read(rng) == 2);
@@ -35,7 +43,10 @@ assert (read(rng) == 999);
 
 int arr [5] = {10, 11, 12, 13, 14};
 
-auto rng2 = output_replace (range(arr, 5), 888, 999);
+auto rng2 = xrange (
+  range(arr, 5)
+, make_replace_write (888, 999)
+);
 
 assert (has_readable(rng2));
 assert (read(rng2) == 10);

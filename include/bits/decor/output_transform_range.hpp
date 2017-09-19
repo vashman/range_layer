@@ -61,7 +61,6 @@ Func func;
 
 public:
 
-using read_type = typename range_trait::read_type_t<Range>;
 using write_type = typename range_trait::write_type_t<Range>;
 
 /*===========================================================

@@ -14,13 +14,17 @@
 using std::array;
 using range_layer::range;
 using range_layer::has_writable;
+using range_layer::write;
+using range_layer::read;
+using range_layer::advance;
+using range_layer::reverse;
 
 int main (){
 auto rng = range(array<int, 5> {{0, 1, 2, 3, 4}});
-
 assert (has_writable(rng));
 write (rng, 99);
 advance (rng);
+
 write (
   range_layer::execution_policy::sequenced{}
 , rng
@@ -31,10 +35,15 @@ write (
 );
 
 reverse (rng);
+assert (has_writable(rng));
 assert (read(rng) == 99);
 advance (rng);
+
+assert (has_writable(rng));
 assert (read(rng) == 400);
 advance (rng);
+
+assert (has_writable(rng));
 assert (read(rng) == 0);
 
 return 0;

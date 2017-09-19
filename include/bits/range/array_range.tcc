@@ -81,8 +81,8 @@ template <typename T, std::size_t N>
 auto
 range (
   std::array<T, N> && _con
-) -> decltype(extend_life(range(_con), std::move(_con))) {
-auto temp = extend_life(range(_con), std::move(_con));
+) -> decltype(range_layer::extend_life(range(_con), std::move(_con))) {
+auto temp = range_layer::extend_life(range(_con), std::move(_con));
 temp.set_range(range(* std::get<0>(temp.variable).get()));
 return temp;
 }

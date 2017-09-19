@@ -12,6 +12,7 @@
 #include <memory>
 #include "is_detected.hpp"
 #include "range_traits_fwd.hpp"
+#include "range_fwd.hpp"
 
 namespace range_layer {
 namespace bits {
@@ -101,10 +102,13 @@ class base_decor;
 template <typename Range, typename Func>
 class as_range;
 
-} //bits-----------------------------------------------------
+template <template <typename> class Decor>
+struct decor_tag_base;
+
+} //-----------------------------------------------------bits
 
 /*===========================================================
-  disable decorator
+  disable decorator func
 ===========================================================*/
 template
 < typename Range
@@ -113,12 +117,12 @@ template
   ::type = 0
 >
 auto
-disable_decorator (
+disable_decorator_func (
   Range _range
 ) -> decltype (disable_decorator(_range.disable()));
 
 /*===========================================================
-  disable decorator
+  disable decorator func
 ===========================================================*/
 template
 < typename Range
@@ -127,9 +131,14 @@ template
   ::type = 0
 >
 Range
-disable_decorator (
+disable_decorator_func (
   Range
 );
+
+/*===========================================================
+  disable decorator
+===========================================================*/
+struct disable_decorator;
 
 /*===========================================================
   remove decorator
@@ -137,206 +146,213 @@ disable_decorator (
 * Removes the decorator status of the range, making the
   decorator permanent.
 ===========================================================*/
-template <typename Range>
-bits::remove_decorator<Range>
-remove_decorator (
-  Range _range
-);
+struct remove_decorator;
 
 /*===========================================================
   remove if
 ===========================================================*/
-template <typename Range, typename Pred>
-bits::remove_range<Range, Pred>
-remove_if (
-  Range
-, Pred
+template <typename Pred>
+struct remove_if;
+
+template <typename Pred>
+remove_if<Pred>
+make_remove_if (
+  Pred
 );
 
 /*===========================================================
   remove
 ===========================================================*/
-template <typename Range, typename T>
-bits::remove_range<Range, bits::remove_pred<T>>
-remove (
-  Range
-, T
+template <typename T>
+struct remove;
+
+template <typename T>
+remove<T>
+make_remove (
+  T
 );
 
 /*===========================================================
-  input replace
+  replace_read
 ===========================================================*/
-template <typename Range, typename T>
-auto
-input_replace (
-  Range _range
-, T _old_value
+template <typename T>
+struct replace_read;
+
+template <typename T>
+replace_read<T>
+make_replace_read (
+  T _old_value
 , T _new_value
-)
--> decltype (input_transform
-  (_range, bits::replace_func<T>{_old_value, _new_value}));
+);
 
 /*===========================================================
   output replace
 ===========================================================*/
-template <typename Range, typename T>
-auto
-output_replace (
-  Range _range
-, T _old_value
+template <typename T>
+struct replace_write;
+
+template <typename T>
+replace_write<T>
+make_replace_write (
+  T _old_value
 , T _new_value
-)
--> decltype (output_transform (
-  _range, bits::replace_func<T>{_old_value, _new_value}));
+);
 
 /*===========================================================
   input_replace if
 ===========================================================*/
-template <typename Range, typename T, typename Pred>
-auto
-input_replace_if (
-  Range _range
-, Pred _pred
-, T _new_value
-)
--> decltype (input_transform (
-  _range, bits::replace_if_func<T,Pred>{_new_value, _pred}));
+template <typename T, typename Pred>
+struct replace_if_read;
+
+template <typename T, typename Pred>
+replace_if_read<T, Pred>
+make_replace_if_read (
+  T
+, Pred
+);
 
 /*===========================================================
   output_replace if
 ===========================================================*/
-template <typename Range, typename T, typename Pred>
-auto
-output_replace_if (
-  Range _range
-, Pred _pred
-, T _new_value
-)
--> decltype (output_transform (
-  _range, bits::replace_if_func<T,Pred>{_new_value, _pred}));
+template <typename T, typename Pred>
+struct replace_if_write;
 
-/*===========================================================
-  output_transform
-===========================================================*/
-template <typename Range, typename Func>
-bits::output_transform_range<Func, Range>
-output_transform (
-  Range
-, Func
+template <typename T, typename Pred>
+replace_if_write<T, Pred>
+make_replace_if_write (
+  T
+, Pred
 );
 
 /*===========================================================
-  input_transform
+  write transform
 ===========================================================*/
-template <typename Range, typename Func>
-bits::input_transform_range<Func, Range>
-input_transform (
-  Range
-, Func
+template <typename Func>
+struct transform_write;
+
+template <typename Func>
+transform_write<Func>
+make_transform_write (
+  Func
+);
+
+/*===========================================================
+  read transform
+===========================================================*/
+template <typename Func>
+struct transform_read;
+
+template <typename Func>
+transform_read<Func>
+make_transform_read (
+  Func
 );
 
 /*===========================================================
   transform
 ===========================================================*/
-template <typename Range, typename Func>
-bits::transform_range<Func, Range>
-transform (
-  Range
-, Func
+template <typename Func>
+struct transform;
+
+template <typename Func>
+transform<Func>
+make_transform (
+  Func
 );
 
 /*===========================================================
   backward
 ===========================================================*/
-template <typename Range>
-bits::reverse_range<Range>
-backward (
-  Range
-);
+struct backward;
 
 /*===========================================================
   sub_range_n
 ===========================================================*/
-template <typename Range>
-bits::sub_range_n<Range>
-sub_range_n (
-  Range
-, typename range_trait::size_type<Range>::type
+template <typename N>
+struct sub_range_n;
+
+template <typename N>
+sub_range_n<N>
+make_sub_range_n (
+  N
 );
 
 /*===========================================================
   circular
 ===========================================================*/
-template <typename Range>
-bits::circular_range<Range>
-circular (
-  Range
-);
+struct circular;
 
 /*===========================================================
   disable_input
 ===========================================================*/
-template <typename Range>
-bits::disable_input<Range>
-disable_input (
-  Range
-);
+struct disable_read;
 
 /*===========================================================
   disable_output
 ===========================================================*/
-template <typename Range>
-bits::disable_output<Range>
-disable_output (
-  Range
-);
+struct disable_write;
 
 /*===========================================================
   select
 ===========================================================*/
-template <std::size_t I, typename Range>
-bits::select<Range, I>
-select (
-  Range
-);
+template <std::size_t I>
+struct select;
 
 /*===========================================================
   extend_life
 ===========================================================*/
-template <typename Range, typename... Ts>
-bits::extend_life<Range, Ts...>
+template <typename... Ts>
+struct extend_life {
+
+std::tuple<std::shared_ptr<Ts>...> variable;
+
+/*===========================================================
+  ctor
+===========================================================*/
 extend_life (
-  Range
-, Ts &&...
-);
+  Ts &&... _ts
+)
+: variable {std::make_shared<Ts>(_ts)...}
+{}
+
+extend_life (extend_life &&) = default;
+extend_life (extend_life const &) = default;
+extend_life & operator = (extend_life &&) = default;
+extend_life & operator = (extend_life const &) = default;
+~extend_life () = default;
+
+template <typename Range>
+bits::extend_life<Range, Ts...>
+range (
+  Range _range
+){
+return
+bits::extend_life<Range, Ts...>{_range, this->variable};
+}
+
+};
 
 /*===========================================================
   sub_range
 ===========================================================*/
-template <typename Range, typename Sentinal>
-bits::sub_range<Range, Sentinal>
-sub_range (
-  Range
-, Sentinal
+template <typename Sentinal>
+struct sub_range;
+
+template <typename Sentinal>
+sub_range<Sentinal>
+make_sub_range (
+  Sentinal
 );
 
 /*===========================================================
   checked_range
 ===========================================================*/
-template <typename Range>
-bits::checked_range<Range>
-checked_range (
-  Range
-);
+struct checked_range;
 
 /*===========================================================
   back_insert
 ===========================================================*/
-template <typename Range>
-bits::back_insert<Range>
-back_insert (
-  Range
-);
+struct back_insert;
 
 /*===========================================================
   extend_range
@@ -348,6 +364,6 @@ extend_range (
 , Func _func
 ) -> decltype(extend_life(_func(_con), std::move(_con)));
 
-} //range layer----------------------------------------------
+} //----------------------------------------------range layer
 #endif
 

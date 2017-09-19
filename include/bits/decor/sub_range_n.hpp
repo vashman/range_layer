@@ -68,9 +68,6 @@ return (this->pos > this->count) || (this->pos == 0);
 
 public:
 
-using read_type
-  = typename range_trait::read_type<Range>::type;
-
 using write_type
   = typename range_trait::write_type<Range>::type;
 

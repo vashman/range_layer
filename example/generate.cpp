@@ -25,14 +25,6 @@ int main (){
 
 auto rng = range(make_generator(gen()));
 
-static_assert (
-  ! range_layer
-  ::range_trait
-  ::input
-  ::is_heterogeneous<decltype(rng)>::value
-, "Must return only a single type"
-);
-
 assert (has_readable(rng));
 assert (read(rng) == 1);
 

@@ -63,9 +63,6 @@ public:
 
 std::tuple<std::shared_ptr<Ts>...> variable;
 
-using read_type
-  = typename range_trait::read_type<Range>::type;
-
 using write_type
   = typename range_trait::write_type<Range>::type;
 
@@ -76,6 +73,15 @@ explicit
 extend_life (
   Range
 , Ts &&...
+);
+
+/*===========================================================
+  ctor
+===========================================================*/
+explicit
+extend_life (
+  Range
+, std::tuple<std::shared_ptr<Ts>...>
 );
 
 /*===========================================================
@@ -117,7 +123,7 @@ this->rng = _range;
 
 using base_t::operator =;
 
-}; //extend_life---------------------------------------------
+}; //---------------------------------------------extend_life
 
 /*===========================================================
   ctor
@@ -131,7 +137,19 @@ extend_life<Range, Ts...>::extend_life (
 , variable {std::make_shared<Ts>(_ts)...}
 {}
 
-} //bits-----------------------------------------------------
-} //range layer----------------------------------------------
+/*===========================================================
+  ctor
+===========================================================*/
+template <typename Range, typename... Ts>
+extend_life<Range, Ts...>::extend_life (
+  Range _range
+, std::tuple<std::shared_ptr<Ts>...> _variable
+)
+: extend_life<Range, Ts...>::base_t {_range}
+, variable {_variable}
+{}
+
+} //-----------------------------------------------------bits
+} //----------------------------------------------range layer
 #endif
 

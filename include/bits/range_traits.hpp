@@ -37,9 +37,6 @@ using void_t = void*;
 namespace trait_bits {
 
 template <typename T>
-using rtype = typename T::read_type;
-
-template <typename T>
 using wtype = typename T::write_type;
 
 template <typename Range, bool flag>
@@ -53,24 +50,6 @@ static constexpr bool value = true;
 template <typename Range>
 struct single_value <Range, true> {
 static constexpr bool value = Range::is_singleton;
-};
-
-template <typename T>
-struct is_typelist {
-using type = T;
-static constexpr bool value = false;
-};
-
-template <template <typename...> class Tuple, typename... Ts>
-struct is_typelist <typelist<Tuple, Ts...>> {
-static constexpr bool value = true;
-using type = typename typelist<Tuple, Ts...>::type;
-};
-
-template <template <typename...> class Tuple, typename T>
-struct is_typelist <typelist<Tuple, T>> {
-static constexpr bool value = false;
-using type = typename typelist<Tuple, T>::type;
 };
 
 template <typename Range, bool HasSize>
@@ -138,12 +117,10 @@ static constexpr bool value
 ===========================================================*/
 template <typename Range>
 struct write_type {
-using type = typename bits::trait_bits::is_typelist
-< typename bits::detected_or
-  < bits::void_t
-  , bits::trait_bits::wtype
-  , Range
-  >::type
+using type = typename bits::detected_or
+< bits::void_t
+, bits::trait_bits::wtype
+, Range
 >::type;
 };
 
@@ -212,21 +189,19 @@ static constexpr bool value
 ===========================================================*/
 template <typename Range>
 struct read_type {
-using type = typename bits::trait_bits::is_typelist
+/*using type = typename bits::trait_bits::is_typelist
 < typename bits::detected_or
-  < typename bits::trait_bits::if_read_type
-    < Range
-    , is_input<Range>::value
-    >::type
+  < typename bits::trait_bits::if_read_type<Range, is_input<Range>::value>::type
   , bits::trait_bits::rtype
   , Range
   >::type
->::type;
+>::type;*/
 
-/*static_assert (
-  std::is_default_constructible<type>::value
-, "Input type must be default constructible."
-);*/
+template <typename T>
+using func_t = decltype(std::declval<T&>().operator*());
+
+using type = typename bits::detected_or
+  <bits::void_t, func_t, Range>::type;
 };
 
 /*===========================================================
@@ -548,7 +523,7 @@ static constexpr bool value
 /*===========================================================
   is_heterogeneous
 ===========================================================*/
-template <typename Range>
+/*template <typename Range>
 struct is_heterogeneous {
 static constexpr bool value
   = bits
@@ -559,16 +534,16 @@ static constexpr bool value
       ::type
       >
     ::value;
-}; 
+};*/ 
 
-} // input---------------------------------------------------
+} //----------------------------------------------------input
 
 namespace output {
 
 /*===========================================================
   is_heterogeneous
 ===========================================================*/
-template <typename Range>
+/*template <typename Range>
 struct is_heterogeneous {
 static constexpr bool value
   = bits
@@ -579,9 +554,9 @@ static constexpr bool value
     ::type
   >
   ::value;
-}; 
+};*/ 
 
-} // output--------------------------------------------------
+} //---------------------------------------------------output
 
 /*===========================================================
   is_subscriptable
@@ -627,7 +602,7 @@ static constexpr bool value
   = bits::is_detected<func_t, Range>::value;
 };
 
-} //range trait----------------------------------------------
-} //range layer----------------------------------------------
+} //----------------------------------------------range trait
+} //----------------------------------------------range layer
 #endif
 

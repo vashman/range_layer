@@ -5,8 +5,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_BACK_INSERT_HPP
-#define RANGE_LAYER_BACK_INSERT_HPP
+#ifndef RANGE_LAYER_REWRITE_RANGE_HPP
+#define RANGE_LAYER_REWRITE_RANGE_HPP
 
 #include "base_decor.hpp"
 
@@ -14,13 +14,13 @@ namespace range_layer {
 namespace bits {
 
 /*===========================================================
-  back insert
+  rewrite_range
 ===========================================================*/
-template <typename Range>
-class back_insert
+template <typename Func, typename Range>
+class rewrite_range
 : public bits::base_decor
   < Range
-  , back_insert<Range>
+  , rewrite_range<Func, Range>
   , range_trait::is_linear<Range>
   , range_trait::is_reversable<Range>
   , range_trait::is_input<Range>
@@ -40,7 +40,7 @@ class back_insert
 
 using base_t = bits::base_decor
   < Range
-  , back_insert<Range>
+  , rewrite_range<Func, Range>
   , range_trait::is_linear<Range>
   , range_trait::is_reversable<Range>
   , range_trait::is_input<Range>
@@ -57,6 +57,8 @@ using base_t = bits::base_decor
   , range_trait::is_decorator<Range>
   >;
 
+Func func;
+
 public:
 
 using write_type = typename range_trait::write_type_t<Range>;
@@ -64,54 +66,86 @@ using write_type = typename range_trait::write_type_t<Range>;
 /*===========================================================
   ctor
 ===========================================================*/
-back_insert (
+rewrite_range (
   Range _range
+, Func _func
 )
-: base_t {end_of_output(_range)}
-{
-expand(this->rng, 1);
-}
+: base_t {_range}
+, func {_func}
+{}
 
 /*===========================================================
   copy ctor
 ===========================================================*/
-back_insert (back_insert const &) = default;
-
-/*===========================================================
-  copy assignment operator
-===========================================================*/
-back_insert & operator = (back_insert const &) = default;
+rewrite_range (
+  rewrite_range const &
+) = default;
 
 /*===========================================================
   move ctor
 ===========================================================*/
-back_insert (back_insert &&) = default;
+rewrite_range (rewrite_range &&) = default;
 
 /*===========================================================
   move assignment operator
 ===========================================================*/
-back_insert & operator = (back_insert &&) = default;
+rewrite_range &
+operator = (rewrite_range &&) = default;
+
+/*===========================================================
+  copy assignment operator
+===========================================================*/
+rewrite_range &
+operator = (rewrite_range const &) = default;
 
 /*===========================================================
   dtor
 ===========================================================*/
-~back_insert() = default;
+~rewrite_range () = default;
 
 /*===========================================================
-  operator ++
+  operator =
 ===========================================================*/
-back_insert &
-operator ++ (
+template <typename T>
+void
+operator = (
+  T const & _var
 ){
-expand(this->rng, 1);
-++this->rng;
-return *this;
+auto rng = this->func(_var);
+  while (range_layer::has_readable(rng)){
+  range_layer::write(this->rng, range_layer::read(rng));
+  }
 }
 
-using base_t::operator =;
-
-}; //---------------------------------------------back insert
+}; //-------------------------------------------rewrite_range
 } //-----------------------------------------------------bits
+
+/*===========================================================
+  rewrite
+===========================================================*/
+template <typename Func>
+struct rewrite {
+
+Func func;
+
+template <typename Range>
+bits::rewrite_range<Func, Range>
+range (
+  Range _range
+){
+return bits::rewrite_range<Func, Range>{_range, this->func};
+}
+
+}; //-------------------------------------------------rewrite
+
+template <typename Func>
+rewrite<Func>
+make_rewrite (
+  Func _func
+){
+return rewrite<Func>{_func};
+}
+
 } //----------------------------------------------range layer
 #endif
 

@@ -9,11 +9,13 @@
 #include "../include/range.hpp"
 
 using range_layer::iota;
-using range_layer::remove;
+//using range_layer::remove;
 using range_layer::remove_if;
 using range_layer::has_readable;
 using range_layer::advance;
 using range_layer::read;
+using range_layer::range;
+using range_layer::xrange;
 
 struct pred {
 
@@ -33,7 +35,10 @@ return ((_var % 2) == 0);
 
 int main (){
 
-auto rng = remove_if (range(iota<int>{2}), pred{});
+auto rng = xrange (
+  range(iota<int>{2})
+, remove_if<pred>{pred{}}
+);
 
 assert (has_readable(rng));
 assert (read(rng) == 3);

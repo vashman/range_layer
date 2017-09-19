@@ -25,8 +25,7 @@ T * end_pos;
 
 public:
 
-using read_type = T;
-using write_type = read_type;
+using write_type = T;
 
 /*===========================================================
   ctor

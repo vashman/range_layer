@@ -14,7 +14,7 @@
 using std::array;
 using range_layer::range;
 using range_layer::output_console_range;
-using range_layer::sub_range_n;
+using range_layer::make_sub_range_n;
 using range_layer::remove_decorator;
 using range_layer::disable_decorator;
 
@@ -25,19 +25,24 @@ auto rng = range(arr);
 write (
   range_layer::execution_policy::sequenced {}
 , output_console_range()
-, disable_decorator (
-    sub_range_n (
-      sub_range_n (rng, 4)
-    , 2)
+, xrange (
+    rng
+  , make_sub_range_n(4)
+  , make_sub_range_n(2)
+  , disable_decorator{}
   )
 );
 
 write (
   range_layer::execution_policy::sequenced {}
 , output_console_range()
-, disable_decorator ( remove_decorator (
-    sub_range_n(sub_range_n(rng, 4), 2)
-  ))
+, xrange (
+    rng
+  , make_sub_range_n(4)
+  , make_sub_range_n(2)
+  , remove_decorator{}
+  , disable_decorator{}
+  )
 );
 
 return 0;

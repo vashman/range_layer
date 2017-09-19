@@ -14,33 +14,29 @@
 
 using std::array;
 using range_layer::range;
-using range_layer::sub_range_n;
-using range_layer::sub_range;
+using range_layer::make_sub_range_n;
+using range_layer::make_sub_range;
+using range_layer::has_readable;
+using range_layer::has_writable;
+using range_layer::read;
+using range_layer::write;
+using range_layer::prev;
+using range_layer::next;
+using range_layer::advance;
+using range_layer::for_each;
 
 int main (){
 range_layer::execution_policy::sequenced seq{};
 array<int, 7> arr {{0, 1, 2, 3, 4, 9, 10}};
 
-auto rng = sub_range(range(arr), 4);
-/*static_assert (
-  range_layer::range_trait::has_position<decltype(rng)>::value
-, "error here"
-);
-static_assert (
-  range_layer::range_trait::is_finite<decltype(rng)>::value
-, "error here"
-);
-static_assert (
-  range_layer::range_trait::is_decorator<decltype(rng)>::value
-, "error here"
-);*/
+/*auto rng = xrange (range(arr), make_sub_range(4));
 
 for (int i = 0; has_readable(rng); ++i){
 assert (read(rng) == i);
 advance(rng);
-}
+}*/
 
-auto arr_rng = sub_range_n (next(range(arr)), 3);
+auto arr_rng = xrange(next(range(arr)), make_sub_range_n(4));
 
 assert(has_readable(arr_rng));
 assert(read(arr_rng) == 1);
