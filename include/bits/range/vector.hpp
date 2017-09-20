@@ -88,18 +88,18 @@ return this->pos;
 }
 
 /*===========================================================
-  operator *
+  read
 ===========================================================*/
 T const &
-operator * (){
+read (){
 return (*this->vec)[this->pos-1];
 }
 
 /*===========================================================
-  operator =
+  write
 ===========================================================*/
 void
-operator = (
+write (
   T const & _var
 ){
 (*(this->vec))[this->pos-1] = _var;
@@ -287,7 +287,7 @@ template <typename T, typename Alloc>
 auto
 range (
   std::vector<T, Alloc> && _con
-) -> decltype(range_layer::extend_range(std::move(_con)));
+);
 
 /*===========================================================
   range
@@ -315,8 +315,10 @@ template <typename T, typename Alloc>
 auto
 range (
   std::vector<T, Alloc> && _con
-) -> decltype(extend_life(range(_con), std::move(_con))) {
-auto temp = extend_life(range(_con), std::move(_con));
+){
+auto temp
+  = xrange (range(_con), make_extend_life(std::move(_con));
+
 temp.set_range(range(* std::get<0>(temp.variable).get()));
 return temp;
 }

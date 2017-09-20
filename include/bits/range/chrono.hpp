@@ -59,10 +59,10 @@ clock_range & operator = (clock_range &&) = default;
 ~clock_range() = default;
 
 /*===========================================================
-  operator *
+  read
 ===========================================================*/
 std::chrono::time_point<Clock>
-operator * (
+read (
 ){
 return this->point;
 }

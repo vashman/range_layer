@@ -19,8 +19,8 @@ namespace range_layer {
 template <typename Range>
 auto
 read (
-  Range & _range
-) -> decltype (*_range);
+  Range &
+);
 
 /*===========================================================
   write
@@ -121,7 +121,7 @@ reverse_n (
 );
 
 }
-//bits-------------------------------------------------------
+//-------------------------------------------------------bits
 
 /*===========================================================
   advance_n
@@ -345,11 +345,10 @@ save (
 template <typename Range, typename Decor, typename... Ts>
 auto
 xrange (
-  Range _range
-, Decor _decor
-, Ts &&... _ts
-)
--> decltype (xrange(_decor.range(_range), _ts...));
+  Range
+, Decor
+, Ts &&...
+);
 
 /*===========================================================
   xrange
@@ -359,8 +358,7 @@ auto
 xrange (
   Range _range
 , Decor _decor
-)
--> decltype (_decor.range(_range));
+);
 
 }
 //------------------------------------------------range layer

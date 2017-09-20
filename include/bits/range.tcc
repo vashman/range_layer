@@ -19,13 +19,11 @@ template <typename Range>
 auto
 read (
   Range & _range
-)
--> decltype (*_range)
-{
+){
 bits::range_assert<Range>();
 bits::read_assert<Range>();
 
-return *_range;
+return _range.read();
 }
 
 /*===========================================================
@@ -40,7 +38,7 @@ write (
 bits::range_assert<Range>();
 bits::write_assert<Range>();
 
-_range = _var;
+_range.write(_var);
 }
 
 /*===========================================================
@@ -560,9 +558,7 @@ xrange (
   Range _range
 , Decor _decor
 , Ts &&... _ts
-)
--> decltype (xrange(_decor.range(_range), _ts...))
-{
+){
 bits::range_assert<Range>();
 
 return xrange(_decor.range(_range), _ts...);
@@ -576,9 +572,7 @@ auto
 xrange (
   Range _range
 , Decor _decor
-)
--> decltype (_decor.range(_range))
-{
+){
 bits::range_assert<Range>();
 
 return _decor.range(_range);

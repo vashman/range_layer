@@ -104,14 +104,14 @@ operator = (output_transform_range const &) = default;
 ~output_transform_range () = default;
 
 /*===========================================================
-  operator =
+  write
 ===========================================================*/
 template <typename T>
 void
-operator = (
+write (
   T const & _var
 ){
-this->rng = this->func(_var);
+range_layer::write(this->rng, this->func(_var));
 }
 
 }; //----------------------------------output transform range

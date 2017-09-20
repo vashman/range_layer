@@ -56,8 +56,8 @@ range (
 template <typename T, std::size_t N>
 auto
 range (
-  std::array<T, N> && _con
-) -> decltype(extend_life(range(_con), std::move(_con)));
+  std::array<T, N> &&
+);
 
 } //range layer----------------------------------------------
 #endif

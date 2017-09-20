@@ -126,7 +126,8 @@ remove_range & operator = (remove_range const &) = default;
 ===========================================================*/
 //template <typename U = Range>
 remove_range &
-operator ++ (){
+operator ++ (
+){
 this->fetched = false;
 this->get_next();
 return *this;
@@ -148,10 +149,10 @@ return *this;
 }*/
 
 /*===========================================================
-  operator *
+  read
 ===========================================================*/
 range_trait::read_type_t<Range>
-operator * (
+read (
 ){
 get_next();
 return this->temp;

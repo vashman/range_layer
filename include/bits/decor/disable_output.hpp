@@ -97,25 +97,8 @@ operator = (disable_output const &) = default;
 ===========================================================*/
 ~disable_output () = default;
 
-using base_t::size;
-using base_t::position;
-using base_t::save;
-using base_t::operator *;
-using base_t::operator ++;
-using base_t::operator +=;
-using base_t::operator --;
-using base_t::operator -=;
-using base_t::operator ==;
-using base_t::erase;
-using base_t::erase_all;
-using base_t::shrink;
-using base_t::insert;
-using base_t::expand;
-using base_t::disable;
-
-}; //disable output------------------------------------------
-
-} //bits-----------------------------------------------------
-} //range layer----------------------------------------------
+}; //------------------------------------------disable output
+} //-----------------------------------------------------bits
+} //----------------------------------------------range layer
 #endif
 

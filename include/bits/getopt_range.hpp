@@ -37,7 +37,7 @@ getopt_range (getopt_range &&) = default;
 getopt_range & operator = (getopt_range const &) = default;
 getopt_range & operator = (getopt_range &&) = default;
 
-program_option & operator * ();
+program_option & read();
 getopt_range & operator ++ ();
 bool operator == (sentinel::readable const) const;
 

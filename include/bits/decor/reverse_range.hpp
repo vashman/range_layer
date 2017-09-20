@@ -102,7 +102,8 @@ operator = (reverse_range const &) = default;
   operator ++
 ===========================================================*/
 reverse_range &
-operator ++ (){
+operator ++ (
+){
 --this->rng;
 return *this;
 }
@@ -112,7 +113,8 @@ return *this;
 ===========================================================*/
 template <typename U = Range>
 reverse_range &
-operator -- (){
+operator -- (
+){
 ++this->rng;
 return *this;
 }

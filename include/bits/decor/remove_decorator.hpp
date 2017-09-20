@@ -57,9 +57,6 @@ using base_t = bits::base_decor
 
 public:
 
-using read_type
-  = typename range_trait::read_type<Range>::type;
-
 using write_type
   = typename range_trait::write_type<Range>::type;
 
@@ -98,8 +95,7 @@ operator = (
   remove_decorator const &
 ) = default;
 
-}; //remove decorator----------------------------------------
-
-} //bits-----------------------------------------------------
-} //range layer----------------------------------------------
+}; //----------------------------------------remove decorator
+} //-----------------------------------------------------bits
+} //----------------------------------------------range layer
 #endif

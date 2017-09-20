@@ -61,19 +61,19 @@ array_range (array_range &&) = default;
 ~array_range () = default;
 
 /*===========================================================
-  operator *
+  read
 ===========================================================*/
 T const &
-operator * (
+read (
 ){
 return *this->pos;
 }
 
 /*===========================================================
-  operator =
+  write
 ===========================================================*/
 void
-operator = (
+write (
   T const & _var
 ){
 *this->pos = _var;

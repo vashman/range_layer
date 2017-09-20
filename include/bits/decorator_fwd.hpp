@@ -119,7 +119,7 @@ template
 auto
 disable_decorator_func (
   Range _range
-) -> decltype (disable_decorator(_range.disable()));
+);
 
 /*===========================================================
   disable decorator func
@@ -181,8 +181,8 @@ struct replace_read;
 template <typename T>
 replace_read<T>
 make_replace_read (
-  T _old_value
-, T _new_value
+  T
+, T
 );
 
 /*===========================================================
@@ -194,8 +194,8 @@ struct replace_write;
 template <typename T>
 replace_write<T>
 make_replace_write (
-  T _old_value
-, T _new_value
+  T
+, T
 );
 
 /*===========================================================
@@ -332,6 +332,14 @@ bits::extend_life<Range, Ts...>{_range, this->variable};
 
 };
 
+template <typename... Ts>
+auto
+make_extend_life (
+  Ts &&... _ts
+){
+return extend_life<Ts...>{std::forward<Ts>(_ts)...};
+}
+
 /*===========================================================
   sub_range
 ===========================================================*/
@@ -360,9 +368,9 @@ struct back_insert;
 template <typename T, typename Func>
 auto
 extend_range (
-  T && _con
-, Func _func
-) -> decltype(extend_life(_func(_con), std::move(_con)));
+  T &&
+, Func
+);
 
 } //----------------------------------------------range layer
 #endif

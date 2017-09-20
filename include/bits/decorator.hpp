@@ -106,7 +106,7 @@ template <typename Range>
 auto
 range (
   Range _range
-) -> decltype(disable_decorator_func(_range));
+);
 
 };
 
@@ -241,14 +241,7 @@ T new_value;
 template <typename Range>
 auto
 range (
-  Range _range
-)
--> decltype (
-xrange (
-  _range
-, make_transform_read
-  (bits::replace_func<T>{this->old_value, this->new_value})
-)
+  Range
 );
 
 };
@@ -265,14 +258,7 @@ T new_value;
 template <typename Range>
 auto
 range (
-  Range _range
-)
--> decltype (
-xrange (
-  _range
-, make_transform_write
-  (bits::replace_func<T>{this->old_value, this->new_value})
-)
+  Range
 );
 
 };
@@ -289,15 +275,8 @@ Pred pred;
 template <typename Range>
 auto
 range (
-  Range _range
-) -> decltype (
-xrange (
-  _range
-, make_transform_read (
-    bits::replace_if_func<T, Pred>
-    {this->new_value, this->pred}
-  )
-));
+  Range
+);
 
 };
 
@@ -313,13 +292,7 @@ Pred pred;
 template <typename Range>
 auto
 range (
-  Range _range
-) -> decltype (
-xrange (
-  _range
-, make_transform_write
-  (bits::replace_if_func<T, Pred>{this->new_value, this->pred})
-)
+  Range
 );
 
 };

@@ -104,11 +104,11 @@ operator = (rewrite_range const &) = default;
 ~rewrite_range () = default;
 
 /*===========================================================
-  operator =
+  write
 ===========================================================*/
 template <typename T>
 void
-operator = (
+write (
   T const & _var
 ){
 auto rng = this->func(_var);

@@ -102,7 +102,7 @@ base_decor & operator = (base_decor &&) = default;
 public:
 
 /*===========================================================
-  operator *
+  read
 ===========================================================*/
 template
 < typename R = Range
@@ -110,11 +110,11 @@ template
     <range_trait::is_input, R, Traits...>
 >
 auto
-operator * (
-) -> decltype(std::declval<Range&>().operator *());
+read (
+);
 
 /*===========================================================
-  operator =
+  write
 ===========================================================*/
 template
 < typename T
@@ -123,7 +123,7 @@ template
     <range_trait::is_output, R, Traits...>
 >
 void
-operator = (
+write (
   T const &
 );
 
@@ -311,10 +311,9 @@ template
 Range
 disable () const;
 
-}; //base decor----------------------------------------------
-
-} //bits-----------------------------------------------------
-} //range layer----------------------------------------------
+}; //----------------------------------------------base decor
+} //-----------------------------------------------------bits
+} //---------------------------------------------range layer-
 #include "base_decor.tcc"
 #endif
 

@@ -64,7 +64,8 @@ return *this;
 }
 
 program_option &
-getopt_range::operator * (){
+getopt_range::read (
+){
 return this->option;
 }
 

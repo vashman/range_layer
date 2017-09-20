@@ -29,7 +29,6 @@ std::size_t pos;
 
 public:
 
-using read_type = CharT;
 using write_type = read_type;
 
 /*===========================================================
@@ -95,7 +94,7 @@ return this->pos;
   operator *
 ===========================================================*/
 CharT const &
-operator * (
+read (
 ){
 return (*this->con)[this->pos-1];
 }
@@ -104,7 +103,7 @@ return (*this->con)[this->pos-1];
   operator =
 ===========================================================*/
 void
-operator = (
+write (
   CharT const & _var
 ){
 (*this->con)[this->pos-1] = _var;

@@ -96,22 +96,6 @@ disable_input & operator = (disable_input const &) = default;
 ===========================================================*/
 ~disable_input () = default;
 
-using base_t::size;
-using base_t::position;
-using base_t::save;
-using base_t::operator =;
-using base_t::operator ++;
-using base_t::operator +=;
-using base_t::operator --;
-using base_t::operator -=;
-using base_t::operator ==;
-using base_t::erase;
-using base_t::erase_all;
-using base_t::shrink;
-using base_t::insert;
-using base_t::expand;
-using base_t::disable;
-
 }; //-------------------------------------------disable input
 } //-----------------------------------------------------bits
 } //----------------------------------------------range layer

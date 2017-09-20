@@ -12,7 +12,6 @@
 #include <type_traits>
 #include "range_traits_fwd.hpp"
 #include "is_detected.hpp"
-#include "typelist.hpp"
 
 namespace range_layer {
 
@@ -140,7 +139,7 @@ private:
 
 template <typename T>
 using func_t = decltype (
-  std::declval<T&>().operator = (
+  std::declval<T&>().write (
     std::declval<write_type_t<Range> const &>()
   )
 );
@@ -167,7 +166,7 @@ struct is_input {
 private:
 
 template <typename T>
-using func_t = decltype(std::declval<T&>().operator *());
+using func_t = decltype(std::declval<T&>().read());
 
 template <typename T>
 using comp_t = decltype (
@@ -189,16 +188,13 @@ static constexpr bool value
 ===========================================================*/
 template <typename Range>
 struct read_type {
-/*using type = typename bits::trait_bits::is_typelist
-< typename bits::detected_or
-  < typename bits::trait_bits::if_read_type<Range, is_input<Range>::value>::type
-  , bits::trait_bits::rtype
-  , Range
-  >::type
->::type;*/
+
+private:
 
 template <typename T>
-using func_t = decltype(std::declval<T&>().operator*());
+using func_t = decltype(std::declval<T&>().read());
+
+public:
 
 using type = typename bits::detected_or
   <bits::void_t, func_t, Range>::type;

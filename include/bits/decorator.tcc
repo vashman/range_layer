@@ -42,7 +42,7 @@ template
 auto
 disable_decorator_func (
   Range _range
-) -> decltype (disable_decorator(_range.disable())) {
+){
 bits::range_assert<Range>();
 bits::decorator_assert<Range>();
 
@@ -75,7 +75,7 @@ template <typename Range>
 auto
 disable_decorator::range (
   Range _range
-) -> decltype(disable_decorator_func(_range)){
+){
 return disable_decorator_func(_range);
 }
 
@@ -133,13 +133,6 @@ template <typename Range>
 auto
 replace_read<T>::range (
   Range _range
-)
--> decltype (
-xrange (
-  _range
-, make_transform_read
-  (bits::replace_func<T>{this->old_value, this->new_value})
-)
 ){
 bits::range_assert<Range>();
 bits::read_assert<Range>();
@@ -168,13 +161,6 @@ template <typename Range>
 auto
 replace_write<T>::range (
   Range _range
-)
--> decltype (
-xrange (
-  _range
-, make_transform_write
-  (bits::replace_func<T>{this->old_value, this->new_value})
-)
 ){
 bits::range_assert<Range>();
 bits::write_assert<Range>();
@@ -203,12 +189,6 @@ template <typename Range>
 auto
 replace_if_read<T, Pred>::range (
   Range _range
-) -> decltype (
-xrange (
-  _range
-, make_transform_read
-  (bits::replace_if_func<T, Pred>{this->new_value, this->pred})
-)
 ){
 bits::range_assert<Range>();
 bits::read_assert<Range>();
@@ -237,12 +217,6 @@ template <typename Range>
 auto
 replace_if_write<T, Pred>::range (
   Range _range
-) -> decltype (
-xrange (
-  _range
-, make_transform_write
-  (bits::replace_if_func<T, Pred>{this->new_value, this->pred})
-)
 ){
 bits::range_assert<Range>();
 bits::write_assert<Range>();
@@ -323,15 +297,15 @@ bits::output_transform_range<Func, Range>
 transform_write<Func>::range (
   Range _range
 ){
+
+using decor_t = bits::output_transform_range<Func, Range>;
+
 bits::range_assert<Range>();
 bits::write_assert<Range>();
-bits::range_assert
-  <bits::output_transform_range<Func, Range>>();
-bits::write_assert
-  <bits::output_transform_range<Func, Range>>();
+bits::range_assert<decor_t>();
+bits::write_assert<decor_t>();
 
-return bits::output_transform_range<Func, Range>
-  {_range, this->func};
+return decor_t{_range, this->func};
 }
 
 template <typename Func>
@@ -438,7 +412,7 @@ return bits::select<Range, I>{_range};
 /*===========================================================
   extend life
 ===========================================================*/
-template <typename Range, typename... Ts>
+/*template <typename Range, typename... Ts>
 bits::extend_life<Range, Ts...>
 extend_life (
   Range _range
@@ -449,21 +423,21 @@ bits::range_assert<bits::extend_life<Range, Ts...>>();
 
 return bits::extend_life<Range, Ts...>
   {_range, std::forward<Ts>(_ts)...};
-}
+}*/
 
 /*===========================================================
   extend range
 ===========================================================*/
-template <typename T, typename Func>
+/*template <typename T, typename Func>
 auto
 extend_range (
   T && _con
 , Func _func
-) -> decltype(extend_life(_func(_con), std::move(_con))){
+){
 auto temp = extend_life(_func(_con), std::move(_con));
 temp.set_range(_func(* std::get<0>(temp.variable).get()));
 return temp;
-}
+}*/
 
 /*===========================================================
   as range
@@ -479,5 +453,5 @@ bits::range_assert<Range>();
 return bits::as_range<Range, Func>{_range, _func};
 }
 
-} //range layer----------------------------------------------
+} //----------------------------------------------range layer
 #endif

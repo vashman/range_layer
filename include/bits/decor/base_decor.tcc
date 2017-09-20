@@ -8,6 +8,8 @@
 #ifndef RANGE_LAYER_BITS_BASE_DECOR_TCC
 #define RANGE_LAYER_BITS_BASE_DECOR_TCC
 
+#include "../range.hpp"
+
 namespace range_layer {
 namespace bits {
 
@@ -23,28 +25,28 @@ base_decor<Range, Decorator, Traits...>::base_decor (
 {}
 
 /*===========================================================
-  operator *
+  read
 ===========================================================*/
 template
   <typename Range, typename Decorator, typename... Traits>
 template<typename, typename>
 auto
-base_decor<Range, Decorator, Traits...>::operator * (
-) -> decltype(std::declval<Range&>().operator*()) {
-return *this->rng;
+base_decor<Range, Decorator, Traits...>::read (
+){
+return range_layer::read(this->rng);
 }
 
 /*===========================================================
-  operator =
+  write
 ===========================================================*/
 template
   <typename Range, typename Decorator, typename... Traits>
 template <typename T, typename, typename>
 void
-base_decor<Range, Decorator, Traits...>::operator = (
+base_decor<Range, Decorator, Traits...>::write (
   T const & _var
 ){
-this->rng = _var;
+range_layer::write(this->rng, _var);
 }
 
 /*===========================================================
@@ -240,6 +242,6 @@ base_decor<Range, Decorator, Traits...>::disable (
 return this->rng;
 }
 
-} // bits----------------------------------------------------
-} // range layer---------------------------------------------
+} //-----------------------------------------------------bits
+} //----------------------------------------------range layer
 #endif

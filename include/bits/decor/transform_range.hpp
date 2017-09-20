@@ -61,9 +61,6 @@ Func func;
 
 public:
 
-using read_type
-  = typename range_trait::read_type<Range>::type;
-
 using write_type
   = typename range_trait::write_type<Range>::type;
 
@@ -110,12 +107,12 @@ operator = (
 ~transform_range () = default;
 
 /*===========================================================
-  operator *
+  read
 ===========================================================*/
 auto
-operator * (
-) -> decltype(this->func(*this->range)) {
-return this->func(*this->range);
+read (
+){
+return this->func(range_layer::read(this->range));
 }
 
 }; //-----------------------------------------transform range

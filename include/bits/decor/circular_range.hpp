@@ -72,9 +72,6 @@ return (
 
 public:
 
-using read_type
-  = typename range_trait::read_type<Range>::type;
-
 using write_type
   = typename range_trait::write_type<Range>::type;
 
@@ -120,7 +117,8 @@ operator = (
 ===========================================================*/
 template <typename U = Range>
 circular_range &
-operator ++ (){
+operator ++ (
+){
 ++this->range;
   if (this->is_end())
   this->range = start_of(this->range);
@@ -132,7 +130,8 @@ return *this;
 ===========================================================*/
 template <typename U = Range>
 circular_range &
-operator -- (){
+operator -- (
+){
 --this->range;
   if (this->is_end())
   this->range = end_of(this->range);
@@ -161,9 +160,8 @@ operator == (
 return true;
 }
 
-}; //circular range------------------------------------------
-
-} //bits-----------------------------------------------------
-} //range layer----------------------------------------------
+}; //------------------------------------------circular range
+} //-----------------------------------------------------bits
+} //----------------------------------------------range layer
 #endif
 

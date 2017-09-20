@@ -74,22 +74,37 @@ generate_range & operator = (generate_range &&) = default;
 generate_range &
 operator = (generate_range const &) = default;
 
+/*===========================================================
+  read
+===========================================================*/
 rtype
-operator * (
+read (
 ){
 return this->temp;
 }
 
+/*===========================================================
+  operator ++
+===========================================================*/
 generate_range<Gen, Ts...> &
 operator ++ (){
 this->temp = this->gen();
 return *this;
 }
 
-bool operator == (sentinel::readable const &) const;
+/*===========================================================
+  operator ==
+===========================================================*/
+bool
+operator == (
+  sentinel::readable const &
+) const;
 
 }; //------------------------------------------generate range
 
+/*===========================================================
+  operator ==
+===========================================================*/
 template <typename Gen, typename... Ts>
 bool
 generate_range<Gen, Ts...>::operator == (

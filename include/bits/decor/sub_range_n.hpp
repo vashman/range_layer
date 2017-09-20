@@ -71,8 +71,6 @@ public:
 using write_type
   = typename range_trait::write_type<Range>::type;
 
-using base_t::operator =;
-
 /*===========================================================
   size
 ===========================================================*/
@@ -124,7 +122,8 @@ sub_range_n & operator = (sub_range_n &&) = default;
 ===========================================================*/
 template <typename U = Range>
 sub_range_n &
-operator ++ (){
+operator ++ (
+){
 ++this->pos;
 ++this->rng;
 return *this;
@@ -135,7 +134,8 @@ return *this;
 ===========================================================*/
 template <typename U = Range>
 sub_range_n &
-operator -- (){
+operator -- (
+){
 --this->pos;
 --this->rng;
 return *this;
