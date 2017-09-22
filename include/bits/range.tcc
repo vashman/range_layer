@@ -90,7 +90,7 @@ advance_n (
   N const _n
 , Range & _range
 ){
-bits::range_assert<Range>();
+//bits::range_assert<Range>();
 
 N count = _n;
 while (0 != count--) ++_range;
@@ -112,7 +112,7 @@ advance_n (
   N const _n
 , Range & _range
 ){
-bits::range_assert<Range>();
+//bits::range_assert<Range>();
 
 _range += _n;
 }

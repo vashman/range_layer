@@ -7,13 +7,13 @@
 
 #include <cassert>
 #include "../include/array.hpp"
-#include "../include/console_range.hpp"
+#include "../include/stream.hpp"
 #include "../include/range.hpp"
 #include "../include/algorithm.hpp"
 
 using std::array;
 using range_layer::range;
-using range_layer::output_console_range;
+using range_layer::xrange;
 using range_layer::make_sub_range_n;
 using range_layer::remove_decorator;
 using range_layer::disable_decorator;
@@ -24,7 +24,7 @@ auto rng = range(arr);
 
 write (
   range_layer::execution_policy::sequenced {}
-, output_console_range()
+, range(std::cout)
 , xrange (
     rng
   , make_sub_range_n(4)
@@ -35,7 +35,7 @@ write (
 
 write (
   range_layer::execution_policy::sequenced {}
-, output_console_range()
+, range(std::cout)
 , xrange (
     rng
   , make_sub_range_n(4)

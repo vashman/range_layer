@@ -29,7 +29,7 @@ std::size_t pos;
 
 public:
 
-using write_type = read_type;
+using write_type = CharT;
 
 /*===========================================================
   ctor

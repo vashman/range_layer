@@ -442,15 +442,25 @@ return temp;
 /*===========================================================
   as range
 ===========================================================*/
-template <typename Range, typename Func>
-bits::as_range<Range, Func>
-as_range (
-  Range && _range
-, Func _func
+template <typename Func>
+template <typename Range>
+auto
+as_range<Func>::range (
+  Range _range
 ){
 bits::range_assert<Range>();
 
-return bits::as_range<Range, Func>{_range, _func};
+return bits::as_range
+  <Range, Func, decltype(this->func(_range))>
+  {_range, this->func};
+}
+
+template <typename Func>
+as_range<Func>
+make_as_range (
+  Func && _func
+){
+return as_range<Func>{_func};
 }
 
 } //----------------------------------------------range layer

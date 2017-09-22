@@ -69,12 +69,12 @@ void
 get_next (
 ){
   while (
-     (this->rng == sentinel::readable{})
+     range_layer::has_readable(this->rng)
   && ! this->fetched
   ){
-  this->temp = *this->rng;
+  this->temp = range_layer::read(this->rng);
     if (! this->pred(this->temp)) this->fetched = true;
-  ++this->rng;
+  range_layer::advance(this->rng);
   }
 }
 

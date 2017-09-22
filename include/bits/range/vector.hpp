@@ -317,7 +317,7 @@ range (
   std::vector<T, Alloc> && _con
 ){
 auto temp
-  = xrange (range(_con), make_extend_life(std::move(_con));
+  = xrange (range(_con), make_extend_life(std::move(_con)));
 
 temp.set_range(range(* std::get<0>(temp.variable).get()));
 return temp;

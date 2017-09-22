@@ -10,21 +10,20 @@
 #include <iostream>
 #include "../include/algorithm.hpp"
 #include "../include/iterator_range.hpp"
-#include "../include/console_range.hpp"
+#include "../include/stream.hpp"
 
 using std::vector;
 using range_layer::make_iterator_range;
-using range_layer::output_console_range;
+using range_layer::range;
 
 int main (){
 vector<char> vec {'0', '1', '2', '3', '4'};
 
-auto rng = make_iterator_range(begin(vec), end(vec));
-auto con = output_console_range();
-
-range_layer::execution_policy::sequenced seq {};
-
-write (seq, con, rng);
+write (
+  range_layer::execution_policy::sequenced {}
+, range(std::cout)
+, make_iterator_range(begin(vec), end(vec))
+);
 
 return 0;
 }

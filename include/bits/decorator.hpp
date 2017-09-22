@@ -311,6 +311,22 @@ range (
 
 };
 
+/*===========================================================
+  as range
+===========================================================*/
+template <typename Func>
+struct as_range {
+
+Func func;
+
+template <typename Range>
+auto
+range (
+  Range
+);
+
+};
+
 } //----------------------------------------------range layer
 #endif
 #include "decorator.tcc"

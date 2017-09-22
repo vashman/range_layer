@@ -26,26 +26,21 @@ template <typename Iter, typename IterEnd>
 struct iterator_range
 <Iter, IterEnd, std::input_iterator_tag> {
 
-using read_type
+using write_type
   = typename std::iterator_traits<Iter>::value_type;
-
-using write_type = read_type;
-
-//static constexpr std::iterator_traits<Iter>::difference_type
-//  max_size = std::numeric_limits<>
 
 Iter iter_begin;
 IterEnd iter_end;
 
 typename std::iterator_traits<Iter>::reference
-operator * (
+read (
 ){
 return *this->iter_begin;
 }
 
 template <typename T>
 void
-operator = (
+write (
   T const & _var
 ){
 *this->iter_begin = _var;
@@ -92,10 +87,8 @@ struct iterator_range
   iterator_range<Iter, IterEnd, std::input_iterator_tag>
 {
 
-using read_type
+using write_type
   = typename std::iterator_traits<Iter>::value_type;
-
-using write_type = read_type;
 
 iterator_range (
   Iter _iter
@@ -107,7 +100,7 @@ iterator_range (
 
 template <typename T>
 void
-operator = (
+write (
   T const & _var
 ){
 *this->iter_begin = _var;
@@ -131,10 +124,8 @@ struct iterator_range
   iterator_range<Iter, IterEnd, std::forward_iterator_tag>
 {
 
-using read_type
+using write_type
   = typename std::iterator_traits<Iter>::value_type;
-
-using write_type = read_type;
 
 iterator_range &
 operator -- (
@@ -160,7 +151,7 @@ iterator_range & operator = (
 
 iterator_range & operator = (iterator_range &&) = default;
 
-}; /* bidirectional iterator range */
+}; //----------------------------bidirectional iterator range
 
 template <typename Iter, typename IterEnd>
 struct iterator_range
@@ -170,14 +161,12 @@ struct iterator_range
   <Iter, IterEnd, std::bidirectional_iterator_tag>
 {
 
-using read_type
+using write_type
   = typename std::iterator_traits<Iter>::value_type;
-
-using write_type = read_type;
 
 template <typename T>
 void
-operator = (
+write (
   T const & _var
 ){
 *this->iter_begin = _var;
@@ -212,21 +201,23 @@ iterator_range (
   Iter _iter
 , IterEnd _end
 )
-: iterator_range<Iter, IterEnd, std::bidirectional_iterator_tag>
+: iterator_range
+  <Iter, IterEnd, std::bidirectional_iterator_tag>
   {_iter, _end}
 {}
 
 iterator_range (iterator_range const &) = default;
 iterator_range (iterator_range &&) = default;
-iterator_range & operator = (iterator_range const &) = default;
+
+iterator_range &
+operator = (iterator_range const &) = default;
+
 iterator_range & operator = (iterator_range &&) = default;
 
-}; /* randome access iterator range */
+}; //----------------------------random access iterator range
 
 template <typename Iter>
 struct iterator_range<Iter, void> {
-
-using read_type = void;
 
 // The iterator may have a void type.
 using write_type
@@ -236,7 +227,7 @@ Iter iter_begin;
 
 template <typename T>
 void
-operator = (
+write (
   T _var
 ){
 *this->iter_begin = _var;
@@ -384,6 +375,6 @@ make_iterator_range (
 return iterator_range<Iter,void>{_begin};
 }
 
-} /* range layer */
+} //----------------------------------------------range layer
 #endif
 

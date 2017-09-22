@@ -19,7 +19,8 @@ using range_layer::next;
 using range_layer::prev;
 
 int main (){
-auto rng = range(array<int, 5> {{0, 1, 2, 3, 4}});
+auto arr = array<int, 5> {{0, 1, 2, 3, 4}};
+auto rng = range(arr);
 
 int temp;
 

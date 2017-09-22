@@ -99,7 +99,7 @@ template
   <typename Range, typename Decorator, typename... Traits>
 class base_decor;
 
-template <typename Range, typename Func>
+template <typename Range, typename Func, typename Range2>
 class as_range;
 
 template <template <typename> class Decor>
@@ -370,6 +370,18 @@ auto
 extend_range (
   T &&
 , Func
+);
+
+/*===========================================================
+  as range
+===========================================================*/
+template <typename Func>
+struct as_range;
+
+template <typename Func>
+as_range<Func>
+make_as_range (
+  Func &&
 );
 
 } //----------------------------------------------range layer

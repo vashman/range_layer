@@ -12,18 +12,18 @@
 #include "../include/algorithm.hpp"
 
 using range_layer::range;
+using range_layer::write;
 
 int main (){
 
 range_layer::execution_policy::sequenced seq{};
 char arr[]
-  = "Press the a button and press enter to continue.";
+  = "Press the 'a' button and press enter to continue.";
 
 auto r_output = range(std::cout);
-write(seq, r_output, range(arr, 47));
-
 auto r_input = range(std::cin);
-write(r_output, read(r_input));
 
+write(seq, r_output, range(arr, 49));
+write(r_output, read(r_input));
 return 0;
 }

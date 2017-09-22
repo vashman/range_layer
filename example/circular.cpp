@@ -7,23 +7,19 @@
 
 using std::array;
 using range_layer::range;
+using range_layer::xrange;
 using range_layer::circular;
 using range_layer::read;
 
 int main (){
-
-
 array<int, 6> arr = {{5,6,7,8,9,0}};
 
-auto rng = xrange (
-  range(arr)
-, circular {}
-);
+auto rng = xrange (range(arr), circular{});
 
-advance_n (3, rng);
+//advance_n (3, rng);
 assert(read(rng) == 8);
 
-advance_n (2, rng);
+//advance_n (2, rng);
 std::cout << read(rng);
 /*assert(read(rng) == 8);
 

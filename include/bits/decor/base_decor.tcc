@@ -58,7 +58,7 @@ template <typename, typename>
 Decorator &
 base_decor<Range, Decorator, Traits...>::operator ++ (
 ){
-++this->rng;
+range_layer::advance(this->rng);
 return static_cast<Decorator&>(*this);
 }
 
@@ -72,7 +72,7 @@ Decorator &
 base_decor<Range, Decorator, Traits...>::operator += (
   N _n
 ){
-this->rng += _n;
+range_layer::advance_n(this->rng, _n);
 return static_cast<Decorator&>(*this);
 }
 
@@ -85,7 +85,7 @@ template <typename, typename>
 Decorator &
 base_decor<Range, Decorator, Traits...>::operator -- (
 ){
---this->rng;
+range_layer::reverse(this->rng);
 return static_cast<Decorator&>(*this);
 }
 
@@ -99,7 +99,7 @@ Decorator &
 base_decor<Range, Decorator, Traits...>::operator -= (
   N _n
 ){
-this->rng -= _n;
+range_layer::reverse_n(this->rng, _n);
 return static_cast<Decorator&>(*this);
 }
 
@@ -138,7 +138,7 @@ template <typename, typename>
 typename range_trait::size_type<Range>::type
 base_decor<Range, Decorator, Traits...>::size (
 ) const {
-return this->rng.size();
+return range_layer::size(this->rng);
 }
 
 /*===========================================================
@@ -150,7 +150,7 @@ template <typename, typename>
 typename range_trait::size_type<Range>::type
 base_decor<Range, Decorator, Traits...>::position (
 ) const {
-return this->rng.position();
+return range_layer::position(this->rng);
 }
 
 /*===========================================================
@@ -176,7 +176,7 @@ template <typename, typename>
 void
 base_decor<Range, Decorator, Traits...>::erase (
 ){
-this->rng->erase();
+range_layer::erase (this->rng);
 }
 
 /*===========================================================
@@ -188,7 +188,7 @@ template <typename, typename>
 void
 base_decor<Range, Decorator, Traits...>::erase_all (
 ){
-this->rng->erase_all();
+range_layer::erase_all(this->rng);
 }
 
 /*===========================================================
@@ -201,7 +201,7 @@ void
 base_decor<Range, Decorator, Traits...>::shrink (
   N _n
 ){
-this->rng->shrink(_n);
+range_layer::shrink(this->rng, _n);
 }
 
 /*===========================================================
@@ -214,7 +214,8 @@ void
 base_decor<Range, Decorator, Traits...>::insert (
   Args &&... _args
 ){
-this->rng->insert(std::forward<Args...>(_args...));
+  range_layer
+::insert(this->rng, std::forward<Args...>(_args...));
 }
 
 /*===========================================================
@@ -227,7 +228,7 @@ void
 base_decor<Range, Decorator, Traits...>::expand (
   N _n
 ){
-this->rng->expand(_n);
+range_layer::expand(this->rng, _n);
 }
 
 /*===========================================================

@@ -7,7 +7,6 @@
 //
 
 #include <iostream>
-#include <functional>
 #include "../include/vector.hpp"
 #include "../include/string.hpp"
 #include "../include/algorithm.hpp"
@@ -15,21 +14,26 @@
 
 using std::string;
 using std::vector;
-using std::function;
 using range_layer::range;
-using range_layer::as_range;
+using range_layer::xrange;
+using range_layer::make_as_range;
 using range_layer::execution_policy::sequenced;
 
 int main (){
 
-vector<string> vec{"test: A", "test: B", "Test: c"};
-/*
-function<decltype(range(vec))(vector<string>&)> func
-  = static_cast<decltype(range(vec))(vector<string>&)>(range_layer::range);
-auto output = range(std::cout);
-auto input = as_range(range(vec), func);*/
+vector<string> vec {"test: A", " test: B", " Test: c"};
 
-//write (sequenced{}, ,);
+/*write (
+  sequenced{}
+, range(std::cout)
+, xrange (
+    range(vec)
+  , make_as_range (
+    static_cast<decltype(range(vec))(*)(vector<string>&)>
+    (range_layer::range)
+    )
+  )
+);*/
 
 return 0;
 }
