@@ -16,9 +16,9 @@ namespace range_layer {
   read
 ===========================================================*/
 template <typename Range>
-auto
+decltype(auto)
 read (
-  Range & _range
+  Range && _range
 ){
 bits::range_assert<Range>();
 bits::read_assert<Range>();
@@ -32,7 +32,7 @@ return _range.read();
 template <typename Range, typename T>
 void
 write (
-  Range & _range
+  Range && _range
 , T const & _var
 ){
 bits::range_assert<Range>();
@@ -47,8 +47,8 @@ _range.write(_var);
 template <typename Range, typename... Ranges>
 void
 advance (
-  Range & _range
-, Ranges &... _ranges
+  Range && _range
+, Ranges &&... _ranges
 ){
 bits::range_assert<Range>();
 
@@ -62,8 +62,8 @@ void* list[] = {0, (static_cast<void*>(&(++_ranges)))...};
 template <typename Range, typename... Ranges>
 void
 reverse (
-  Range & _range
-, Ranges &... _ranges
+  Range && _range
+, Ranges &&... _ranges
 ){
 bits::range_assert<Range>();
 bits::reversible_assert<Range>();
@@ -88,9 +88,9 @@ template
 void
 advance_n (
   N const _n
-, Range & _range
+, Range && _range
 ){
-//bits::range_assert<Range>();
+bits::range_assert<Range>();
 
 N count = _n;
 while (0 != count--) ++_range;
@@ -110,9 +110,9 @@ template
 void
 advance_n (
   N const _n
-, Range & _range
+, Range && _range
 ){
-//bits::range_assert<Range>();
+bits::range_assert<Range>();
 
 _range += _n;
 }
@@ -130,7 +130,7 @@ template <
 void
 reverse_n (
   N const _n
-, Range & _range
+, Range && _range
 ){
 bits::range_assert<Range>();
 bits::reversible_assert<Range>();
@@ -152,7 +152,7 @@ template <
 void
 reverse_n (
   N const _n
-, Range & _range
+, Range && _range
 ){
 bits::range_assert<Range>();
 bits::reversible_assert<Range>();
@@ -169,8 +169,8 @@ template <typename N, typename Range, typename... Ranges>
 void
 advance_n (
   N const _n
-, Range & _range
-, Ranges &... _ranges
+, Range && _range
+, Ranges &&... _ranges
 ){
 bits::range_assert<Range>();
 
@@ -185,8 +185,8 @@ template <typename N, typename Range, typename... Ranges>
 void
 reverse_n (
   N const _n
-, Range & _range
-, Ranges &... _ranges
+, Range && _range
+, Ranges &&... _ranges
 ){
 bits::range_assert<Range>();
 bits::reversible_assert<Range>();
@@ -320,62 +320,62 @@ return _range.position();
   end_of
 ===========================================================*/
 template <typename Range>
-Range
+void
 end_of (
-  Range _range
+  Range && _range
 ){
 bits::range_assert<Range>();
 bits::finite_assert<Range>();
 bits::write_assert<Range>();
 bits::read_assert<Range>();
 
-while (has_readable(_range) || has_writable(_range))
-advance(_range);
-
-return _range;
+  while (
+     range_layer::has_readable(_range)
+  || range_layer::has_writable(_range)
+  ){
+  range_layer::advance(_range);
+  }
 }
 
 /*===========================================================
   end_of_output
 ===========================================================*/
 template <typename Range>
-Range
+void
 end_of_output (
-  Range _range
+  Range && _range
 ){
 bits::write_assert<Range>();
 bits::finite_assert<Range>();
 bits::write_assert<Range>();
 
-while (has_writable(_range)) advance(_range);
-
-return _range;
+  while (range_layer::has_writable(_range))
+  range_layer::advance(_range);
 }
 
 /*===========================================================
   end_of_input
 ===========================================================*/
 template <typename Range>
-Range
+void
 end_of_input (
-  Range _range
+  Range && _range
 ){
 bits::range_assert<Range>();
 bits::finite_assert<Range>();
 bits::read_assert<Range>();
 
-while (has_readable(_range)) advance(_range);
-
-return _range;
+  while (range_layer::has_readable(_range))
+  range_layer::advance(_range);
 }
 
 /*===========================================================
   start_of
 ===========================================================*/
 template <typename Range>
-Range
+void
 start_of (
-  Range _range
+  Range && _range
 ){
 bits::range_assert<Range>();
 bits::write_assert<Range>();
@@ -383,78 +383,75 @@ bits::read_assert<Range>();
 bits::reversible_assert<Range>();
 bits::position_assert<Range>();
 
-while (has_readable(_range) || has_writable(_range))
-reverse(_range);
-
-return _range;
+  while (
+     range_layer::has_readable(_range)
+  || range_layer::has_writable(_range)
+  ){
+  range_layer::reverse(_range);
+  }
 }
 
 /*===========================================================
   start_of_output
 ===========================================================*/
 template <typename Range>
-Range
+void
 start_of_output (
-  Range _range
+  Range && _range
 ){
 bits::write_assert<Range>();
 bits::write_assert<Range>();
 bits::reversible_assert<Range>();
 bits::position_assert<Range>();
 
-while (has_writable(_range)) reverse(_range);
-
-return _range;
+  while (range_layer::has_writable(_range))
+  range_layer::reverse(_range);
 }
 
 /*===========================================================
   start_of_input
 ===========================================================*/
 template <typename Range>
-Range
+void
 start_of_input (
-  Range _range
+  Range && _range
 ){
 bits::range_assert<Range>();
 bits::read_assert<Range>();
 bits::reversible_assert<Range>();
 bits::position_assert<Range>();
 
-while (has_readable(_range))
-reverse(_range);
-
-return _range;
+  while (range_layer::has_readable(_range))
+  range_layer::reverse(_range);
 }
 
 /*===========================================================
   shrink
 ===========================================================*/
 template <typename Range, typename N>
-Range
+void
 shrink (
-  Range _range
+  Range && _range
 , N _n
 ){
 bits::range_assert<Range>();
 bits::shrinkable_assert<Range>();
 
 _range.shrink(_n);
-return _range;
 }
 
 /*===========================================================
   erase
 ===========================================================*/
 template <typename Range>
-Range
+void
 erase (
-  Range _range
+  Range && _range
 ){
 bits::range_assert<Range>();
 bits::erase_assert<Range>();
 
 _range.erase();
-return _range;
 }
 
 /*===========================================================
@@ -465,14 +462,13 @@ template
 , typename = typename std::enable_if
   <range_trait::is_all_erasable<Range>::value, void>::type
 >
-Range
+void
 erase_all (
-  Range _range
+  Range && _range
 ){
 bits::range_assert<Range>();
 
 _range.erase_all();
-return _range;
 }
 
 /*===========================================================
@@ -500,34 +496,29 @@ return _range;
   insert
 ===========================================================*/
 template <typename Range, typename... Args>
-Range
+void
 insert (
-  Range _range
+  Range && _range
 , Args &&... _args
 ){
 bits::range_assert<Range>();
+bits::insert_assert<Range>();
 
-static_assert (
-  range_trait::is_insertable<Range>::value
-, "range.hpp 442"
-);
 _range.insert(std::forward<Args...>(_args...));
-return _range;
 }
 
 /*===========================================================
   expand
 ===========================================================*/
 template <typename Range, typename N>
-Range
+void
 expand (
-  Range _range
+  Range && _range
 , N _n
 ){
 bits::range_assert<Range>();
 
 _range.expand(_n);
-return _range;
 }
 
 /*===========================================================
@@ -536,7 +527,7 @@ return _range;
 template <typename Range>
 Range
 save (
-  Range _range
+  Range const &_range
 ){
 bits::range_assert<Range>();
 bits::not_singleton_assert<Range>();

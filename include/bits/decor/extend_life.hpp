@@ -18,11 +18,11 @@ namespace bits {
 /*===========================================================
   extend life
 ===========================================================*/
-template <typename Range, typename... Ts>
+template <typename Range, template <typename> class Ptr, typename... Ts>
 class extend_life
 : public bits::base_decor
   < Range
-  , extend_life<Range, Ts...>
+  , extend_life<Range, Ptr, Ts...>
   , range_trait::is_linear<Range>
   , range_trait::is_reversable<Range>
   , range_trait::is_input<Range>
@@ -42,7 +42,7 @@ class extend_life
 
 using base_t = bits::base_decor
   < Range
-  , extend_life<Range, Ts...>
+  , extend_life<Range, Ptr, Ts...>
   , range_trait::is_linear<Range>
   , range_trait::is_reversable<Range>
   , range_trait::is_input<Range>
@@ -61,7 +61,7 @@ using base_t = bits::base_decor
 
 public:
 
-std::tuple<std::shared_ptr<Ts>...> variable;
+std::tuple<Ptr<Ts>...> variable;
 
 using write_type
   = typename range_trait::write_type<Range>::type;
@@ -72,16 +72,7 @@ using write_type
 explicit
 extend_life (
   Range
-, Ts &&...
-);
-
-/*===========================================================
-  ctor
-===========================================================*/
-explicit
-extend_life (
-  Range
-, std::tuple<std::shared_ptr<Ts>...>
+, std::tuple<Ptr<Ts>...>
 );
 
 /*===========================================================
@@ -126,24 +117,12 @@ this->rng = _range;
 /*===========================================================
   ctor
 ===========================================================*/
-template <typename Range, typename... Ts>
-extend_life<Range, Ts...>::extend_life (
+template <typename Range, template <typename> class Ptr, typename... Ts>
+extend_life<Range, Ptr, Ts...>::extend_life (
   Range _range
-, Ts &&... _ts
+, std::tuple<Ptr<Ts>...> _variable
 )
-: extend_life<Range, Ts...>::base_t {_range}
-, variable {std::make_shared<Ts>(_ts)...}
-{}
-
-/*===========================================================
-  ctor
-===========================================================*/
-template <typename Range, typename... Ts>
-extend_life<Range, Ts...>::extend_life (
-  Range _range
-, std::tuple<std::shared_ptr<Ts>...> _variable
-)
-: extend_life<Range, Ts...>::base_t {_range}
+: extend_life<Range, Ptr, Ts...>::base_t {_range}
 , variable {_variable}
 {}
 

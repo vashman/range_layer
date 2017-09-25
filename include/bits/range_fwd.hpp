@@ -17,9 +17,9 @@ namespace range_layer {
   read
 ===========================================================*/
 template <typename Range>
-auto
+decltype(auto)
 read (
-  Range &
+  Range &&
 );
 
 /*===========================================================
@@ -28,7 +28,7 @@ read (
 template <typename Range, typename T>
 void
 write (
-  Range &
+  Range &&
 , T const &
 );
 
@@ -38,8 +38,8 @@ write (
 template <typename Range, typename... Ranges>
 void
 advance (
-  Range &
-, Ranges &...
+  Range &&
+, Ranges &&...
 );
 
 /*===========================================================
@@ -48,8 +48,8 @@ advance (
 template <typename Range, typename... Ranges>
 void
 reverse (
-  Range &
-, Ranges &...
+  Range &&
+, Ranges &&...
 );
 
 namespace bits {
@@ -68,7 +68,7 @@ template
 void
 advance_n (
   N const
-, Range &
+, Range &&
 );
 
 /*===========================================================
@@ -85,7 +85,7 @@ template
 void
 advance_n (
   N const
-, Range &
+, Range &&
 );
 
 /*===========================================================
@@ -101,7 +101,7 @@ template <
 void
 reverse_n (
   N const
-, Range &
+, Range &&
 );
 
 /*===========================================================
@@ -117,7 +117,7 @@ template <
 void
 reverse_n (
   N const
-, Range &
+, Range &&
 );
 
 }
@@ -130,8 +130,8 @@ template <typename N, typename Range, typename... Ranges>
 void
 advance_n (
   N const
-, Range &
-, Ranges &...
+, Range &&
+, Ranges &&...
 );
 
 /*===========================================================
@@ -141,8 +141,8 @@ template <typename N, typename Range, typename... Ranges>
 void
 reverse_n (
   N const
-, Range &
-, Ranges &...
+, Range &&
+, Ranges &&...
 );
 
 /*===========================================================
@@ -229,63 +229,63 @@ position (
   end_of
 ===========================================================*/
 template <typename Range>
-Range
+void
 end_of (
-  Range
+  Range &&
 );
 
 /*===========================================================
   end_of_output
 ===========================================================*/
 template <typename Range>
-Range
+void
 end_of_output (
-  Range _range
+  Range &&
 );
 
 /*===========================================================
   end_of_input
 ===========================================================*/
 template <typename Range>
-Range
+void
 end_of_input (
-  Range
+  Range &&
 );
 
 /*===========================================================
   start_of
 ===========================================================*/
 template <typename Range>
-Range
+void
 start_of (
-  Range
+  Range &&
 );
 
 /*===========================================================
   start_of_output
 ===========================================================*/
 template <typename Range>
-Range
+void
 start_of_output (
-  Range
+  Range &&
 );
 
 /*===========================================================
   start_of_input
 ===========================================================*/
 template <typename Range>
-Range
+void
 start_of_input (
-  Range
+  Range &&
 );
 
 /*===========================================================
   shrink
 ===========================================================*/
 template <typename Range, typename N>
-Range
+void
 shrink (
-  Range
+  Range &&
 , N
 );
 
@@ -293,27 +293,27 @@ shrink (
   erase
 ===========================================================*/
 template <typename Range>
-Range
+void
 erase (
-  Range
+  Range &&
 );
 
 /*===========================================================
   erase_all
 ===========================================================*/
 template <typename Range>
-Range
+void
 erase_all (
-  Range
+  Range &&
 );
 
 /*===========================================================
   insert
 ===========================================================*/
 template <typename Range, typename... Args>
-Range
+void
 insert (
-  Range
+  Range &&
 , Args &&...
 );
 
@@ -321,22 +321,19 @@ insert (
   expand
 ===========================================================*/
 template <typename Range, typename N>
-Range
+void
 expand (
-  Range
+  Range &&
 , N
 );
 
 /*===========================================================
   save
-
-* Does not gurantee the returned type will be the same as the
-  range passed in, or convertable to it.
 ===========================================================*/
 template <typename Range>
 Range
 save (
-  Range _range
+  Range const &
 );
 
 /*===========================================================
@@ -356,8 +353,8 @@ xrange (
 template <typename Range, typename Decor>
 auto
 xrange (
-  Range _range
-, Decor _decor
+  Range
+, Decor
 );
 
 }

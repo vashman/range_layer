@@ -158,7 +158,7 @@ operator += (
 template
 < typename R = Range
 , typename = enable_range_if_t
-    <range_trait::is_reversable, R, Traits...>
+    <range_trait::is_reversable, R, Traits...> // checks is linear?
 >
 Decorator &
 operator -- ();
@@ -231,7 +231,7 @@ position () const;
 template
 < typename R = Range
 , typename = enable_range_if_not_t
-    <range_trait::is_singleton, R, Traits...>
+    <range_trait::is_singleton, R, Traits...> //! singleton?
 >
 Decorator
 save ();
@@ -313,7 +313,6 @@ disable () const;
 
 }; //----------------------------------------------base decor
 } //-----------------------------------------------------bits
-} //---------------------------------------------range layer-
-#include "base_decor.tcc"
+} //----------------------------------------------range layer
 #endif
 

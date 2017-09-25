@@ -12,10 +12,6 @@ Distributed under the Boost Software License, Version 1.0.
 
 3 Motivation and Scope
 =============================================================
-Represent the device / container in a more 1 to 1
-relationship. ie: the range should not try to adapt the
-device / containers access model.
-
 1. constexpr range
 2. Move sems, and temporay data
 3. concurrancy
@@ -28,27 +24,76 @@ none, pure extenstion. / Addtional headers
 
 5 Desgin Descions
 =============================================================
-No transversal on construction
+
+# Handle
+* A handle is owned by the range.
+* A handle maybe shared between mutliple ranges.
+* The range should attempt to provide the same set of functions as the handle.
+* The hadle used in the range should be accessible.
+  * The deference operators should provide access to the range handle.
+  
+Construction
 -------------------------------------------------------------
-1. When constructing a range type, no obervable transversal
+1. When constructing a range type, no observable transversal
    should take place.
-2. The ctor should not eat any part of the range.
+2. A constructed range must be movable.
+3. A saved range must have the same postion, size, 
+4. A copied range will refer to the same handle as the
+   orgianl range.
+5. A saved range will not refer to the same handle as the
+   orginal range.
 
-X Automatic transversal
-X -----------------------------------------------------------
-X 1. Reading or Writing to a range should transverse once,
-X    when the operation completes.
-
-X Non-const observation
-X -----------------------------------------------------------
-X 1. Observing the class does not gurantee constness and the
-X   object may change.
-
-Locking calls
+Transversal
 -------------------------------------------------------------
-The following function calls may block and can lock;
-1. `read_size`
-2. `write_size`
+1. A range must be advanceable.
+2. Transversal operations must perform in constant time.
+3. Transversal functions perform in best time.
+
+Size
+-------------------------------------------------------------
+1. A range that has postion must also have a size.
+2. The size must be reresented by whole numbers.
+3. A range that has a size is finite.
+4. The number of readable elements may not be the same as the
+   number of writable elements.
+
+Range
+-------------------------------------------------------------
+1. Represent the device / container in a more 1 to 1
+   relationship. ie: the range should not try to adapt the
+   device / containers access model.
+
+Element
+-------------------------------------------------------------
+1. A element is a type that is written too or read from a
+   range.
+2. Element qualiffiers share extra information about how the
+   element works with the range.
+3. Element qulaiffiers should not be removed.
+
+Algorithm
+-------------------------------------------------------------
+1. When returning a range, will return the same type of range
+   that was passed to it.
+2. [Construction 2][Algorithm 1]
+   ∴ Algorithms which return a range cannot take a refrence
+   to the same range as a argument.
+3. Should provide the same set of capabilits that the range
+   handle posesses.
+4. Ranges should be movable into algorithms.
+5. [Algorithm 2]
+   ∴ Algorithms that do not return a range sould take r-value
+   or l-value refrences.
+
+Ownership
+-------------------------------------------------------------
+1. [Construction 2]
+   ∴ Algorithms should only transfer ownership of ranges.
+
+Input / Output
+-------------------------------------------------------------
+1. The number of readable elements may not be the same as the
+   number of writable elements.
 
 Seperate input & output postions
 -------------------------------------------------------------
@@ -57,26 +102,11 @@ time of construction. Their postions / transversal will be
 synced after that point, but either or may go on when the
 other ends.
 
-Allow move / copy / refrence passing
--------------------------------------------------------------
-1. The range object can be passed around by moving,
-   refrencing or coping to the same API.
-
 Allow move / copy / refrence return
 -------------------------------------------------------------
 1. Reading from a range may return a refrence, move or copy.
 2. Reading will consistently return the same type using the
    same operation.
-
-No size
--------------------------------------------------------------
-
-Read & Write end / begin may differ
--------------------------------------------------------------
-1. The `read_size` & `write_size` may differ in size.
-
-No position
--------------------------------------------------------------
 
 Types
 -------------------------------------------------------------

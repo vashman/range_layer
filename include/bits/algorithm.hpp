@@ -20,8 +20,8 @@ template <typename Policy> class cpu {};
 template <typename Policy> class remote {};
 
 using default_policy = sequenced;
-} // execution policy----------------------------------------
-} // range layer---------------------------------------------
+} //-----------------------------------------execution policy
+} //----------------------------------------------range layer
 
 #include "algo/read.hpp"
 #include "algo/write.hpp"

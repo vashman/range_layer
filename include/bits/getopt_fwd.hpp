@@ -13,5 +13,5 @@ namespace range_layer {
 struct program_option;
 class getopt_range;
 
-} /* range layer */
+} //----------------------------------------------range layer
 #endif

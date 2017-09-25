@@ -24,7 +24,7 @@ using range_layer::write;
 
 int main (){
 auto rng = range(vector<int>{10});
-fill(sequenced{}, rng, 99);
+rng = fill(sequenced{}, std::move(rng), 99);
 
 while (has_readable(rng)){
 assert (99 == read(rng));

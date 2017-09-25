@@ -103,8 +103,6 @@ public:
 
 static constexpr bool value
   = bits::is_detected<func_t, Range>::value
-&& std::is_copy_constructible<Range>::value
-&& std::is_copy_assignable<Range>::value
 && std::is_move_constructible<Range>::value
 && std::is_move_assignable<Range>::value;
 };

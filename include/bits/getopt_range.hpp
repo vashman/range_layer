@@ -37,9 +37,16 @@ getopt_range (getopt_range &&) = default;
 getopt_range & operator = (getopt_range const &) = default;
 getopt_range & operator = (getopt_range &&) = default;
 
-program_option & read();
-getopt_range & operator ++ ();
-bool operator == (sentinel::readable const) const;
+program_option &
+read();
+
+getopt_range &
+operator ++ ();
+
+bool
+operator == (
+  sentinel::readable const
+) const;
 
 int
 postion (
@@ -47,7 +54,6 @@ postion (
 return this->local_argc;
 }
 
-}; /* getopt range */
-
-} /* range layer */
+}; //--------------------------------------------getopt range 
+} //----------------------------------------------range layer
 #endif

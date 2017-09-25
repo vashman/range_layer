@@ -10,31 +10,40 @@
 
 namespace range_layer {
 
+/*===========================================================
+  all_of
+===========================================================*/
 template <typename Range, typename Pred>
 bool
 all_of (
   execution_policy::sequenced
-, Range _range
+, Range && _range
 , Pred _pred
 );
 
+/*===========================================================
+  none_of
+===========================================================*/
 template <typename Range, typename Pred>
 bool
 none_of (
   execution_policy::sequenced
-, Range _range
+, Range && _range
 , Pred _pred
 );
 
+/*===========================================================
+  any_of
+===========================================================*/
 template <typename Range, typename Pred>
 bool
 any_of (
   execution_policy::sequenced
-, Range _range
+, Range && _range
 , Pred _pred
 );
 
-} /* range layer */
+} //----------------------------------------------range layer
 #endif
 #include "read.tcc"
 

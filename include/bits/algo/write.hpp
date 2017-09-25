@@ -10,32 +10,30 @@
 
 namespace range_layer {
 
+/*===========================================================
+  fill
+===========================================================*/
 template <typename Range, typename T>
-Range
+void
 fill (
   execution_policy::sequenced
-, Range
+, Range &&
 , T const &
 );
 
+/*===========================================================
+  fill
+===========================================================*/
 template <typename Range, typename T, typename Count>
-Range
+void
 fill (
   execution_policy::sequenced
-, Range
+, Range &&
 , T const &
 , Count
 );
 
-/*template<typename Range, typename Generator>
-Range
-generate (
-  execution_policy::sequenced
-, Range
-, Generator
-);*/
-
-} /* range layer */
+} //---------------------------------------------=range layer
 #include "write.tcc"
 #endif
 

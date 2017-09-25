@@ -223,6 +223,18 @@ static_assert (
 return 0;
 }
 
-} //bits-----------------------------------------------------
-} //range layer----------------------------------------------
+/*===========================================================
+  insert assert
+===========================================================*/
+template <typename Range>
+constexpr int insert_assert (){
+static_assert (
+  range_trait::is_insertable<Range>::value
+, "Range must be insertable."
+);
+return 0;
+}
+
+} //-----------------------------------------------------bits
+} //----------------------------------------------range layer
 #endif

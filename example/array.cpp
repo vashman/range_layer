@@ -17,21 +17,22 @@ using range_layer::write;
 using range_layer::read;
 using range_layer::next;
 using range_layer::prev;
+using range_layer::advance;
+using range_layer::reverse;
 
 int main (){
-auto arr = array<int, 5> {{0, 1, 2, 3, 4}};
-auto rng = range(arr);
+auto rng = range(array<int, 5> {{0, 1, 2, 3, 4}});
 
 int temp;
 
 assert(has_readable(rng));
 temp = read(rng);
-rng = next(rng);
+advance (rng);
 assert(temp == 0);
 
 assert(has_readable(rng));
 temp = read(rng);
-rng = prev (rng);
+reverse (rng);
 assert(temp == 1);
 
 assert(has_writable(rng));

@@ -77,7 +77,7 @@ operator = (generate_range const &) = default;
 /*===========================================================
   read
 ===========================================================*/
-rtype
+rtype const &
 read (
 ){
 return this->temp;
@@ -87,7 +87,8 @@ return this->temp;
   operator ++
 ===========================================================*/
 generate_range<Gen, Ts...> &
-operator ++ (){
+operator ++ (
+){
 this->temp = this->gen();
 return *this;
 }

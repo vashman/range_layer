@@ -89,7 +89,7 @@ class circular_range;
 template <typename Range, std::size_t I>
 class select;
 
-template <typename Range, typename... Ts>
+template <typename Range, template <typename> class Ptr, typename... Ts>
 class extend_life;
 
 template <typename Range>
@@ -322,12 +322,12 @@ extend_life & operator = (extend_life const &) = default;
 ~extend_life () = default;
 
 template <typename Range>
-bits::extend_life<Range, Ts...>
+bits::extend_life<Range, std::shared_ptr, Ts...>
 range (
   Range _range
 ){
-return
-bits::extend_life<Range, Ts...>{_range, this->variable};
+return bits::extend_life<Range, std::shared_ptr, Ts...>
+  {_range, this->variable};
 }
 
 };
@@ -338,6 +338,57 @@ make_extend_life (
   Ts &&... _ts
 ){
 return extend_life<Ts...>{std::forward<Ts>(_ts)...};
+}
+
+/*===========================================================
+  unique_extend_life
+===========================================================*/
+template <typename... Ts>
+struct unique_extend_life {
+
+std::tuple<std::unique_ptr<Ts>...> variable;
+
+/*===========================================================
+  ctor
+===========================================================*/
+unique_extend_life (
+  Ts &&... _ts
+)
+: variable {std::make_unique<Ts>(_ts)...}
+{}
+
+unique_extend_life (unique_extend_life &&) = default;
+unique_extend_life (unique_extend_life const &) = delete;
+
+unique_extend_life &
+operator = (
+  unique_extend_life &&
+) = default;
+
+unique_extend_life &
+operator = (
+  unique_extend_life const &
+) = delete;
+
+~unique_extend_life () = default;
+
+template <typename Range>
+bits::extend_life<Range, std::unique_ptr, Ts...>
+range (
+  Range _range
+){
+return bits::extend_life<Range, std::unique_ptr, Ts...>
+  {_range, move(this->variable)};
+}
+
+};
+
+template <typename... Ts>
+auto
+make_unique_extend_life (
+  Ts &&... _ts
+){
+return unique_extend_life<Ts...>{std::forward<Ts>(_ts)...};
 }
 
 /*===========================================================
@@ -373,7 +424,7 @@ extend_range (
 );
 
 /*===========================================================
-  as range
+  as_range
 ===========================================================*/
 template <typename Func>
 struct as_range;

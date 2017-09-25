@@ -74,7 +74,7 @@ iota_range (
 /*===========================================================
   copy ctor
 ===========================================================*/
-iota_range (iota_range const &) = default;
+iota_range (iota_range const &) = delete;
 
 /*===========================================================
   move ctor
@@ -84,7 +84,7 @@ iota_range (iota_range &&) = default;
 /*===========================================================
   copy assignment operator
 ===========================================================*/
-iota_range & operator = (iota_range const &) = default;
+iota_range & operator = (iota_range const &) = delete;
 
 /*===========================================================
   move assignment operator
