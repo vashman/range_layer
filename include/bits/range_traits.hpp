@@ -33,6 +33,10 @@ namespace bits {
 
 using void_t = void*;
 
+template <typename Range>
+using r_type = typename std::remove_cv
+  <typename std::remove_reference<Range>::type>::type;
+
 namespace trait_bits {
 
 template <typename T>
@@ -102,9 +106,9 @@ using func_t = decltype(std::declval<T&>().operator ++());
 public:
 
 static constexpr bool value
-  = bits::is_detected<func_t, Range>::value
-&& std::is_move_constructible<Range>::value
-&& std::is_move_assignable<Range>::value;
+  = bits::is_detected<func_t, bits::r_type<Range>>::value
+&& std::is_move_constructible<bits::r_type<Range>>::value
+&& std::is_move_assignable<bits::r_type<Range>>::value;
 };
 
 /*===========================================================
@@ -117,7 +121,7 @@ struct write_type {
 using type = typename bits::detected_or
 < bits::void_t
 , bits::trait_bits::wtype
-, Range
+, bits::r_type<Range>
 >::type;
 };
 
@@ -138,21 +142,21 @@ private:
 template <typename T>
 using func_t = decltype (
   std::declval<T&>().write (
-    std::declval<write_type_t<Range> const &>()
+    std::declval<write_type_t<bits::r_type<Range>> const &>()
   )
 );
 
 template <typename T>
 using comp_t = decltype (
-   std::declval<T&>()
+   std::declval<T const &>()
 == std::declval<const sentinel::writable>()
 );
 
 public:
 
 static constexpr bool value
-  = bits::is_detected<func_t, Range>::value
-&&  bits::is_detected<comp_t, Range>::value;
+  = bits::is_detected<func_t, bits::r_type<Range>>::value
+&&  bits::is_detected<comp_t, bits::r_type<Range>>::value;
 };
 
 /*===========================================================
@@ -175,8 +179,8 @@ using comp_t = decltype (
 public:
 
 static constexpr bool value
-  =  bits::is_detected<func_t, Range>::value
-  && bits::is_detected<comp_t, Range>::value;
+  =  bits::is_detected<func_t, bits::r_type<Range>>::value
+  && bits::is_detected<comp_t, bits::r_type<Range>>::value;
 };
 
 /*===========================================================
@@ -195,7 +199,7 @@ using func_t = decltype(std::declval<T&>().read());
 public:
 
 using type = typename bits::detected_or
-  <bits::void_t, func_t, Range>::type;
+  <bits::void_t, func_t, bits::r_type<Range>>::type;
 };
 
 /*===========================================================
@@ -218,7 +222,7 @@ using func_t = decltype(std::declval<T&>().size());
 public:
 
 static constexpr bool value
-  = bits::is_detected<func_t, Range>::value;
+  = bits::is_detected<func_t, bits::r_type<Range>>::value;
 };
 
 /*===========================================================
@@ -235,18 +239,18 @@ using func_t = decltype(std::declval<T&>().size());
 public:
 
 using type
-  = typename bits::detected_or<bits::void_t, func_t, Range>
-  ::type;
+  = typename bits::detected_or
+  <bits::void_t, func_t, bits::r_type<Range>>::type;
 
 static_assert (
    std::is_same<type, void>::value
-|| std::is_unsigned<type>::value
+|| std::is_unsigned<bits::r_type<Range>>::value
 , "Range size must be a unsigned type."
 );
 
 static_assert (
    std::is_same<type, void>::value
-|| std::numeric_limits<type>::is_integer
+|| std::numeric_limits<bits::r_type<Range>>::is_integer
 , "Range size must be a interger type."
 );
 
@@ -272,7 +276,7 @@ using func_t = decltype(std::declval<T&>().position());
 public:
 
 static constexpr bool value
-  = bits::is_detected<func_t, Range>::value;
+  = bits::is_detected<func_t, bits::r_type<Range>>::value;
 
 static_assert (
  ! value || (value && is_finite<Range>::value)
@@ -303,7 +307,7 @@ using func_t = decltype(std::declval<T&>().save());
 public:
 
 static constexpr bool value
-  = ! bits::is_detected<func_t, Range>::value;
+  = ! bits::is_detected<func_t, bits::r_type<Range>>::value;
 };
 
 
@@ -321,7 +325,7 @@ using func_t = decltype(std::declval<T&>().operator --());
 public:
 
 static constexpr bool value
-  = bits::is_detected<func_t, Range>::value;
+  = bits::is_detected<func_t, bits::r_type<Range>>::value;
 };
 
 /*===========================================================
@@ -343,9 +347,9 @@ using bckfunc_t = decltype (
 public:
 
 static constexpr bool value
-  = !(bits::is_detected<fwdfunc_t, Range>::value
+  = !(bits::is_detected<fwdfunc_t, bits::r_type<Range>>::value
 && (! is_reversable<Range>::value
-  || (bits::is_detected <bckfunc_t, Range>::value
+  || (bits::is_detected <bckfunc_t, bits::r_type<Range>>::value
     && is_reversable<Range>::value
     )
   )
@@ -381,7 +385,7 @@ using func_t = decltype (
 public:
 
 static constexpr bool value
-  = bits::is_detected<func_t, Range>::value;
+  = bits::is_detected<func_t, bits::r_type<Range>>::value;
 };
 
 /*===========================================================
@@ -409,7 +413,7 @@ using func_t = decltype (std::declval<T&>().erase());
 public:
 
 static constexpr bool value
-  = bits::is_detected<func_t, Range>::value;
+  = bits::is_detected<func_t, bits::r_type<Range>>::value;
 };
 
 /*===========================================================
@@ -434,7 +438,7 @@ using func_t = decltype(std::declval<T&>().erase_all());
 public:
 
 static constexpr bool value
-  = bits::is_detected<func_t, Range>::value;
+  = bits::is_detected<func_t, bits::r_type<Range>>::value;
 };
 
 /*===========================================================
@@ -462,7 +466,7 @@ using func_t = decltype (
 public:
 
 static constexpr bool value
-  = bits::is_detected<func_t, Range>::value;
+  = bits::is_detected<func_t, bits::r_type<Range>>::value;
 };
 
 /*===========================================================
@@ -487,7 +491,7 @@ using func_t = decltype (
 public:
 
 static constexpr bool value
-  = bits::is_detected<func_t, Range>::value;
+  = bits::is_detected<func_t, bits::r_type<Range>>::value;
 };
 
 namespace input {
@@ -504,12 +508,12 @@ struct is_temporary {
 static constexpr bool value
    = (
        std::is_reference
-      <decltype(std::declval<Range&>().operator *())>::value
+      <decltype(std::declval<bits::r_type<Range>&>().operator *())>::value
   && std::is_const
-       <decltype(std::declval<Range&>().operator *())>::value
+       <decltype(std::declval<bits::r_type<Range>&>().operator *())>::value
   )
   || ! std::is_reference <
-         decltype(std::declval<Range&>().operator *())>
+         decltype(std::declval<bits::r_type<Range>&>().operator *())>
        ::value;
 
 };
@@ -576,7 +580,7 @@ static constexpr bool value
 && is_output<Range>::value
 && (is_linear<Range>::value == false)
 && is_finite<Range>::value
-&& bits::is_detected<func_t, Range>::value;
+&& bits::is_detected<func_t, bits::r_type<Range>>::value;
 };
 
 /*===========================================================
@@ -593,7 +597,7 @@ using func_t = decltype (std::declval<T&>().disable());
 public:
 
 static constexpr bool value
-  = bits::is_detected<func_t, Range>::value;
+  = bits::is_detected<func_t, bits::r_type<Range>>::value;
 };
 
 } //----------------------------------------------range trait

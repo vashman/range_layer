@@ -9,91 +9,51 @@
 #define RANGE_LAYER_VECTOR_RANGE_HPP
 
 #include <vector>
-#include <memory>
-#include "../../range_traits.hpp"
+#include "range.hpp"
 
 namespace range_layer {
+
 namespace bits {
 
-template <typename T, bool Is_Unique>
-struct range_ptr {
-
-// Is deleted by default.
-using type = std::unique_ptr<T>
-
-};
-
-template <typename T>
-struct range_ptr <T, false> {
-
-using type = std::shared_ptr<const T>;
-
-};
-
 /*===========================================================
-  vector_range
+  range_helper
 ===========================================================*/
-template <typename T, typename Alloc, bool Is_Unique>
-struct vector_range;
-
-/*===========================================================
-  mut_vector_range
-===========================================================*/
-template <typename T, typename Alloc>
-struct mut_vector_range <T, Alloc>;
-
-/*===========================================================
-  vector_range
-
-  * Read only
-  * Shared pointer to container.
-===========================================================*/
-template <typename T, typename Alloc, bool Is_Unique>
-class vector_range {
+template <typename Ptr, typename T, typename Alloc>
+struct range_helper<Ptr, std::vector<T, Alloc>> {
 
 protected:
 
-range_ptr<Is_Unique>::type con;
+Ptr handle;
 std::size_t pos;
 
+/*===========================================================
+  ctor
+===========================================================*/
+range_helper (
+  Ptr _handle
+, std::size_t _pos
+)
+: handle {move(_handle)}
+, pos {_pos}
+{}
+
 public:
-
-/*===========================================================
-  copy ctor
-===========================================================*/
-vector_range (vector_range const &) = default;
-
-/*===========================================================
-  move ctor
-===========================================================*/
-vector_range (vector_range &&) = default;
-
-/*===========================================================
-  copy assignment operator
-===========================================================*/
-vector_range & operator = (vector_range const &) = default;
-
-/*===========================================================
-  move assignment operator
-===========================================================*/
-vector_range & operator = (vector_range &&) = default;
-
-/*===========================================================
-  dtor
-===========================================================*/
-~vector_range() = default;
 
 /*===========================================================
   size
 ===========================================================*/
 std::size_t
-size () const;
+size () const {
+return this->handle->size();
+}
 
 /*===========================================================
   position
 ===========================================================*/
 std::size_t
-position () const;
+position () const {
+return this->pos;
+}
 
 /*===========================================================
   read
@@ -101,49 +61,49 @@ position () const;
 T const &
 read (
 ){
-return (*this->vec)[this->pos-1];
+return (*this->handle)[this->pos-1];
 }
 
 /*===========================================================
   operator ++
 ===========================================================*/
-vector_range &
+range<Ptr> &
 operator ++ (
 ){
 ++this->pos;
-return *this;
+return static_cast<range<Ptr>&>(*this);
 }
 
 /*===========================================================
   operator --
 ===========================================================*/
-vector_range &
+range<Ptr> &
 operator -- (
 ){
 --this->pos;
-return *this;
+return static_cast<range<Ptr>&>(*this);
 }
 
 /*===========================================================
   operator +=
 ===========================================================*/
-vector_range &
+range<Ptr> &
 operator += (
   std::size_t const _n
 ){
 this->pos += _n;
-return *this;
+return static_cast<range<Ptr>&>(*this);
 }
 
 /*===========================================================
   operator -=
 ===========================================================*/
-vector_range &
+range<Ptr> &
 operator -= (
   std::size_t const _n
 ){
 this->pos -= _n;
-return *this;
+return static_cast<range<Ptr>&>(*this);
 }
 
 /*===========================================================
@@ -151,37 +111,77 @@ return *this;
 ===========================================================*/
 bool
 operator == (
-  sentinel::readable const _sen
+  sentinel::readable const & _sen
 ) const {
-return this->pos <= this->vec->size();
+return this->pos <= this->handle->size();
 }
 
-}; //--------------------------------------------vector range
+};
+
+} //-----------------------------------------------------bits
 
 /*===========================================================
-  mut_vector_range
+  range
 ===========================================================*/
 template <typename T, typename Alloc>
-class mut_vector_range
-: public vector_range<T, Alloc, true>
+class range <std::shared_ptr<const std::vector<T, Alloc>>>
+: public bits::range_helper
+< std::shared_ptr<const std::vector<T, Alloc>>
+, std::vector<T, Alloc>
+>
 {
 
 public:
 
-using write_type = T;
+range (
+  std::shared_ptr<const std::vector<T, Alloc>> _ptr
+)
+: range::range_helper {_ptr, 1}
+{}
+
+}; //-------------------------------const shared vector range
+
+/*===========================================================
+  range
+===========================================================*/
+template <typename T, typename Alloc>
+class range <std::shared_ptr<std::vector<T, Alloc>>>
+: public range <std::shared_ptr<const std::vector<T, Alloc>>>
+{
+
+public:
+
+range (
+  std::shared_ptr<std::vector<T, Alloc>> _ptr
+)
+: range<std::shared_ptr<const std::vector<T, Alloc>>> {_ptr}
+{}
+
+}; //-------------------------------------shared vector range
+
+/*===========================================================
+  range
+===========================================================*/
+template <typename T, typename Alloc, typename Deleter>
+class range<std::unique_ptr<std::vector<T, Alloc>, Deleter>>
+: public bits::range_helper
+< std::unique_ptr<std::vector<T, Alloc>, Deleter>
+, std::vector<T, Alloc>
+>
+{
+
+public:
 
 /*===========================================================
   ctor
 ===========================================================*/
-mut_vector_range (
-  std::unique_ptr<std::vector<T, Alloc>, Deleter>
-);
+range (
+  std::unique_ptr<std::vector<T, Alloc>, Deleter> _ptr
+)
+: range::range_helper {move(_ptr), 1}
+{}
 
-/*===========================================================
-  save
-===========================================================*/
-/*vector_range
-save () const;*/
+using write_type = T;
 
 /*===========================================================
   write
@@ -190,185 +190,98 @@ void
 write (
   T const & _var
 ){
-(*(this->vec))[this->pos-1] = _var;
-}
-
-/*===========================================================
-  operator ==
-===========================================================*/
-bool
-operator == (
-  sentinel::writable const _sen
-) const {
-return *this == sentinel::readable{};
+(*(this->handle))[this->pos-1] = _var;
 }
 
 /*===========================================================
   expand
 ===========================================================*/
-vector_range
+range
 expand (
   std::size_t _n
 ){
-_n += this->vec->size();
-this->vec->resize(_n);
+_n += this->handle->size();
+this->handle->resize(_n);
 return *this;
 }
 
 /*===========================================================
   shrink
 ===========================================================*/
-vector_range
+range
 shrink (
   std::size_t _n
 ){
-_n = this->vec->size() - _n;
-this->vec->resize(_n);
+_n = this->handle->size() - _n;
+this->handle->resize(_n);
 return *this;
 }
 
 /*===========================================================
   insert
 ===========================================================*/
-vector_range
+range
 insert (
   write_type const & _var
 ){
-this->vec->insert(this->vec->begin() + this->pos, _var);
+this->handle->insert
+  (this->handle->begin() + this->pos, _var);
 return *this;
 }
 
 /*===========================================================
   erase_all
 ===========================================================*/
-mut_vector_range &
-erase_all ();
+range &
+erase_all (){
+this->handle->clear();
+return *this;
+}
 
 /*===========================================================
   erase
 ===========================================================*/
-mut_vector_range &
-erase ();
+range &
+erase () {
+this->handle->erase(this->handle->begin() + this->pos);
+return *this;
+}
 
-}; //--------------------------------------------vector range
-
-/*===========================================================
-  vector_range:: ctor
-===========================================================*/
-template <typename T, typename Alloc, bool Is_Unique>
-vector_range<T, Alloc, Is_Unique>::vector_range (
-  std::unique_ptr<std::vector<T, Alloc>, Deleter> _vec
-)
-: vec {_vec}
-, pos {1}
-{}
+}; //-------------------------------------unique vector range
 
 /*===========================================================
-  vector_range:: erase
+  range
 ===========================================================*/
 template <typename T, typename Alloc>
-vector_range<T, Alloc, true> &
-vector_range<T, Alloc, true>::erase (
-){
-this->vec->erase(this->vec->begin() + this->pos);
-return *this;
-}
+class range <std::vector<T, Alloc>>
+: public range<std::unique_ptr<std::vector<T, Alloc>>>
+{
+
+public:
 
 /*===========================================================
-  vector_range:: erase_all
+  ctor
 ===========================================================*/
-template <typename T, typename Alloc, typename Deleter>
-vector_range<T, Alloc, Deleter> &
-vector_range<T, Alloc, Deleter>::erase_all (
-){
-this->vec->clear();
-return *this;
-}
-
-/*===========================================================
-  vector_range:: size
-===========================================================*/
-template <typename T, typename Alloc, bool Is_Unique>
-std::size_t
-vector_range<T, Alloc, Is_Unique>::size (
-) const {
-return this->vec->size();
-}
-
-/*===========================================================
-  vector_range:: position
-===========================================================*/
-template <typename T, typename Alloc, bool Is_Unique>
-std::size_t
-vector_range<T, Alloc, Is_Unique>::position (
-) const {
-return this->pos;
-}
-
-/*===========================================================
-  vector_range:: save
-===========================================================*/
-/*template <typename T, typename Alloc, typename Deleter>
-vector_range<T, Alloc, Deleter>
-vector_range<T, Alloc, Deleter>::save (
-) const {
-vector_range<T, Alloc, Deleter> {Ptr{}}
-return *this;
-}*/
-
-} //-----------------------------------------------------bits
-
-/*===========================================================
-  range
-===========================================================*/
-template <typename T, typename Alloc, typename Deleter>
-bits::vector_range<T, Alloc>
 range (
-  std::vector<T, Alloc> &
-);
+  std::vector<T, Alloc> _ptr
+)
+: range<std::unique_ptr<std::vector<T, Alloc>>>
+    { std::make_unique<std::vector<T, Alloc>>(move(_ptr)) }
+{}
+
+}; //-------------------------------------------vector range
 
 /*===========================================================
-  range
+  range:: operator ==
 ===========================================================*/
 template <typename T, typename Alloc, typename Deleter>
-auto
-range (
-  std::vector<T, Alloc> && _con
-);
-
-/*===========================================================
-  range
-===========================================================*/
-template <typename T, typename Alloc, typename Deleter>
-auto
-range (
-  std::vector<T, Alloc> & _vec
+bool
+operator == (
+  range<std::unique_ptr<std::vector<T, Alloc>, Deleter>>
+  const & _lhs
+, sentinel::writable const & _sen
 ){
-return xrange (
-
-return type{_vec};
-}
-
-/*===========================================================
-  move range
-===========================================================*/
-template <typename T, typename Alloc, typename Deleter>
-bits::vector_range<T, Alloc>
-range (
-  std::vector<T, Alloc> && _vec
-){
-auto lam = [](auto * _con){delete _con;}
-using type = bits::vector_range<T, Alloc, decltype(lam)>;
-bits::range_assert<type>();
-bits::read_assert<type>();
-bits::write_assert<type>();
-bits::not_decorator_assert<type>();
-bits::shrinkable_assert<type>();
-bits::erase_assert<type>();
-
-return bits::vector_range<T, Alloc, Deleter>
-{std::unique_ptr<std::vector<T, Alloc>, Deleter>
-{new std::vector<T, Alloc>{_vec}, lam};
+return _lhs == sentinel::readable{};
 }
 
 } //----------------------------------------------range layer

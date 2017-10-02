@@ -33,11 +33,11 @@ class iota_range;
 /*===========================================================
   range
 ===========================================================*/
-template <typename T>
-bits::iota_range<T>
-range (
-  iota<T>
-);
+//template <typename T>
+//bits::iota_range<T>
+//range (
+//  iota<T>
+//);
 
 /*===========================================================
   iota
@@ -251,13 +251,13 @@ return *this;
 /*===========================================================
   range
 ===========================================================*/
-template <typename T>
+/*template <typename T>
 bits::iota_range<T>
 range (
   iota<T> _var
 ){
 return bits::iota_range<T>{_var};
-}
+}*/
 
 } //----------------------------------------------range layer
 #endif

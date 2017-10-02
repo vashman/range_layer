@@ -410,36 +410,6 @@ return bits::select<Range, I>{_range};
 }
 
 /*===========================================================
-  extend life
-===========================================================*/
-/*template <typename Range, typename... Ts>
-bits::extend_life<Range, Ts...>
-extend_life (
-  Range _range
-, Ts &&... _ts
-){
-bits::range_assert<Range>();
-bits::range_assert<bits::extend_life<Range, Ts...>>();
-
-return bits::extend_life<Range, Ts...>
-  {_range, std::forward<Ts>(_ts)...};
-}*/
-
-/*===========================================================
-  extend range
-===========================================================*/
-/*template <typename T, typename Func>
-auto
-extend_range (
-  T && _con
-, Func _func
-){
-auto temp = extend_life(_func(_con), std::move(_con));
-temp.set_range(_func(* std::get<0>(temp.variable).get()));
-return temp;
-}*/
-
-/*===========================================================
   as range
 ===========================================================*/
 template <typename Func>

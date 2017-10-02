@@ -89,8 +89,8 @@ class circular_range;
 template <typename Range, std::size_t I>
 class select;
 
-template <typename Range, template <typename> class Ptr, typename... Ts>
-class extend_life;
+/*template <typename Range, template <typename> class Ptr, typename... Ts>
+class extend_life;*/
 
 template <typename Range>
 class checked_range;
@@ -297,99 +297,99 @@ struct disable_write;
 ===========================================================*/
 template <std::size_t I>
 struct select;
-
-/*===========================================================
-  extend_life
-===========================================================*/
-template <typename... Ts>
-struct extend_life {
-
-std::tuple<std::shared_ptr<Ts>...> variable;
-
-/*===========================================================
-  ctor
-===========================================================*/
-extend_life (
-  Ts &&... _ts
-)
-: variable {std::make_shared<Ts>(_ts)...}
-{}
-
-extend_life (extend_life &&) = default;
-extend_life (extend_life const &) = default;
-extend_life & operator = (extend_life &&) = default;
-extend_life & operator = (extend_life const &) = default;
-~extend_life () = default;
-
-template <typename Range>
-bits::extend_life<Range, std::shared_ptr, Ts...>
-range (
-  Range _range
-){
-return bits::extend_life<Range, std::shared_ptr, Ts...>
-  {_range, this->variable};
-}
-
-};
-
-template <typename... Ts>
-auto
-make_extend_life (
-  Ts &&... _ts
-){
-return extend_life<Ts...>{std::forward<Ts>(_ts)...};
-}
-
-/*===========================================================
-  unique_extend_life
-===========================================================*/
-template <typename... Ts>
-struct unique_extend_life {
-
-std::tuple<std::unique_ptr<Ts>...> variable;
-
-/*===========================================================
-  ctor
-===========================================================*/
-unique_extend_life (
-  Ts &&... _ts
-)
-: variable {std::make_unique<Ts>(_ts)...}
-{}
-
-unique_extend_life (unique_extend_life &&) = default;
-unique_extend_life (unique_extend_life const &) = delete;
-
-unique_extend_life &
-operator = (
-  unique_extend_life &&
-) = default;
-
-unique_extend_life &
-operator = (
-  unique_extend_life const &
-) = delete;
-
-~unique_extend_life () = default;
-
-template <typename Range>
-bits::extend_life<Range, std::unique_ptr, Ts...>
-range (
-  Range _range
-){
-return bits::extend_life<Range, std::unique_ptr, Ts...>
-  {_range, move(this->variable)};
-}
-
-};
-
-template <typename... Ts>
-auto
-make_unique_extend_life (
-  Ts &&... _ts
-){
-return unique_extend_life<Ts...>{std::forward<Ts>(_ts)...};
-}
+//
+///*===========================================================
+//  extend_life
+//===========================================================*/
+//template <typename... Ts>
+//struct extend_life {
+//
+//std::tuple<std::shared_ptr<Ts>...> variable;
+//
+///*===========================================================
+//  ctor
+//===========================================================*/
+//extend_life (
+//  Ts &&... _ts
+//)
+//: variable {std::make_shared<Ts>(_ts)...}
+//{}
+//
+//extend_life (extend_life &&) = default;
+//extend_life (extend_life const &) = default;
+//extend_life & operator = (extend_life &&) = default;
+//extend_life & operator = (extend_life const &) = default;
+//~extend_life () = default;
+//
+//template <typename Range>
+//bits::extend_life<Range, std::shared_ptr, Ts...>
+//range (
+//  Range _range
+//){
+//return bits::extend_life<Range, std::shared_ptr, Ts...>
+//  {_range, this->variable};
+//}
+//
+//};
+//
+//template <typename... Ts>
+//auto
+//make_extend_life (
+//  Ts &&... _ts
+//){
+//return extend_life<Ts...>{std::forward<Ts>(_ts)...};
+//}
+//
+///*===========================================================
+//  unique_extend_life
+//===========================================================*/
+//template <typename... Ts>
+//struct unique_extend_life {
+//
+//std::tuple<std::unique_ptr<Ts>...> variable;
+//
+///*===========================================================
+//  ctor
+//===========================================================*/
+//unique_extend_life (
+//  Ts &&... _ts
+//)
+//: variable {std::make_unique<Ts>(_ts)...}
+//{}
+//
+//unique_extend_life (unique_extend_life &&) = default;
+//unique_extend_life (unique_extend_life const &) = delete;
+//
+//unique_extend_life &
+//operator = (
+//  unique_extend_life &&
+//) = default;
+//
+//unique_extend_life &
+//operator = (
+//  unique_extend_life const &
+//) = delete;
+//
+//~unique_extend_life () = default;
+//
+//template <typename Range>
+//bits::extend_life<Range, std::unique_ptr, Ts...>
+//range (
+//  Range _range
+//){
+//return bits::extend_life<Range, std::unique_ptr, Ts...>
+//  {_range, move(this->variable)};
+//}
+//
+//};
+//
+//template <typename... Ts>
+//auto
+//make_unique_extend_life (
+//  Ts &&... _ts
+//){
+//return unique_extend_life<Ts...>{std::forward<Ts>(_ts)...};
+//}
 
 /*===========================================================
   sub_range

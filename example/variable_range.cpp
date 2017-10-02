@@ -8,12 +8,14 @@
 #include <cassert>
 #include "../include/range.hpp"
 
-//using range_layer::range;
+using range_layer::range;
 
 int main (){
 int var {1};
-//auto rng = range(var);
-//auto rng2 = range('A');
+range<int> rng {var};
+
+  if (has_writable(rng)) write(rng, 44);
+  if (has_readable(rng)) int i = read(rng);
 
 return 0;
 }

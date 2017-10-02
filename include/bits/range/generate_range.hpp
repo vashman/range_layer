@@ -133,13 +133,13 @@ return generate<Gen>{_gen};
 /*===========================================================
   range
 ===========================================================*/
-template <typename Generator>
-bits::generate_range<Generator>
-range (
-  generate<Generator> _con
-){
-return bits::generate_range<Generator>{_con};
-}
+//template <typename Generator>
+//bits::generate_range<Generator>
+//range (
+//  generate<Generator> _con
+//){
+//return bits::generate_range<Generator>{_con};
+//}
 
 } //----------------------------------------------range layer
 #endif
