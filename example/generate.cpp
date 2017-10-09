@@ -8,10 +8,10 @@
 #include <cassert>
 #include "../include/range.hpp"
 
-using range_layer::range;
-using range_layer::has_readable;
-using range_layer::read;
-using range_layer::next;
+using range_layer::make_range;
+//using range_layer::has_readable;
+//using range_layer::read;
+//using range_layer::next;
 using range_layer::make_generator;
 
 struct gen {
@@ -23,12 +23,12 @@ int operator ()(){return this->temp++;}
 
 int main (){
 
-auto rng = range(make_generator(gen()));
+auto rng = make_range(make_generator(gen()));
 
 assert (has_readable(rng));
 assert (read(rng) == 1);
 
-rng = next(2, rng);
+advance_n(2, rng);
 
 assert (has_readable(rng));
 assert (read(rng) == 3);

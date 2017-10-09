@@ -8,31 +8,31 @@
 #include <cassert>
 #include "../include/range.hpp"
 
-using range_layer::range;
+using range_layer::make_range;
 using range_layer::iota;
-using range_layer::has_readable;
-using range_layer::read;
-using range_layer::next;
-using range_layer::prev;
+//using range_layer::has_readable;
+//using range_layer::read;
+//using range_layer::next;
+//using range_layer::prev;
 
 int main (int arc, char** argv){
-auto rng = range(iota<int>{0});
+auto rng = make_range(iota<int>{0});
 
 assert(has_readable(rng));
 int temp = read(rng);
-rng = next(rng);
+advance(rng);
 assert(temp == 0);
 
 assert(has_readable(rng));
 temp = read(rng);
 assert(temp == 1);
-rng = next(100, rng);
+advance_n(100, rng);
 
 assert(has_readable(rng));
 temp = read(rng);
 assert(temp == 101);
 
-rng = prev (rng);
+reverse(rng);
 assert(has_readable(rng));
 temp = read(rng);
 assert(temp == 100);

@@ -16,6 +16,16 @@ namespace range_layer {
   ctor
 ===========================================================*/
 template <typename T>
+range<iota<T> * const>::range (
+  iota<T> * const _ptr
+) : range<const iota<T> * const> {_ptr}
+, handle {_ptr}
+{}
+
+/*===========================================================
+  ctor
+===========================================================*/
+template <typename T>
 range<const iota<T> * const>::range (
   const iota<T> * const _ptr
 ) : const_handle {_ptr}
@@ -36,9 +46,9 @@ return this->const_handle->var;
 ===========================================================*/
 template <typename T>
 void
-range<const iota<T> * const>::advance (
+range<iota<T> * const>::advance (
 ){
-return ++(this->const_handle->var);
+++(this->handle->var);
 }
 
 /*===========================================================
@@ -46,9 +56,9 @@ return ++(this->const_handle->var);
 ===========================================================*/
 template <typename T>
 void
-range<const iota<T> * const>::reverse (
+range<iota<T> * const>::reverse (
 ){
-return --(this->const_handle->var);
+--(this->handle->var);
 }
 
 /*===========================================================
@@ -56,10 +66,10 @@ return --(this->const_handle->var);
 ===========================================================*/
 template <typename T>
 void
-range<const iota<T> * const>::advance_n (
+range<iota<T> * const>::advance_n (
   T const & _n
 ){
-return (this->const_handle->var) += _n;
+(this->handle->var) += _n;
 }
 
 /*===========================================================
@@ -67,10 +77,10 @@ return (this->const_handle->var) += _n;
 ===========================================================*/
 template <typename T>
 void
-range<const iota<T> * const>::reverse_n (
+range<iota<T> * const>::reverse_n (
   T const & _n
 ){
-return (this->const_handle->var) -= _n;
+(this->handle->var) -= _n;
 }
 
 /*===========================================================

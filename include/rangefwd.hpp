@@ -22,7 +22,9 @@
 #include "bits/range/empty.fwd"
 #include "bits/range/default.fwd"
 #include "bits/range/smart_pointer.fwd"
+//#include "bits/range/decorator.fwd"
 #include "bits/range/iota.fwd"
+#include "bits/range/generate.fwd"
 
 /*===========================================================
   Decorators

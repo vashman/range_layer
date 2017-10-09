@@ -35,10 +35,15 @@ class range<iota<T> * const>
 
 public:
 
-range (range const &) = delete;
-range (range &&) = default;
-range & operator = (range const &) = delete;
-range & operator = (range &&) = default;
+explicit range (iota<T> * const);
+         range (range const &) = delete;
+         range (range &&) = default;
+range &  operator = (range const &) = delete;
+range &  operator = (range &&) = default;
+void     advance ();
+void     reverse ();
+void     advance_n (T const &);
+void     reverse_n (T const &);
 
 private:
 
@@ -60,10 +65,6 @@ public:
 
 explicit  range (const iota<T> * const);
 T const & read () const;
-void      advance ();
-void      reverse ();
-void      advance_n (T const &);
-void      reverse_n (T const &);
 size_type size () const;
 size_type position () const;
 bool      has_readable () const;

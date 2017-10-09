@@ -25,7 +25,7 @@
 #include "bits/range/smart_pointer.hpp"
 #include "bits/range/decorator.hpp"
 #include "bits/range/iota.hpp"
-//#include "bits/range/generate_range.hpp"
+#include "bits/range/generate.hpp"
 
 /*===========================================================
   Decorators
