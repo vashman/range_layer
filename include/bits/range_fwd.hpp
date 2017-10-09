@@ -337,24 +337,12 @@ save (
 );
 
 /*===========================================================
-  xrange
+  copy
 ===========================================================*/
-template <typename Range, typename Decor, typename... Ts>
-auto
-xrange (
-  Range
-, Decor
-, Ts &&...
-);
-
-/*===========================================================
-  xrange
-===========================================================*/
-template <typename Range, typename Decor>
-auto
-xrange (
-  Range
-, Decor
+template <typename T>
+constexpr T
+copy (
+  T
 );
 
 }

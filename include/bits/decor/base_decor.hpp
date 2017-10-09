@@ -13,6 +13,11 @@
 namespace range_layer {
 namespace bits {
 
+/*===========================================================
+  has_type
+
+* True if T is in the list.
+===========================================================*/
 template <typename...>
 struct has_type {
 static constexpr bool value = false;
@@ -28,7 +33,7 @@ static constexpr bool value
   enable_range_if
 ===========================================================*/
 template
-  < template <typename> class T, typename R, typename... Ts>
+  <template <typename> class T, typename R, typename... Ts>
 using enable_range_if = std::enable_if
 <has_type<T<R>, Ts...>::value && T<R>::value, void>;
 
@@ -67,37 +72,7 @@ protected:
 
 Range rng;
 
-/*===========================================================
-  ctor
-===========================================================*/
-base_decor (
-  Range _range
-);
-
-/*===========================================================
-  copy ctor
-===========================================================*/
-base_decor (base_decor const &) = default;
-
-/*===========================================================
-  copy assignment operator
-===========================================================*/
-base_decor & operator = (base_decor const &) = default;
-
-/*===========================================================
-  move ctor
-===========================================================*/
-base_decor (base_decor &&) = default;
-
-/*===========================================================
-  move assignment operator
-===========================================================*/
-base_decor & operator = (base_decor &&) = default;
-
-/*===========================================================
-  dtor
-===========================================================*/
-~base_decor() = default;
+base_decor (Range);
 
 public:
 
@@ -109,9 +84,7 @@ template
 , typename = enable_range_if_t
     <range_trait::is_input, R, Traits...>
 >
-auto
-read (
-);
+auto read ();
 
 /*===========================================================
   write
@@ -122,10 +95,7 @@ template
 , typename = enable_range_if_t
     <range_trait::is_output, R, Traits...>
 >
-void
-write (
-  T const &
-);
+void write (T const &);
 
 /*===========================================================
   operator ++
@@ -135,8 +105,7 @@ template
 , typename = enable_range_if_t
     <range_trait::is_range, R, Traits...>
 >
-Decorator &
-operator ++ ();
+range<Range, Decorator> & operator ++ ();
 
 /*===========================================================
   operator +=
@@ -147,10 +116,7 @@ template
 , typename = enable_range_if_not_t
     <range_trait::is_linear, R, Traits...>
 >
-Decorator &
-operator += (
-  N
-);
+range<Range, Decorator> & operator += (N);
 
 /*===========================================================
   operator --
@@ -160,8 +126,7 @@ template
 , typename = enable_range_if_t
     <range_trait::is_reversable, R, Traits...> // checks is linear?
 >
-Decorator &
-operator -- ();
+range<Range, Decorator> & operator -- ();
 
 /*===========================================================
   operator -=
@@ -172,10 +137,7 @@ template
 , typename = enable_range_if_not_t
     <range_trait::is_linear, R, Traits...>
 >
-Decorator &
-operator -= (
-  N
-);
+range<Range, Decorator> & operator -= (N);
 
 /*===========================================================
   operator ==
@@ -185,10 +147,7 @@ template
 , typename = enable_range_if_t
     <range_trait::is_input, R, Traits...>
 >
-bool
-operator == (
-  sentinel::readable const &
-) const;
+bool operator == (sentinel::readable const &) const;
 
 /*===========================================================
   operator ==
@@ -198,10 +157,7 @@ template
 , typename = enable_range_if_t
     <range_trait::is_output, R, Traits...>
 >
-bool
-operator == (
-  sentinel::writable const &
-) const;
+bool operator == (sentinel::writable const &) const;
 
 /*===========================================================
   size
@@ -233,8 +189,7 @@ template
 , typename = enable_range_if_not_t
     <range_trait::is_singleton, R, Traits...> //! singleton?
 >
-Decorator
-save ();
+range<Range, Decorator> save () const;
 
 /*===========================================================
   erase
@@ -244,8 +199,7 @@ template
 , typename = enable_range_if_t
     <range_trait::is_erasable, R, Traits...>
 >
-void
-erase ();
+void erase ();
 
 /*===========================================================
   erase all
@@ -255,8 +209,7 @@ template
 , typename = enable_range_if_t
     <range_trait::is_all_erasable, R, Traits...>
 >
-void
-erase_all ();
+void erase_all ();
 
 /*===========================================================
   shrink
@@ -267,10 +220,7 @@ template
 , typename = enable_range_if_t
     <range_trait::is_shrinkable, R, Traits...>
 >
-void
-shrink (
-  N
-);
+void shrink (N);
 
 /*===========================================================
   insert
@@ -281,10 +231,7 @@ template
 , typename = enable_range_if_t
     <range_trait::is_insertable, R, Traits...>
 >
-void
-insert (
-  Args &&...
-);
+void insert (Args &&...);
 
 /*===========================================================
   expand
@@ -295,10 +242,7 @@ template
 , typename = enable_range_if_t
     <range_trait::is_expandable, R, Traits...>
 >
-void
-expand (
-  N
-);
+void expand (N);
 
 /*===========================================================
   disable
@@ -308,8 +252,7 @@ template
 , typename = enable_range_if_t
     <range_trait::is_decorator, R, Traits...>
 >
-Range
-disable () const;
+Range disable () const;
 
 }; //----------------------------------------------base decor
 } //-----------------------------------------------------bits

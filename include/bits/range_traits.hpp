@@ -101,14 +101,13 @@ struct is_range {
 private:
 
 template <typename T>
-using func_t = decltype(std::declval<T&>().operator ++());
+using func_t = decltype(std::declval<T&>().advance());
 
 public:
 
 static constexpr bool value
   = bits::is_detected<func_t, bits::r_type<Range>>::value
-&& std::is_move_constructible<bits::r_type<Range>>::value
-&& std::is_move_assignable<bits::r_type<Range>>::value;
+&& std::is_move_constructible<bits::r_type<Range>>::value;
 };
 
 /*===========================================================
@@ -148,8 +147,7 @@ using func_t = decltype (
 
 template <typename T>
 using comp_t = decltype (
-   std::declval<T const &>()
-== std::declval<const sentinel::writable>()
+   std::declval<const T&>().has_writable()
 );
 
 public:
@@ -172,8 +170,7 @@ using func_t = decltype(std::declval<T&>().read());
 
 template <typename T>
 using comp_t = decltype (
-     std::declval<T&>()
-  == std::declval<const sentinel::readable>()
+     std::declval<const T&>().has_readable()
 );
 
 public:
@@ -320,7 +317,7 @@ struct is_reversable {
 private:
 
 template <typename T>
-using func_t = decltype(std::declval<T&>().operator --());
+using func_t = decltype(std::declval<T&>().reverse());
 
 public:
 
@@ -338,11 +335,11 @@ private:
 
 template <typename T>
 using fwdfunc_t = decltype (
-  std::declval<T&>().operator +=(std::declval<int>()) );
+  std::declval<T&>().advance_n(std::declval<int>()) );
 
 template <typename T>
 using bckfunc_t = decltype (
-  std::declval<T&>().operator -=(std::declval<int>()) );
+  std::declval<T&>().reverse_n(std::declval<int>()) );
 
 public:
 

@@ -52,8 +52,8 @@ advance (
 ){
 bits::range_assert<Range>();
 
-++_range;
-void* list[] = {0, (static_cast<void*>(&(++_ranges)))...};
+_range.advance();
+void* list[] = {0, (static_cast<void*>(&(_ranges.advance())))...};
 }
 
 /*===========================================================
@@ -68,8 +68,8 @@ reverse (
 bits::range_assert<Range>();
 bits::reversible_assert<Range>();
 
---_range;
-void* list[] = {0, (static_cast<void*>(&(--_ranges)))...};
+_range.reverse();
+void* list[] = {0, (static_cast<void*>(&(_ranges.reverse())))...};
 }
 
 namespace bits {
@@ -93,7 +93,7 @@ advance_n (
 bits::range_assert<Range>();
 
 N count = _n;
-while (0 != count--) ++_range;
+while (0 != count--) _range.advance();
 }
 
 /*===========================================================
@@ -114,7 +114,7 @@ advance_n (
 ){
 bits::range_assert<Range>();
 
-_range += _n;
+_range.advance_n(_n);
 }
 
 /*===========================================================
@@ -136,7 +136,7 @@ bits::range_assert<Range>();
 bits::reversible_assert<Range>();
 
 N count = _n;
-while (0 != count--) --_range;
+while (0 != count--) _range.reverse();
 }
 
 /*===========================================================
@@ -157,7 +157,7 @@ reverse_n (
 bits::range_assert<Range>();
 bits::reversible_assert<Range>();
 
-_range -= _n;
+_range.reverse_n(_n);
 }
 
 } //-----------------------------------------------------bits
@@ -266,7 +266,7 @@ has_readable (
 bits::range_assert<Range>();
 bits::read_assert<Range>();
 
-return _range == sentinel::readable{};
+return _range.has_readable();
 }
 
 /*===========================================================
@@ -280,7 +280,7 @@ has_writable (
 bits::range_assert<Range>();
 bits::write_assert<Range>();
 
-return _range == sentinel::writable{};
+return _range.has_writable();
 }
 
 /*===========================================================
@@ -527,7 +527,7 @@ _range.expand(_n);
 template <typename Range>
 Range
 save (
-  Range const &_range
+  Range const & _range
 ){
 bits::range_assert<Range>();
 bits::not_singleton_assert<Range>();
@@ -541,33 +541,16 @@ return _range.save();
 }
 
 /*===========================================================
-  xrange
+  copy
 ===========================================================*/
-template <typename Range, typename Decor, typename... Ts>
-auto
-xrange (
-  Range _range
-, Decor _decor
-, Ts &&... _ts
+template <typename T>
+constexpr T
+copy (
+  T _var
 ){
-bits::range_assert<Range>();
-
-return xrange(_decor.range(_range), _ts...);
+return _var;
 }
 
-/*===========================================================
-  xrange
-===========================================================*/
-template <typename Range, typename Decor>
-auto
-xrange (
-  Range _range
-, Decor _decor
-){
-bits::range_assert<Range>();
-
-return _decor.range(_range);
-}
 
 } //----------------------------------------------range layer
 #endif

@@ -9,18 +9,23 @@
 #define RANGE_LAYER_DISABLE_OUTPUT_HPP
 
 #include "base_decor.hpp"
+#include "../range/range.hpp"
 
 namespace range_layer {
-namespace bits {
 
 /*===========================================================
   disable_output
 ===========================================================*/
+struct disable_output {};
+
+/*===========================================================
+  disable_output range
+===========================================================*/
 template <typename Range>
-class disable_output
+class range<Range, disable_output>
 : public bits::base_decor
   < Range
-  , disable_output<Range>
+  , disable_output
   , range_trait::is_linear<Range>
   , range_trait::is_reversable<Range>
   , range_trait::is_input<Range>
@@ -38,67 +43,22 @@ class disable_output
   >
 {
 
-using base_t = bits::base_decor
-  < Range
-  , disable_output<Range>
-  , range_trait::is_linear<Range>
-  , range_trait::is_reversable<Range>
-  , range_trait::is_input<Range>
-  , range_trait::is_output<Range>
-  , range_trait::has_position<Range>
-  , range_trait::is_singleton<Range>
-  , range_trait::is_finite<Range>
-  , range_trait::is_erasable<Range>
-  , range_trait::is_all_erasable<Range>
-  , range_trait::is_shrinkable<Range>
-  , range_trait::is_expandable<Range>
-  , range_trait::is_insertable<Range>
-  , range_trait::is_subscriptable<Range>
-  , range_trait::is_decorator<Range>
-  >;
-
 public:
 
-using read_type
-  = typename range_trait::read_type<Range>::type;
+range (Range);
+
+}; //------------------------------------disable output range
 
 /*===========================================================
-  ctor
+  ctor ::range<Range, disable_output>
 ===========================================================*/
-disable_output (
+template <typename Range>
+range<Range, disable_output>::range (
   Range _range
 )
-: base_t {_range}
+: range::base_decor {_range}
 {}
 
-/*===========================================================
-  copy ctor
-===========================================================*/
-disable_output (disable_output const &) = default;
-
-/*===========================================================
-  move ctor
-===========================================================*/
-disable_output (disable_output &&) = default;
-
-/*===========================================================
-  move assignment operator
-===========================================================*/
-disable_output & operator = (disable_output &&) = default;
-
-/*===========================================================
-  copy assignment operator
-===========================================================*/
-disable_output &
-operator = (disable_output const &) = default;
-
-/*===========================================================
-  dtor
-===========================================================*/
-~disable_output () = default;
-
-}; //------------------------------------------disable output
-} //-----------------------------------------------------bits
 } //----------------------------------------------range layer
 #endif
 

@@ -22,10 +22,10 @@ using range_layer::read;
 using range_layer::write;
 
 template <typename Range>
-void write_test (Range);
+void write_test (Range &&);
 
 template <typename Range>
-void read_test (Range);
+void read_test (Range &&);
 
 int main (){
 
@@ -48,7 +48,7 @@ return 0;
 template <typename Range>
 void
 write_test (
-  Range _range
+  Range && _range
 ){
 fill(sequenced{}, _range, 99);
 
@@ -66,7 +66,7 @@ advance(_range);
 template <typename Range>
 void
 read_test (
-  Range _range
+  Range && _range
 ){
 while (has_readable(_range)){
 assert (99 == read(_range));
