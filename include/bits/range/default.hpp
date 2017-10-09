@@ -5,8 +5,10 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_BITS_RANGE_DEFAULT_RANGE_HPP
-#define RANGE_LAYER_BITS_RANGE_DEFAULT_RANGE_HPP
+#ifndef RANGE_LAYER_BITS_RANGE_DEFAULT_HPP
+#define RANGE_LAYER_BITS_RANGE_DEFAULT_HPP
+
+#include "default.fwd"
 
 namespace range_layer {
 
@@ -90,4 +92,4 @@ bool is_end;
 }; //-----------------------------default const pointer range
 } //----------------------------------------------range layer
 #endif
-#include "default_range.tcc"
+#include "default.tcc"

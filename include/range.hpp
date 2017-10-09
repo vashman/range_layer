@@ -10,12 +10,27 @@
 
 #include "rangefwd.hpp"
 #include "range_traits.hpp"
-#include "bits/range.hpp"
+
+/*===========================================================
+  Algorithm
+===========================================================*/
+#include "bits/algo/basic.hpp"
+
+/*===========================================================
+  Range
+===========================================================*/
+#include "bits/range/range.hpp"
+#include "bits/range/empty.hpp"
+#include "bits/range/default.hpp"
+#include "bits/range/smart_pointer.hpp"
+#include "bits/range/decorator.hpp"
+#include "bits/range/iota.hpp"
+//#include "bits/range/generate_range.hpp"
 
 /*===========================================================
   Decorators
 ===========================================================*/
-#include "bits/decor/disable_output.hpp"
-#include "bits/decor/disable_input.hpp"
+//#include "bits/decor/disable_output.hpp"
+//#include "bits/decor/disable_input.hpp"
 
 #endif

@@ -8,17 +8,11 @@
 #ifndef RANGE_LAYER_BITS_RANGE_RANGE_HPP
 #define RANGE_LAYER_BITS_RANGE_RANGE_HPP
 
-#include "../range_traits.hpp"
+#include "range.fwd"
 
 namespace range_layer {
 
 namespace bits {
-
-/*===========================================================
-  base_from_member
-===========================================================*/
-template <typename T>
-struct base_from_member;
 
 /*===========================================================
   base_from_member
@@ -31,28 +25,6 @@ T member;
 };
 
 } //-----------------------------------------------------bits
-
-/*===========================================================
-  range
-===========================================================*/
-template <typename... Ts>
-class range;
-
-/*===========================================================
-  decorator builder range
-
-* A range with more then 2 types means multiple decorators
-  are being used.
-===========================================================*/
-template
-< typename Range
-, typename Decorator
-, typename T
-, typename... Ts
->
-class range<Range, Decorator, T, Ts...>
-: public range<range<Range, Decorator>, T, Ts...>
-{};
 
 /*===========================================================
   const_range unique_ptr
@@ -132,21 +104,6 @@ class range<Range, Decorator, T, Ts...>
 //return {_range};
 //}
 
-/*===========================================================
-  make_range
-
-* Does not deduce pointer ranges correctly.
-===========================================================*/
-template <typename... Ts>
-range<Ts...>
-make_range (
-  Ts... _args
-){
-return range<Ts...>{std::move(_args)...};
-}
-
 } //----------------------------------------------range layer
-#include "default_range.hpp"
-#include "empty_range.hpp"
-#include "smart_pointer_range.hpp"
 #endif
+#include "range.tcc"

@@ -10,24 +10,10 @@
 
 #include <limits>
 #include <type_traits>
-#include "range_traits_fwd.hpp"
+#include "range_traits.fwd"
 #include "is_detected.hpp"
 
 namespace range_layer {
-
-namespace sentinel {
-
-/*===========================================================
-  readable
-===========================================================*/
-class readable {};
-
-/*===========================================================
-  writable
-===========================================================*/
-class writable {};
-
-} //-------------------------------------------------sentinel
 
 namespace bits {
 

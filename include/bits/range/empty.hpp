@@ -5,8 +5,10 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_BITS_RANGE_EMPTY_RANGE_HPP
-#define RANGE_LAYER_BITS_RANGE_EMPTY_RANGE_HPP
+#ifndef RANGE_LAYER_BITS_RANGE_EMPTY_HPP
+#define RANGE_LAYER_BITS_RANGE_EMPTY_HPP
+
+#include "empty.fwd"
 
 namespace range_layer {
 
@@ -27,4 +29,4 @@ void                  advance () const;
 
 } //----------------------------------------------range layer
 #endif
-#include "empty_range.tcc"
+#include "empty.tcc"
