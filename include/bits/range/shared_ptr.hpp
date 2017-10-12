@@ -5,10 +5,10 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_BITS_SMART_POINTER_HPP
-#define RANGE_LAYER_BITS_SMART_POINTER_HPP
+#ifndef RANGE_LAYER_BITS_SHARED_PTR_HPP
+#define RANGE_LAYER_BITS_SHARED_PTR_HPP
 
-#include "smart_pointer.fwd"
+#include "shared_ptr.fwd"
 
 namespace range_layer {
 
@@ -41,5 +41,5 @@ explicit range(std::shared_ptr<const T>);
 }; //----------------------------------const shared ptr range
 } //----------------------------------------------range layer
 #endif
-#include "smart_pointer.tcc"
+#include "shared_ptr.tcc"
 
