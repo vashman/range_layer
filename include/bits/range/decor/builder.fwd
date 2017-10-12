@@ -5,13 +5,16 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_BITS_RANGE_DECOR_BUILDER_HPP
-#define RANGE_LAYER_BITS_RANGE_DECOR_BUILDER_HPP
+#ifndef RANGE_LAYER_BITS_RANGE_DECOR_BUILDER_FWD
+#define RANGE_LAYER_BITS_RANGE_DECOR_BUILDER_FWD
 
 namespace range_layer {
 
 /*===========================================================
   decorator builder range
+
+* A range with more then 2 types means multiple decorators
+  are being used.
 ===========================================================*/
 template
 < typename Range
@@ -19,14 +22,7 @@ template
 , typename T
 , typename... Ts
 >
-class range<Range, Decorator, T, Ts...>
-: public range<range<Range, Decorator>, T, Ts...>
-{
+class range<Range, Decorator, T, Ts...>;
 
-public:
-
-range (Range, Decorator) : 
-
-}; //-------------------------------------------------builder
 } //----------------------------------------------range layer
 #endif
