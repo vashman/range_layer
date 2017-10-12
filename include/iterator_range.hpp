@@ -13,6 +13,29 @@
 
 namespace range_layer {
 
+template <typename Iterator, typename Sentinal>
+class range<Iterator, Sentinal> {
+
+public:
+
+using write_type
+  = typename std::iterator_traits<Iter>::value_type;
+
+explicit range (Iterator _iter, Sentinal _sen) : iter {_iter}, sen {_sen}{}
+void advance();
+void reverse();
+typename std::iterator_traits<Iter>::reference read() const{return *this->iter;}
+void write(const std::iterator_traits<Iter>::reference _var){*this->iter = _var;}
+bool has_readable() const {return this->iter != this->sen;}
+bool has_writable() const {return this->has_readable();}
+
+private:
+
+Iterator iter;
+Sentinal sen;
+
+};
+
 template <
   typename Iter
 , typename IterEnd = Iter

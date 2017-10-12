@@ -5,8 +5,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_BITS_RANGE_VECTOR_RANGE_HPP
-#define RANGE_LAYER_BITS_RANGE_VECTOR_RANGE_HPP
+#ifndef RANGE_LAYER_BITS_RANGE_VECTOR_HPP
+#define RANGE_LAYER_BITS_RANGE_VECTOR_HPP
 
 #include <vector>
 #include "range.hpp"

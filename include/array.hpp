@@ -5,13 +5,4 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_ARRAY_RANGE_HPP
-#define RANGE_LAYER_ARRAY_RANGE_HPP
-
-#include <cstddef>
-#include <array>
-#include "range_traits.hpp"
-#include "bits/decor/extend_life.hpp"
-#include "bits/range/array_range.hpp"
-
-#endif
+#include "bits/range/array.hpp"

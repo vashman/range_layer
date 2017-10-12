@@ -15,7 +15,7 @@ using range_layer::iota;
 //using range_layer::next;
 //using range_layer::prev;
 
-int main (int arc, char** argv){
+int main (int argc, char** argv){
 auto rng = make_range(iota<int>{0});
 
 assert(has_readable(rng));

@@ -10,18 +10,11 @@
 #include "../include/range.hpp"
 
 using std::array;
-using range_layer::range;
-using range_layer::has_readable;
-using range_layer::has_writable;
-using range_layer::write;
-using range_layer::read;
-using range_layer::next;
-using range_layer::prev;
-using range_layer::advance;
-using range_layer::reverse;
+using range_layer::make_range;
 
-int main (){
-auto rng = range(array<int, 5> {{0, 1, 2, 3, 4}});
+int main (int argc, char** argv){
+
+auto rng = make_range(array<int, 5> {{0, 1, 2, 3, 4}});
 
 int temp;
 

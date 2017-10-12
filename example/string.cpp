@@ -11,12 +11,13 @@
 
 using std::string;
 using range_layer::fill;
-using range_layer::range;
+using range_layer::make_range;
 using range_layer::execution_policy::sequenced;
 
 int main (){
 string var {"Here is a string."};
-fill(sequenced{}, range(var), 'A');
 
+auto rng = make_range(var);
+fill(sequenced{}, rng, 'A');
 return 0;
 }

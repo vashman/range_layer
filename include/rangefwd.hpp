@@ -25,6 +25,7 @@
 //#include "bits/range/decorator.fwd"
 #include "bits/range/iota.fwd"
 #include "bits/range/generate.fwd"
+#include "bits/range/pointer.fwd"
 
 /*===========================================================
   Decorators

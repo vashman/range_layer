@@ -378,10 +378,8 @@ start_of (
   Range && _range
 ){
 bits::range_assert<Range>();
-bits::write_assert<Range>();
-bits::read_assert<Range>();
 bits::reversible_assert<Range>();
-bits::position_assert<Range>();
+//bits::position_assert<Range>();
 
   while (
      range_layer::has_readable(_range)
@@ -399,7 +397,7 @@ void
 start_of_output (
   Range && _range
 ){
-bits::write_assert<Range>();
+bits::range_assert<Range>();
 bits::write_assert<Range>();
 bits::reversible_assert<Range>();
 bits::position_assert<Range>();
