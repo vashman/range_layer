@@ -38,7 +38,7 @@ explicit range(const T * _ptr) : range<const T * const> {_ptr}{}
   pointer const range
 ===========================================================*/
 template <typename T>
-class range <T * const> : range<const T * const> {
+class range <T * const> : public range<const T * const> {
 
 public:
 
@@ -62,7 +62,7 @@ T * const handle;
   const pointer const range
 ===========================================================*/
 template <typename T>
-class range <T * const> {
+class range <const T * const> {
 
 using read_type = typename std::remove_pointer<T>::type;
 
@@ -81,7 +81,7 @@ private:
 const T * const c_handle;
 bool is_end;
 
-}; //-------------------------------------pointer const range
+}; //-------------------------------const pointer const range
 } //----------------------------------------------range layer
 #endif
 #include "pointer.tcc"

@@ -6,24 +6,30 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <cassert>
-#include <vector>
 #include <iostream>
-#include "../include/algorithm.hpp"
-#include "../include/iterator_range.hpp"
-#include "../include/stream.hpp"
+#include "../include/range.hpp"
 
-using std::vector;
-using range_layer::make_iterator_range;
-using range_layer::range;
+using range_layer::make_range;
+using range_layer::enable_range::iterator;
 
 int main (){
-vector<char> vec {'0', '1', '2', '3', '4'};
+int arr[10] = {1,2,3,4,5,6,7,8,9,10};
 
-write (
-  range_layer::execution_policy::sequenced {}
-, range(std::cout)
-, make_iterator_range(begin(vec), end(vec))
+auto rng = make_range (
+  std::begin(arr)
+, iterator<decltype(std::end(arr))>{std::end(arr)}
 );
+
+assert(has_writable(rng));
+rng.write(12);
+rng.advance();
+assert(has_writable(rng));
+rng.write(13);
+rng.advance();
+
+for (auto x : arr){
+std::cout << "arr is: " << x << std::endl;
+}
 
 return 0;
 }

@@ -9,7 +9,7 @@
 #define RANGE_LAYER_BITS_ALGO_BASIC_FWD
 
 #include <type_traits>
-#include "../range_traits.fwd"
+#include "../traits.fwd"
 
 namespace range_layer {
 

@@ -8,7 +8,7 @@
 #ifndef RANGE_LAYER_RANGEFWD_HPP
 #define RANGE_LAYER_RANGEFWD_HPP
 
-#include "bits/range_traits.fwd"
+#include "bits/traits.fwd"
 
 /*===========================================================
   Algorithm
@@ -20,12 +20,18 @@
 ===========================================================*/
 #include "bits/range/range.fwd"
 #include "bits/range/empty.fwd"
-#include "bits/range/default.fwd"
-#include "bits/range/smart_pointer.fwd"
-//#include "bits/range/decorator.fwd"
-#include "bits/range/iota.fwd"
-#include "bits/range/generate.fwd"
 #include "bits/range/pointer.fwd"
+#include "bits/range/default.fwd"
+#include "bits/range/unique_ptr.fwd"
+#include "bits/range/shared_ptr.fwd"
+
+/*-----------------------------------------------------------
+  Concept Range
+-----------------------------------------------------------*/
+#include "bits/range/decor/iterator.fwd"
+//#include "bits/range/decorator.fwd"
+//#include "bits/range/iota.fwd"
+//#include "bits/range/generate.fwd"
 
 /*===========================================================
   Decorators

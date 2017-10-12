@@ -9,7 +9,7 @@
 #define RANGE_LAYER_BITS_RANGE_DEFAULT_HPP
 
 #include "default.fwd"
-#inlcude "pointer.hpp"
+#include "pointer.hpp"
 
 namespace range_layer {
 
