@@ -9,5 +9,6 @@
 #define RANGE_LAYER_BITS_RANGE_DEFAULT_FWD
 
 #include "range.fwd"
+#include "pointer.fwd"
 
 #endif
