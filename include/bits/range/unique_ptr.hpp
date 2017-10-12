@@ -9,6 +9,7 @@
 #define RANGE_LAYER_BITS_RANGE_UNIQUE_POINTER_HPP
 
 #include "unique_ptr.fwd"
+#include "pointer.hpp"
 
 namespace range_layer {
 

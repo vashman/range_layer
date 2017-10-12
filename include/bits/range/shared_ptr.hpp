@@ -9,6 +9,7 @@
 #define RANGE_LAYER_BITS_SHARED_PTR_HPP
 
 #include "shared_ptr.fwd"
+#include "pointer.hpp"
 
 namespace range_layer {
 
