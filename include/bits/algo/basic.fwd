@@ -13,337 +13,237 @@
 
 namespace range_layer {
 
-/*===========================================================
-  read
-===========================================================*/
-template <typename Range>
-decltype(auto)
-read (
-  Range &&
-);
+/*==============================================================================
+  Tag
 
-/*===========================================================
-  write
-===========================================================*/
-template <typename Range, typename T>
-void
-write (
-  Range &&
-, T const &
-);
+* Creates a type for both version of the tag.
+* True tag exits, false tag does not exist.
+* For the tag to not exist it has to be known, and thus must exist.
+==============================================================================*/
+template <typename... Ts> struct tag {};
+template <typename... Ts> struct tag <std::true_type, Ts...>{};
+template <typename... Ts> struct tag <std::false_type, Ts...>{};
 
-/*===========================================================
-  advance
-===========================================================*/
-template <typename Range, typename... Ranges>
-void
-advance (
-  Range &&
-, Ranges &&...
-);
+/*==============================================================================
+  Basic Range Operations
 
-/*===========================================================
-  reverse
-===========================================================*/
-template <typename Range, typename... Ranges>
-void
-reverse (
-  Range &&
-, Ranges &&...
-);
+# Template Types
+1. R = Range
+2. N = Natural number of any size.
+3. T = Element
+==============================================================================*/
+
+/*==============================================================================
+  Non-Modifing
+
+All non-modifing functions cannot;
+* transverse the range.
+* modify the elements in the range.
+* resize the range.
+
+# ```const auto & read (const R &, N)```
+## Pre-Conditions
+## Effects
+## Post-Conditions
+## Requires
+## Throws
+## Exception Safty
+## Returns
+
+* Same as read(R, (position(R)+read_size(R)-1)) when only read
+- It may not move the type, but return a copy.
+- Will transverse the range once with read(const R&).
+
+# ```decltype(auto) size (const R &)```
+* The size can only change when extending or shrinknig the
+  range. Otherwise the range is invalidated.
+
+## Pre-Conditions
+## Effects
+## Post-Conditions
+## Requires
+* The size can only change when extending or shrinking the range.
+  Otherwise the range is invalidated.
+
+## Throws
+* Never throws.
+
+## Exception Safty
+* Safe as long as range is not modified when calling function.
+
+## Returns
+* Natural number representing the total size of the range.
+* For infinite ranges
+
+# ```decltype(auto) position (const R &)```
+* UB to call once the range has ended.
+* The position starts at zero.
+
+## Pre-Conditions
+## Effects
+## Post-Conditions
+## Requires
+## Throws
+* Never throws.
+
+## Exception Safty
+* UB to call once the range has ended.
+
+## Returns
+* The natural number representing the postion.
+* The position starts at the eqivilent of zero.
+
+# ```decltype(auto) read_size (const R &)```
+## Pre-Conditions
+## Effects
+## Post-Conditions
+## Requires
+## Throws
+## Exception Safty
+
+## Returns
+* Returns the size of the readable block.
+
+# ```decltype(auto) write_size (const R &)```
+## Pre-Conditions
+## Effects
+## Post-Conditions
+## Requires
+## Throws
+## Exception Safty
+
+## Returns
+* Returns the size of the writable block.
+==============================================================================*/
+template <typename R>             bool           has_input    (const R &);
+template <typename R>             bool           has_output   (const R &);
+template <typename R>             bool           has_io       (const R &);
+template <typename R>             decltype(auto) size         (const R &);
+template <typename R>             decltype(auto) position     (const R &);
+template <typename R>             decltype(auto) read_size    (const R &);
+template <typename R>             decltype(auto) write_size   (const R &);
+template <typename R>             decltype(auto) rw_size      (const R &);
+template <typename R, typename N> const auto &   read         (const R &, N);
 
 namespace bits {
 
-/*===========================================================
-  advance_n
+template <typename R> bool           has_input  (const R &, const tag<std::true_type,  is_synced<R>>);
+template <typename R> bool           has_input  (const R &, const tag<std::false_type, is_synced<R>>);
+template <typename R> bool           has_output (const R &, const tag<std::true_type,  is_synced<R>>);
+template <typename R> bool           has_output (const R &, const tag<std::false_type, is_synced<R>>);
+template <typename R> bool           has_io     (const R &, const tag<std::true_type,  is_synced<R>>);
+template <typename R> bool           has_io     (const R &, const tag<std::false_type, is_synced<R>>);
+template <typename R> decltype(auto) read_size  (const R &, const tag<std::true_type,  is_synced<R>>);
+template <typename R> decltype(auto) read_size  (const R &, const tag<std::false_type, is_synced<R>>);
+template <typename R> decltype(auto) write_size (const R &, const tag<std::true_type,  is_synced<R>>);
+template <typename R> decltype(auto) write_size (const R &, const tag<std::false_type, is_synced<R>>);
+template <typename R> decltype(auto) rw_size    (const R &, const tag<std::true_type,  is_synced<R>>);
+template <typename R> decltype(auto) rw_size    (const R &, const tag<std::false_type, is_synced<R>>);
 
-* Enabled when the type is linear.
-===========================================================*/
-template
-< typename Range
-, typename N
-, typename std::enable_if
-  <range_trait::is_linear<Range>::value, int>::type = 0
->
-void
-advance_n (
-  N const
-, Range &&
-);
+} //------------------------------------------------------------------------bits
 
-/*===========================================================
-  advance_n
+/*==============================================================================
+  Modify Element
 
-* Enabled when the type is not linear.
-===========================================================*/
-template
-< typename Range
-, typename N
-, typename std::enable_if
-  <! range_trait::is_linear<Range>::value, int>::type = 0
->
-void
-advance_n (
-  N const
-, Range &&
-);
+# ```R erase (R)```
+## 
+## Returns
+* The range.
 
-/*===========================================================
-  reverse_n
+# ```R drain (R, T&)```
+## Pre-Conditions
+## Effects
+## Post-Conditions
+* Same as calling next.
 
-* Enabled when the type is not linear.
-===========================================================*/
-template <
-  typename Range
-, typename N
-, typename std::enable_if
-  <range_trait::is_linear<Range>::value, int>::type = 0 >
-void
-reverse_n (
-  N const
-, Range &&
-);
+## Requires
+## Throws
+## Exception Safty
+## Returns
+* The range.
 
-/*===========================================================
-  reverse_n
+# ```R write (R, T const &)```
+## Post-Conditions
+* Same as calling next.
 
-* Enabled when the type is not linear.
-===========================================================*/
-template <
-  typename Range
-, typename N
-, typename std::enable_if
-  <! range_trait::is_linear<Range>::value, int>::type = 0 >
-void
-reverse_n (
-  N const
-, Range &&
-);
+# ```R emplace (R, Ts &&...)```
+## 
+==============================================================================*/
+template <typename R, typename N, typename... Ts> R write  (R, N, Ts &&...);
+template <typename R, typename T>                 R drain  (R, T &);
+template <typename R, typename... Ts>             R insert (R, Ts &&...);
 
-}
-//-------------------------------------------------------bits
+namespace bits {
 
-/*===========================================================
-  advance_n
-===========================================================*/
-template <typename N, typename Range, typename... Ranges>
-void
-advance_n (
-  N const
-, Range &&
-, Ranges &&...
-);
+//template <typename R, typename T> R drain (R, T&, tag<true, >);
 
-/*===========================================================
-  reverse_n
-===========================================================*/
-template <typename N, typename Range, typename... Ranges>
-void
-reverse_n (
-  N const
-, Range &&
-, Ranges &&...
-);
+} //------------------------------------------------------------------------bits
 
-/*===========================================================
-  next
-===========================================================*/
-template <typename Range>
-Range
-next (
-  Range
-);
+/*==============================================================================
+  Resize
 
-/*===========================================================
-  next
-===========================================================*/
-template <typename Range, typename N>
-Range
-next (
-  N
-, Range
-);
+# ```R clear (R)```
+# ```R expand (R, N)```
+# ```R emplace_next (R, Ts &&...)```
+# ```R emplace_prev (R, Ts &&...)```
+# ```R emplace_front (R, Ts &&...)```
+# ```R emplace_back (R, Ts &&...)```
+==============================================================================*/
+/*template <typename R>                 R erase     (R);
+template <typename R>                 R pop_front (R);
+template <typename R>                 R pop_back  (R);
+template <typename R>                 R clear     (R);
+template <typename R, tpynemae N>     R pop_front (R, N);
+template <typename R, typename N>     R pop_back  (R, N);
+template <typename R, typename N>     R erase     (R, N);
 
-/*===========================================================
-  prev
-===========================================================*/
-template <typename Range>
-Range
-prev (
-  Range
-);
+template <typename R>                 R expand   (R);
+template <typename R, typename N>     R expand   (R, N);
+template <typename R>                 R push_front  (R);
+template <typename R>                 R push_back   (R);
+template <typename R, typename N>     R push_front  (R, N);
+template <typename R, typename N>     R push_back   (R, N);
 
-/*===========================================================
-  prev
-===========================================================*/
-template <typename Range, typename N>
-Range
-prev (
-  N
-, Range
-);
+template <typename R, typename... Ts> R emplace_next  (R, Ts &&...);
+template <typename R, typename... Ts> R emplace_prev  (R, Ts &&...);
+template <typename R, typename... Ts> R emplace_front (R, Ts &&...);
+template <typename R, typename... Ts> R emplace_back  (R, Ts &&...);*/
 
-/*===========================================================
-  has_readable
-===========================================================*/
-template <typename Range>
-bool
-has_readable (
-  Range const &
-);
+/*==============================================================================
+  Transversal
 
-/*===========================================================
-  has_writable
-===========================================================*/
-template <typename Range>
-bool
-has_writable (
-  Range const &
-);
+# ```R next (R)```
+* Change the poistion by +1
+* Same as calling next block 
 
-/*===========================================================
-  size
+# ```R next_block(R)```
+* Change the poistion by + ```auto r_size (const R &)```
 
-* The size can only change when extending or shrinknig the
-  range. Otherwise the range is invalidated.
-===========================================================*/
-template <typename Range>
-typename range_trait::size_type<Range>::type
-size (
-  Range const & _range
-);
+# ```R prev (R)```
+* next & prev 
+==============================================================================*/
+template <typename R>             R next        (R);
+template <typename R>             R prev        (R);
+template <typename R, typename N> R next        (R, N);
+template <typename R, typename N> R prev        (R, N);
 
-/*===========================================================
-  position
+/*template <typename R>             R front       (R);
+template <typename R>             R front_write (R);
+template <typename R>             R front_read  (R);
+template <typename R>             R back        (R);
+template <typename R>             R back_write  (R);
+template <typename R>             R back_read   (R);*/
 
-* UB to call once the range has ended.
-* The position starts at zero.
-===========================================================*/
-template <typename Range>
-typename range_trait::size_type<Range>::type
-position (
-  Range const & _range
-);
+namespace bits {
 
-/*===========================================================
-  end_of
-===========================================================*/
-template <typename Range>
-void
-end_of (
-  Range &&
-);
+template <typename R> struct has_next;
+template <typename R> struct has_prev;
 
-/*===========================================================
-  end_of_output
-===========================================================*/
-template <typename Range>
-void
-end_of_output (
-  Range &&
-);
+template <typename R, typename N> R next (R, N, const tag<std::true_type, bits::has_next<R>>);
+template <typename R, typename N> R next (R, N, const tag<std::false_type, bits::has_next<R>>);
+template <typename R, typename N> R prev (R, N, const tag<std::true_type, bits::has_prev<R>>);
+template <typename R, typename N> R prev (R, N, const tag<std::false_type, bits::has_prev<R>>);
 
-/*===========================================================
-  end_of_input
-===========================================================*/
-template <typename Range>
-void
-end_of_input (
-  Range &&
-);
-
-/*===========================================================
-  start_of
-===========================================================*/
-template <typename Range>
-void
-start_of (
-  Range &&
-);
-
-/*===========================================================
-  start_of_output
-===========================================================*/
-template <typename Range>
-void
-start_of_output (
-  Range &&
-);
-
-/*===========================================================
-  start_of_input
-===========================================================*/
-template <typename Range>
-void
-start_of_input (
-  Range &&
-);
-
-/*===========================================================
-  shrink
-===========================================================*/
-template <typename Range, typename N>
-void
-shrink (
-  Range &&
-, N
-);
-
-/*===========================================================
-  erase
-===========================================================*/
-template <typename Range>
-void
-erase (
-  Range &&
-);
-
-/*===========================================================
-  erase_all
-===========================================================*/
-template <typename Range>
-void
-erase_all (
-  Range &&
-);
-
-/*===========================================================
-  insert
-===========================================================*/
-template <typename Range, typename... Args>
-void
-insert (
-  Range &&
-, Args &&...
-);
-
-/*===========================================================
-  expand
-===========================================================*/
-template <typename Range, typename N>
-void
-expand (
-  Range &&
-, N
-);
-
-/*===========================================================
-  save
-===========================================================*/
-template <typename Range>
-Range
-save (
-  Range const &
-);
-
-/*===========================================================
-  copy
-===========================================================*/
-template <typename T>
-constexpr T
-copy (
-  T
-);
-
-} //----------------------------------------------range layer
+} //------------------------------------------------------------------------bits
+} //-----------------------------------------------------------------range layer
 #endif

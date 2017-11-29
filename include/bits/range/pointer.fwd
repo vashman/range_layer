@@ -12,17 +12,10 @@
 
 namespace range_layer {
 
-template <typename T>
-class range <T *>;
-
-template <typename T>
-class range <const T *>;
-
-template <typename T>
-class range <T * const>;
-
-template <typename T>
-class range <const T * const>;
+template <typename T> class range <T *>;
+template <typename T> class range <const T *>;
+template <typename T> class range <volatile T *>;
+template <typename T> class range <const volatile T *>;
 
 } //----------------------------------------------range layer
 #endif

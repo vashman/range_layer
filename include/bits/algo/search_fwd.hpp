@@ -10,6 +10,10 @@
 
 namespace range_layer {
 
+template <typename R, typename T> bool find        (const R &, T const &);
+template <typename R, typename P> bool find_if     (const R &, P);
+template <typename R, typename P> bool find_if_not (const R &, P);
+
 /*===========================================================
   find #4
 
@@ -18,26 +22,16 @@ namespace range_layer {
 * If the range has temporary input, the element cannot be
   read again.
 ===========================================================*/
-template<typename Range, typename T>
-Range
-find (
-  execution_policy::sequenced
-, Range
-, T const &
-);
+template<typename R, typename T>
+bool find (execution_policy::sequenced, const R &, T const &);
 
 /*===========================================================
   find #3
 
 * parallel
 ===========================================================*/
-template<typename Range, typename T>
-Range
-find (
-  execution_policy::parallel
-, Range
-, T const &
-);
+template<typename R, typename T>
+bool find (execution_policy::parallel, cnost R &, T const &);
 
 /*===========================================================
   find #2

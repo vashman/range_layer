@@ -10,9 +10,9 @@
 
 #include "bits/traits.fwd"
 
-/*===========================================================
+/*==============================================================================
   Algorithm
-===========================================================*/
+==============================================================================*/
 #include "bits/algo/basic.fwd"
 
 /*===========================================================
@@ -20,15 +20,16 @@
 ===========================================================*/
 #include "bits/range/range.fwd"
 #include "bits/range/empty.fwd"
-#include "bits/range/pointer.fwd"
-#include "bits/range/default.fwd"
-#include "bits/range/unique_ptr.fwd"
-#include "bits/range/shared_ptr.fwd"
+//#include "bits/range/pointer.fwd"
+//#include "bits/range/default.fwd"
+//#include "bits/range/unique_ptr.fwd"
+//#include "bits/range/shared_ptr.fwd"
 
 /*-----------------------------------------------------------
   Concept Range
 -----------------------------------------------------------*/
-#include "bits/range/decor/iterator.fwd"
+//#include "bits/range/decor/iterator.fwd"
+//#include "bits/range/decor/smart_pointer.fwd"
 //#include "bits/range/decorator.fwd"
 //#include "bits/range/iota.fwd"
 //#include "bits/range/generate.fwd"

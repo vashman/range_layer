@@ -9,11 +9,11 @@
 #define RANGE_LAYER_RANGE_HPP
 
 #include "rangefwd.hpp"
-#include "bits/traits.hpp"
+#include "traits.hpp"
 
-/*===========================================================
+/*==============================================================================
   Algorithm
-===========================================================*/
+==============================================================================*/
 #include "bits/algo/basic.hpp"
 
 /*===========================================================
@@ -21,15 +21,16 @@
 ===========================================================*/
 #include "bits/range/range.hpp"
 #include "bits/range/empty.hpp"
-#include "bits/range/pointer.hpp"
-#include "bits/range/default.hpp"
-#include "bits/range/unique_ptr.hpp"
-#include "bits/range/shared_ptr.hpp"
+//#include "bits/range/pointer.hpp"
+//#include "bits/range/default.hpp"
+//#include "bits/range/unique_ptr.hpp"
+//#include "bits/range/shared_ptr.hpp"
 
 /*-----------------------------------------------------------
   Concept Range
 -----------------------------------------------------------*/
-#include "bits/range/decor/iterator.hpp"
+//#include "bits/range/decor/iterator.hpp"
+//#include "bits/range/decor/smart_pointer.hpp"
 //#include "bits/range/decorator.hpp"
 //#include "bits/range/iota.hpp"
 //#include "bits/range/generate.hpp"

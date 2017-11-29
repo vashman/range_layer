@@ -10,30 +10,25 @@
 
 namespace range_layer {
 
+/*===========================================================
+  Range
+
+# ```class range```
+
+# ```make_range```
+* Does not deduce pointer ranges correctly.
+
+# ```class base_from_member```
+===========================================================*/
+template <typename... Ts> class range;
+
+template <typename... Ts> range<Ts...> make_range (Ts...);
+
 namespace bits {
 
-/*===========================================================
-  base_from_member
-===========================================================*/
-template <typename T>
-struct base_from_member;
+template <typename T> struct base_from_member;
 
 } //-----------------------------------------------------bits
-
-/*===========================================================
-  range
-===========================================================*/
-template <typename... Ts>
-class range;
-
-/*===========================================================
-  make_range
-
-* Does not deduce pointer ranges correctly.
-===========================================================*/
-template <typename... Ts>
-range<Ts...> make_range (Ts...);
-
 } //----------------------------------------------range layer
 #endif
 #include "range.tcc"

@@ -5,37 +5,31 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_BITS_EMPTY_TCC
-#define RANGE_LAYER_BITS_EMPTY_TCC
+#ifndef RANGE_LAYER_BITS_RANGE_DECOR_SMART_POINTER_FWD
+#define RANGE_LAYER_BITS_RANGE_DECOR_SMART_POINTER_FWD
 
 namespace range_layer {
 
-/*===========================================================
-  size
-===========================================================*/
-constexpr std::size_t
-range<>::size (
-) const {
-return 0;
-}
+namespace enable_range {
 
 /*===========================================================
-  position
+  smart_pointer
 ===========================================================*/
-constexpr std::size_t
-range<>::position (
-) const {
-return 0;
-}
+struct smart_pointer;
+
+} //---------------------------------------------enable range
 
 /*===========================================================
-  next
+  const range
 ===========================================================*/
-void
-range<>::next (
-) const {
-throw;
-}
+template <typename Pointer>
+class range <Pointer, const enable_range::smart_pointer>;
+
+/*===========================================================
+  range
+===========================================================*/
+template <typename Pointer>
+class range <Pointer, enable_range::smart_pointer>;
 
 } //----------------------------------------------range layer
 #endif

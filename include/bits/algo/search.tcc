@@ -13,16 +13,18 @@ namespace range_layer {
 /*===========================================================
   find if #4
 ===========================================================*/
-template <typename Range, typename Pred>
-Range
+template <typename R, typename P>
+bool
 find_if (
   execution_policy::sequenced
-, Range _range
-, Pred _pred
+, const R & _range
+, P _pred
 ){
-  for (; has_readable(_range); advance(_range))
-    if (_pred(read(_range))) break;
-return _range;
+  while (has_readable(_range)){
+    if ( _pred(read(_range)) )
+    return true;
+  }
+return false;
 }
 
 /*===========================================================
@@ -103,16 +105,16 @@ find_if_not (
 /*===========================================================
   find if not #1
 ===========================================================*/
-template <typename Range, typename Pred>
-Range
+template <typename R, typename P>
+bool
 find_if_not (
   execution_policy::sequenced
-, Range _range
-, Pred _pred
+, const R & _range
+, P _pred
 ){
-  for (; has_readable(_range); advance(_range))
-    if (! _pred(read(_range))) break;
-return _range;
+  while (has_readable(_range))
+    if ( !_pred(read(_range)) ) return true;
+return false;
 }
 
 /*===========================================================

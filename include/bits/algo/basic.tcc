@@ -8,321 +8,212 @@
 #ifndef RANGE_LAYER_BITS_ALGO_BASIC_TCC
 #define RANGE_LAYER_BITS_ALGO_BASIC_TCC
 
-#include "asserts.hpp"
+//#include "asserts.hpp"
+#include <memory>
 
 namespace range_layer {
 
-/*===========================================================
+/*==============================================================================
   read
-===========================================================*/
-template <typename Range>
-decltype(auto)
+==============================================================================*/
+template <typename R>
+const auto &
 read (
-  Range && _range
+  R const & _range
 ){
-bits::range_assert<Range>();
-bits::read_assert<Range>();
-
 return _range.read();
 }
 
-/*===========================================================
+/*==============================================================================
+  drain
+==============================================================================*/
+template <typename R, typename T>
+R
+drain (
+  R _range
+, T & _var
+){
+_range.drain(_var);
+return _range;
+}
+
+/*==============================================================================
   write
-===========================================================*/
-template <typename Range, typename T>
-void
+==============================================================================*/
+template <typename R, typename... Ts>
+R
 write (
-  Range && _range
-, T const & _var
+  R _range
+, Ts &&... _var
 ){
-bits::range_assert<Range>();
-bits::write_assert<Range>();
-
-_range.write(_var);
-}
-
-/*===========================================================
-  advance
-===========================================================*/
-template <typename Range, typename... Ranges>
-void
-advance (
-  Range && _range
-, Ranges &&... _ranges
-){
-bits::range_assert<Range>();
-
-_range.advance();
-void* list[] = {0, (static_cast<void*>(&(_ranges.advance())))...};
-}
-
-/*===========================================================
-  reverse
-===========================================================*/
-template <typename Range, typename... Ranges>
-void
-reverse (
-  Range && _range
-, Ranges &&... _ranges
-){
-bits::range_assert<Range>();
-bits::reversible_assert<Range>();
-
-_range.reverse();
-void* list[] = {0, (static_cast<void*>(&(_ranges.reverse())))...};
-}
-
-namespace bits {
-
-/*===========================================================
-  advance_n
-
-* Enabled when the type is linear.
-===========================================================*/
-template
-< typename Range
-, typename N
-, typename std::enable_if
-  <range_trait::is_linear<Range>::value, int>::type
->
-void
-advance_n (
-  N const _n
-, Range && _range
-){
-bits::range_assert<Range>();
-
-N count = _n;
-while (0 != count--) _range.advance();
-}
-
-/*===========================================================
-  advance_n
-
-* Enabled when the type is not linear.
-===========================================================*/
-template
-< typename Range
-, typename N
-, typename std::enable_if
-  <! range_trait::is_linear<Range>::value, int>::type
->
-void
-advance_n (
-  N const _n
-, Range && _range
-){
-bits::range_assert<Range>();
-
-_range.advance_n(_n);
-}
-
-/*===========================================================
-  reverse_n
-
-* Enabled when the type is not linear.
-===========================================================*/
-template <
-  typename Range
-, typename N
-, typename std::enable_if
-  <range_trait::is_linear<Range>::value, int>::type >
-void
-reverse_n (
-  N const _n
-, Range && _range
-){
-bits::range_assert<Range>();
-bits::reversible_assert<Range>();
-
-N count = _n;
-while (0 != count--) _range.reverse();
-}
-
-/*===========================================================
-  reverse_n
-
-* Enabled when the type is not linear.
-===========================================================*/
-template <
-  typename Range
-, typename N
-, typename std::enable_if
-  <! range_trait::is_linear<Range>::value, int>::type >
-void
-reverse_n (
-  N const _n
-, Range && _range
-){
-bits::range_assert<Range>();
-bits::reversible_assert<Range>();
-
-_range.reverse_n(_n);
-}
-
-} //-----------------------------------------------------bits
-
-/*===========================================================
-  advance_n
-===========================================================*/
-template <typename N, typename Range, typename... Ranges>
-void
-advance_n (
-  N const _n
-, Range && _range
-, Ranges &&... _ranges
-){
-bits::range_assert<Range>();
-
-bits::advance_n(_n, _range);
-void* list[] = {0, (bits::advance_n(_n, _ranges), 0)...};
-}
-
-/*===========================================================
-  reverse_n
-===========================================================*/
-template <typename N, typename Range, typename... Ranges>
-void
-reverse_n (
-  N const _n
-, Range && _range
-, Ranges &&... _ranges
-){
-bits::range_assert<Range>();
-bits::reversible_assert<Range>();
-
-bits::reverse_n(_n, _range);
-void* list[] = {0, (bits::reverse_n(_n, _ranges),0)...};
-}
-
-/*===========================================================
-  next
-===========================================================*/
-template <typename Range>
-Range
-next (
-  Range _range
-){
-bits::range_assert<Range>();
-
-advance(_range);
+_range.write(_var...);
 return _range;
 }
 
-/*===========================================================
-  next
-===========================================================*/
-template <typename Range, typename N>
-Range
-next (
-  N _n
-, Range _range
+/*==============================================================================
+  insert
+==============================================================================*/
+template <typename R, typename... Ts>
+R
+insert (
+  R _range
+, Ts &&... _var
 ){
-bits::range_assert<Range>();
-
-advance_n(_n, _range);
+_range.insert(std::forward<Ts...>(_var...));
 return _range;
 }
 
-/*===========================================================
-  prev
-===========================================================*/
-template <typename Range>
-Range
-prev (
-  Range _range
-){
-bits::range_assert<Range>();
-bits::reversible_assert<Range>();
-
-reverse(_range);
-return _range;
-}
-
-/*===========================================================
-  prev
-===========================================================*/
-template <typename Range, typename N>
-Range
-prev (
-  N _n
-, Range _range
-){
-bits::range_assert<Range>();
-bits::reversible_assert<Range>();
-
-reverse_n(_n, _range);
-return _range;
-}
-
-/*===========================================================
-  has_readable
-===========================================================*/
-template <typename Range>
+/*==============================================================================
+  has_input
+==============================================================================*/
+template <typename R>
 bool
-has_readable (
-  Range const & _range
+has_input (
+  R const & _range
 ){
-bits::range_assert<Range>();
-bits::read_assert<Range>();
-
-return _range.has_readable();
+return bits::has_input(_range, tag<typename is_synced<R>::type, is_synced<R>>{});
 }
 
-/*===========================================================
-  has_writable
-===========================================================*/
-template <typename Range>
+/*==============================================================================
+  has_output
+==============================================================================*/
+template <typename R>
 bool
-has_writable (
-  Range const & _range
+has_output (
+  R const & _range
 ){
-bits::range_assert<Range>();
-bits::write_assert<Range>();
-
-return _range.has_writable();
+return bits::has_output(_range, tag<typename is_synced<R>::type, is_synced<R>>{});
 }
 
-/*===========================================================
+/*==============================================================================
+  has_io
+==============================================================================*/
+template <typename R>
+bool
+has_io (
+  R const & _range
+){
+return bits::has_io(_range, tag<typename is_synced<R>::type, is_synced<R>>{});
+}
+
+/*==============================================================================
+  next
+==============================================================================*/
+template <typename R>
+R
+next (
+  R _range
+){
+_range.next();
+return _range;
+}
+
+/*==============================================================================
+  prev
+==============================================================================*/
+template <typename R>
+R
+prev (
+  R _range
+){
+_range.prev();
+return _range;
+}
+
+/*==============================================================================
+  next (R, N)
+==============================================================================*/
+template <typename R, typename N>
+R
+next (
+  R _range
+, N _n
+){
+return bits::next (
+  std::move(_range)
+, std::move(_n)
+, tag<typename bits::has_next<R>::type, bits::has_next<R>>{}
+);
+}
+
+/*==============================================================================
+  prev (R, N)
+==============================================================================*/
+template <typename R, typename N>
+R
+prev (
+  R _range
+, N _n
+){
+return bits::prev (
+  std::move(_range)
+, std::move(_n)
+, tag<typename bits::has_prev<R>::type, bits::has_prev<R>>{}
+);
+}
+
+/*==============================================================================
+  read_size
+==============================================================================*/
+template <typename R>
+decltype(auto)
+read_size (
+  R const & _range
+){
+return bits::read_size(_range, tag<typename is_synced<R>::type, is_synced<R>>{});
+}
+
+/*==============================================================================
+  write_size
+==============================================================================*/
+template <typename R>
+decltype(auto)
+write_size (
+  R const & _range
+){
+return bits::write_size(_range, tag<typename is_synced<R>::type, is_synced<R>>{});
+}
+
+/*==============================================================================
+  rw_size
+==============================================================================*/
+template <typename R>
+decltype(auto)
+rw_size (
+  R const & _range
+){
+return bits::rw_size(_range, tag<typename is_synced<R>::type, is_synced<R>>{});
+}
+
+/*==============================================================================
   size
-
-* The size can only change when extending or shrinknig the
-  range. Otherwise the range is invalidated.
-===========================================================*/
-template <typename Range>
-typename range_trait::size_type<Range>::type
+==============================================================================*/
+template <typename R>
+decltype(auto)
 size (
-  Range const & _range
+  R const & _range
 ){
-bits::range_assert<Range>();
-bits::finite_assert<Range>();
-
 return _range.size();
 }
 
-/*===========================================================
+/*==============================================================================
   position
-
-* UB to call once the range has ended.
-* The position starts at zero.
-===========================================================*/
-template <typename Range>
-typename range_trait::size_type<Range>::type
+==============================================================================*/
+template <typename R>
+decltype(auto)
 position (
-  Range const & _range
+  R const & _range
 ){
-bits::range_assert<Range>();
-
 return _range.position();
 }
 
 /*===========================================================
   end_of
 ===========================================================*/
-template <typename Range>
-void
+/*template <typename Range>
+Range
 end_of (
-  Range && _range
+  Range _range
 ){
 bits::range_assert<Range>();
 bits::finite_assert<Range>();
@@ -333,14 +224,15 @@ bits::read_assert<Range>();
      range_layer::has_readable(_range)
   || range_layer::has_writable(_range)
   ){
-  range_layer::advance(_range);
+  _range = range_layer::next(_range);
   }
-}
+return _range;
+}*/
 
 /*===========================================================
   end_of_output
 ===========================================================*/
-template <typename Range>
+/*template <typename Range>
 void
 end_of_output (
   Range && _range
@@ -351,12 +243,12 @@ bits::write_assert<Range>();
 
   while (range_layer::has_writable(_range))
   range_layer::advance(_range);
-}
+}*/
 
 /*===========================================================
   end_of_input
 ===========================================================*/
-template <typename Range>
+/*template <typename Range>
 void
 end_of_input (
   Range && _range
@@ -367,12 +259,12 @@ bits::read_assert<Range>();
 
   while (range_layer::has_readable(_range))
   range_layer::advance(_range);
-}
+}*/
 
 /*===========================================================
   start_of
 ===========================================================*/
-template <typename Range>
+/*template <typename Range>
 void
 start_of (
   Range && _range
@@ -387,12 +279,12 @@ bits::reversible_assert<Range>();
   ){
   range_layer::reverse(_range);
   }
-}
+}*/
 
 /*===========================================================
   start_of_output
 ===========================================================*/
-template <typename Range>
+/*template <typename Range>
 void
 start_of_output (
   Range && _range
@@ -404,12 +296,12 @@ bits::position_assert<Range>();
 
   while (range_layer::has_writable(_range))
   range_layer::reverse(_range);
-}
+}*/
 
 /*===========================================================
   start_of_input
 ===========================================================*/
-template <typename Range>
+/*template <typename Range>
 void
 start_of_input (
   Range && _range
@@ -421,27 +313,28 @@ bits::position_assert<Range>();
 
   while (range_layer::has_readable(_range))
   range_layer::reverse(_range);
-}
+}*/
 
 /*===========================================================
   shrink
 ===========================================================*/
-template <typename Range, typename N>
-void
+/*template <typename Range, typename N>
+Range
 shrink (
-  Range && _range
+  Range _range
 , N _n
 ){
 bits::range_assert<Range>();
 bits::shrinkable_assert<Range>();
 
 _range.shrink(_n);
-}
+return _range;
+}*/
 
 /*===========================================================
   erase
 ===========================================================*/
-template <typename Range>
+/*template <typename Range>
 void
 erase (
   Range && _range
@@ -450,12 +343,12 @@ bits::range_assert<Range>();
 bits::erase_assert<Range>();
 
 _range.erase();
-}
+}*/
 
 /*===========================================================
   erase_all
 ===========================================================*/
-template
+/*template
 < typename Range
 , typename = typename std::enable_if
   <range_trait::is_all_erasable<Range>::value, void>::type
@@ -467,7 +360,7 @@ erase_all (
 bits::range_assert<Range>();
 
 _range.erase_all();
-}
+}*/
 
 /*===========================================================
   erase_all
@@ -491,24 +384,9 @@ return _range;
 }*/
 
 /*===========================================================
-  insert
-===========================================================*/
-template <typename Range, typename... Args>
-void
-insert (
-  Range && _range
-, Args &&... _args
-){
-bits::range_assert<Range>();
-bits::insert_assert<Range>();
-
-_range.insert(std::forward<Args...>(_args...));
-}
-
-/*===========================================================
   expand
 ===========================================================*/
-template <typename Range, typename N>
+/*template <typename Range, typename N>
 void
 expand (
   Range && _range
@@ -517,12 +395,12 @@ expand (
 bits::range_assert<Range>();
 
 _range.expand(_n);
-}
+}*/
 
 /*===========================================================
   save
 ===========================================================*/
-template <typename Range>
+/*template <typename Range>
 Range
 save (
   Range const & _range
@@ -536,18 +414,214 @@ static_assert(
 );
 
 return _range.save();
-}
+}*/
 
-/*===========================================================
-  copy
-===========================================================*/
-template <typename T>
-constexpr T
-copy (
-  T _var
+namespace bits {
+
+/*==============================================================================
+  next (R, N)
+==============================================================================*/
+template <typename R, typename N>
+R
+next (
+  R _range
+, N _n
+, const tag<std::false_type, bits::has_next<R>>
 ){
-return _var;
+  while (0 != _n--){
+  _range = next(std::move(_range));
+  }
+return _range;
 }
 
-} //----------------------------------------------range layer
+/*==============================================================================
+  next (R, N)
+==============================================================================*/
+template <typename R, typename N>
+R
+next (
+  R _range
+, N _n
+, const tag<std::true_type, bits::has_next<R>>
+){
+_range.next(_n);
+return _range;
+}
+
+/*==============================================================================
+  prev (R, N)
+==============================================================================*/
+template <typename R, typename N>
+R
+prev (
+  R _range
+, N _n
+, const tag<std::false_type, bits::has_prev<R>>
+){
+  while (0 != _n--){
+  _range = prev(std::move(_range));
+  }
+return _range;
+}
+
+/*==============================================================================
+  prev (R, N)
+==============================================================================*/
+template <typename R, typename N>
+R
+prev (
+  R _range
+, N _n
+, const tag<std::true_type, bits::has_prev<R>>
+){
+_range.prev(_n);
+return _range;
+}
+
+/*==============================================================================
+  has_input
+==============================================================================*/
+template <typename R>
+bool
+has_input (
+  R const & _range
+, const tag<std::true_type, is_synced<R>>
+){
+return _range.has_io();
+}
+
+/*==============================================================================
+  has_input
+==============================================================================*/
+template <typename R>
+bool
+has_input (
+  R const & _range
+, const tag<std::false_type, is_synced<R>>
+){
+return _range.has_input();
+}
+
+/*==============================================================================
+  has_output
+==============================================================================*/
+template <typename R>
+bool
+has_output (
+  R const & _range
+, const tag<std::true_type, is_synced<R>>
+){
+return _range.has_io();
+}
+
+/*==============================================================================
+  has_output
+==============================================================================*/
+template <typename R>
+bool
+has_output (
+  R const & _range
+, const tag<std::false_type, is_synced<R>>
+){
+return _range.has_output();
+}
+
+/*==============================================================================
+  has_io
+==============================================================================*/
+template <typename R>
+bool
+has_io (
+  R const & _range
+, const tag<std::true_type, is_synced<R>>
+){
+return _range.has_io();
+}
+
+/*==============================================================================
+  has_io
+==============================================================================*/
+template <typename R>
+bool
+has_io (
+  R const & _range
+, const tag<std::false_type, is_synced<R>>
+){
+return (has_input(_range) && has_output(_range));
+}
+
+/*==============================================================================
+  read_size
+==============================================================================*/
+template <typename R>
+decltype(auto)
+read_size (
+  R const & _range
+, const tag<std::true_type, is_synced<R>>
+){
+return _range.rw_size();
+}
+
+/*==============================================================================
+  read_size
+==============================================================================*/
+template <typename R>
+decltype(auto)
+read_size (
+  R const & _range
+, const tag<std::false_type, is_synced<R>>
+){
+return _range.read_size();
+}
+
+/*==============================================================================
+  write_size
+==============================================================================*/
+template <typename R>
+decltype(auto)
+write_size (
+  R const & _range
+, const tag<std::true_type, is_synced<R>>
+){
+return _range.rw_size();
+}
+
+/*==============================================================================
+  write_size
+==============================================================================*/
+template <typename R>
+decltype(auto)
+write_size (
+  R const & _range
+, const tag<std::false_type, is_synced<R>>
+){
+return _range.write_size();
+}
+
+/*==============================================================================
+  rw_size
+==============================================================================*/
+template <typename R>
+decltype(auto)
+rw_size (
+  R const & _range
+, const tag<std::true_type, is_synced<R>>
+){
+return _range.rw_size();
+}
+
+/*==============================================================================
+  rw_size
+==============================================================================*/
+template <typename R>
+decltype(auto)
+rw_size (
+  R const & _range
+, const tag<std::false_type, is_synced<R>>
+){
+return std::min(read_size(_range), write_size(_range));
+}
+
+} //------------------------------------------------------------------------bits
+} //-----------------------------------------------------------------range layer
 #endif

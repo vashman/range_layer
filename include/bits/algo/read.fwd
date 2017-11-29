@@ -1,0 +1,50 @@
+// Read only algorithms
+
+//          Copyright Sundeep S. Sangha 2015 - 2017.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef RANGE_LAYER_ALGO_READ_FWD
+#define RANGE_LAYER_ALGO_READ_FWD
+
+namespace range_layer {
+
+/*==============================================================================
+  Read only algorithms
+
+# Template Types
+1. R = Range
+2. N = size_type<R>::type
+3. P = Predicate
+4. E = Execution Policy
+5. O = Functor / Operation
+==============================================================================*/
+
+template <typename R, typename P>   bool all_of      (const R &, P);
+template <typename R, typename P>   bool none_of     (const R &, P);
+template <typename R, typename P>   bool any_of      (const R &, P);
+template <typename R, typename T>   bool any_is      (const R &, T const &);
+template <typename R, typename T>   bool any_is_not  (const R &, T const &);
+template <typename R1, typename R2> bool equal       (const R1 &, const R2 &);
+template <typename R, typename P>   auto count_if    (const R &, P);
+template <typename R, typename T>   auto count       (const R &, T);
+template <typename R, typename P>   auto count_until (const R &, P);
+template <typename R, typename O>   void for_each    (const R &, O);
+
+template <typename R, typename P>   bool all_of  (execution_policy::sequenced, const R &, P);
+template <typename R, typename P>   bool none_of (execution_policy::sequenced, const R &, P);
+template <typename R, typename P>   bool any_of  (execution_policy::sequenced, const R &, P);
+template <typename R, typename T>   bool any_is  (execution_policy::sequenced, const R &, T const &);
+template <typename R, typename T>   bool any_is_not (execution_policy::sequenced, const R &, T const &);
+template <typename R1, typename R2> bool equal (execution_policy::sequenced, const R1 &, const R2 &);
+template <typename R, typename P>   auto count_if (execution_policy::sequenced, const R &, P);
+template <typename R, typename P>   auto count_until (execution_policy::sequenced, const R &, P);
+template <typename R, typename O>   void for_each (execution_policy::sequenced, const R &, O);
+
+template <typename R, typename T, typename E> auto count (E, const R &, T);
+template <typename R, typename T, typename E> auto count_until (E, const R &, T);
+
+} //-----------------------------------------------------------------range layer
+#endif
+

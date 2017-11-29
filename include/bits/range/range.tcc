@@ -14,8 +14,6 @@ namespace range_layer {
 
 /*===========================================================
   make_range
-
-* Does not deduce pointer ranges correctly.
 ===========================================================*/
 template <typename... Ts>
 range<Ts...>

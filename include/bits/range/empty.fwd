@@ -8,6 +8,12 @@
 #ifndef RANGE_LAYER_BITS_RANGE_EMPTY_FWD
 #define RANGE_LAYER_BITS_RANGE_EMPTY_FWD
 
-#include "range.tcc"
+namespace range_layer {
 
+/*===========================================================
+  empty range
+===========================================================*/
+template <> class range <>;
+
+} //----------range layer
 #endif

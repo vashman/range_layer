@@ -1,0 +1,50 @@
+//
+
+//          Copyright Sundeep S. Sangha 2015 - 2017.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef RANGE_LAYER_BITS_ALGO_WRITE_FWD
+#define RANGE_LAYER_BITS_ALGO_WRITE_FWD
+
+namespace range_layer {
+
+/*==============================================================================
+  fill
+
+# Template Types
+1. R = Range
+2. N = size_type<R>::type
+3. P = Predicate
+4. E = Execution Policy
+5. O = Functor / Operation
+6. C = Count
+==============================================================================*/
+template <typename R, typename T>               R  fill (R, T const &);
+template <typename R, typename T, typename C>   R  fill (R, T const &, C);
+template <typename IR, typename OR>             OR copy (const IR &, OR);
+template <typename IR, typename OR, typename P> OR copy_if (const IR &, OR, P);
+template <typename OR, typename... Ts>          OR write (OR, Ts &&...);
+template <typename IR, typename OR, typename N> OR copy_n (const IR &, OR, N);
+
+template <typename R, typename T>
+R  fill (execution_policy::sequenced, R, T const &);
+
+template <typename R, typename T, typename C>
+R  fill (execution_policy::sequenced, R, T const &, C);
+
+template <typename IR, typename OR>
+OR copy (execution_policy::sequenced, const IR &, OR);
+
+template <typename IR, typename OR, typename P>
+OR copy_if (execution_policy::sequenced, const IR &, OR, P);
+
+template <typename OR, typename T, typename... Ts>
+OR write (execution_policy::sequenced, OR, T const &, Ts &&...);
+
+template <typename IR, typename OR, typename N>
+OR copy_n (execution_policy::sequenced, const IR &, OR, N);
+} //-----------------------------------------------------------------range layer
+#endif
+

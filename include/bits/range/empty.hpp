@@ -12,18 +12,21 @@
 
 namespace range_layer {
 
-/*===========================================================
+/*==============================================================================
   empty range
-===========================================================*/
+
+# ```next```
+* Cannot be called since the range is always empty; has zero effect.
+* Throws to catch bugs.
+==============================================================================*/
 template <>
-class range<> {
+class range <> {
 
 public:
 
-constexpr std::size_t size() const;
-constexpr std::size_t position() const;
-constexpr range<>     save() const;
-void                  advance () const;
+constexpr std::size_t size     () const;
+constexpr std::size_t position () const;
+void                  next     () const;
 
 }; //---------------------------------------------empty range
 

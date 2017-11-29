@@ -5,84 +5,111 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_BITS_RANGE_TRAITS_FWD
-#define RANGE_LAYER_BITS_RANGE_TRAITS_FWD
+#ifndef RANGE_LAYER_BITS_TRAITS_FWD
+#define RANGE_LAYER_BITS_TRAITS_FWD
+
+#include <type_traits>
 
 namespace range_layer {
 
-namespace range_trait {
+/*==============================================================================
+  Traits
 
-/*===========================================================
-  is_range
-===========================================================*/
-template <typename Range>
-struct is_range;
+# ```struct is_range```
+1. True if the range has;
+  1. ```R next (R)```
+  2. ```R (R &&)``` or ```R (const R &)```
 
-/*===========================================================
-  read_type
-===========================================================*/
-template <typename Range>
-struct read_type;
+# ```struct is_synced```
+1. Input & Output have synced transversal.
+2. Range has both input and output functions.
 
-/*===========================================================
-  read_type_t
-===========================================================*/
-template <typename Range>
-using read_type_t = typename read_type<Range>::type;
+# ```struct is_input```
+1. The following function is ...```R drain (R, T&)```?
+2. ```bool has_readable (const R &)```
 
-/*===========================================================
-  write type
-===========================================================*/
-template <typename Range>
-struct write_type;
+# ```struct is_readable```
+1. True if the range has the following valid functions;
+  1. ```T read (const R &)```
+  2. ```auto read_size (const R &)```
 
-/*===========================================================
-  write_type_t
-===========================================================*/
-template <typename Range>
-using write_type_t = typename write_type<Range>::type;
+# ```struct is_output```
+1. True if the range has;
+  1. ```R insert (R, Ts &&...)```
+  2. ```bool has_output (const R &)```
 
-/*===========================================================
-  size_type
-===========================================================*/
-template <typename Range>
-struct size_type;
+# ```struct is_writable```
+1. True if the range has;
+  1. ```R write (R, Ts &&...)```
+  2. ```bool has_writable (const R &)```
 
-/*===========================================================
-  has_position
-===========================================================*/
-template <typename Range>
-struct has_position;
+# ```struct is_next_linear```
+1. True if range has ```R next (R, N)```.
 
-/*===========================================================
-  is_singleton
-===========================================================*/
-template <typename Range>
-struct is_singleton;
+# ```struct is_prev_linear```
+1. True if range has ```R prev (R, N)```.
 
-/*===========================================================
-  is_output
-===========================================================*/
-template <typename Range>
-struct is_output;
+# ```struct is_reversable```
+1. False if the range has ```R prev (R)```.
 
-/*===========================================================
-  is_input
-===========================================================*/
-template <typename Range>
-struct is_input;
+# ```struct is_finite```
+1. True if frange has;
+  1. ```auto size (const R &)```
+  2. ```auto position (const R &)```
 
-/*===========================================================
-  is_reversable
-===========================================================*/
-template <typename Range>
-struct is_reversable;
+# ```struct is_front_shrinkable```
+1. True if range has ```R pop_front (R)```.
 
-/*===========================================================
-  is_linear
-===========================================================*/
-template <typename Range>
-struct is_linear;
+# ```struct is_back_shrinkable```
+1. True if range has ```R pop_back (R)```.
+
+# ```struct is_shrinkable```
+* True if range has ```R erase (R)```.
+
+# ```struct is_expandable```
+* True if range has ```R expand (R, N)```.
+
+# ```struct is_clearable```
+* True if range has ```R clear (R)```.
+
+# ```struct is_front_expandable```
+1. True if range has ```R push_front (R)```.
+
+# ```struct is_back_expandable```
+1. True if range has ```R push_back (R)```.
+
+# Useful standard traits
+* std::is_movable
+* std::is_copable
+* std::is_move_assignment
+* std::is_copy_assignment
+
+
+Phil Test
+1. true tables - fill out / symbolize eng argument
+2. Terminolgy - inerance / best explaination / theroicalt explnation / inductive reasoning
+3. Evelauting reasinng / 5 - testabilty, ffrut, scope, simility, conservatsm (8 - 10 terms)
+  securtizze alteratives (acronym TEST).
+==============================================================================*/
+template <typename R> struct range_type;
+template <typename R> struct is_range;
+template <typename R> struct is_synced;
+template <typename R> struct is_input;
+//template <typename R> struct is_readable;//
+template <typename R> struct is_output;
+//template <typename R> struct is_writable;//
+template <typename R> struct is_next_linear;
+template <typename R> struct is_prev_linear;
+template <typename R> struct is_reversable;
+template <typename R> struct is_finite;
+/*template <typename R> struct is_front_shrinkable;//
+template <typename R> struct is_back_shrinkable;//
+template <typename R> struct is_shrinkable;
+template <typename R> struct is_expandable;
+template <typename R> struct is_clearable;
+template <typename R> struct is_front_expandable;//
+template <typename R> struct is_back_expandable;//*/
+template <typename R> struct is_decorator;
 
 /*===========================================================
   is_shrinkable
@@ -99,8 +126,6 @@ struct is_linear;
   n = 3
   post: | 0| 1|*
 ===========================================================*/
-template <typename Range>
-struct is_shrinkable;
 
 /*===========================================================
   is_erasable
@@ -116,8 +141,6 @@ struct is_shrinkable;
   pre:  | 0| 1| 2| 3|*4
   post: | 0| 1| 2| 3|*
 ===========================================================*/
-template <typename Range>
-struct is_erasable;
 
 /*===========================================================
   is_all_erasable
@@ -130,8 +153,6 @@ struct is_erasable;
   pre:  | 0| 1|*2| 3| 4
   post: *
 ===========================================================*/
-template <typename Range>
-struct is_all_erasable;
 
 /*===========================================================
   is_expandable
@@ -144,8 +165,6 @@ struct is_all_erasable;
   n = 1
   post: | 0| 1|*2| 3| 4| #
 ===========================================================*/
-template <typename Range>
-struct is_expandable;
 
 /*===========================================================
   is_insertable
@@ -157,59 +176,7 @@ struct is_expandable;
   pre:  | 0| 1|*2| 3| 4
   post: | 0| 1|*#| 2| 3| 4
 ===========================================================*/
-template <typename Range>
-struct is_insertable;
 
-/*===========================================================
-  is_finite
-===========================================================*/
-template <typename Range>
-struct is_finite;
-
-namespace input {
-
-/*===========================================================
-  is_temporary
-
-* if true, the read function performs UB when reading to
-  the same postion more than once.
-===========================================================*/
-template <typename Range>
-struct is_temporary;
-
-/*===========================================================
-  is_heterogeneous
-===========================================================*/
-template <typename Range>
-struct is_heterogeneous; 
-
-} //----------------------------------------------------input
-
-namespace output {
-
-/*===========================================================
-  is_heterogeneous
-===========================================================*/
-template <typename Range>
-struct is_heterogeneous; 
-
-} //---------------------------------------------------output
-
-/*===========================================================
-  is_subscriptable
-
-* if true; T& range[n]
-===========================================================*/
-template <typename Range>
-struct is_subscriptable;
-
-/*===========================================================
-  is_decorator
-===========================================================*/
-template <typename Range>
-struct is_decorator;
-
-} //----------------------------------------------range trait
-} //----------------------------------------------range layer
+} //-----------------------------------------------------------------range layer
 #endif
 

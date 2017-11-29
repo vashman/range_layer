@@ -11,4 +11,12 @@
 #include "range.fwd"
 #include "pointer.fwd"
 
+namespace range_layer {
+
+template <typename T> class range <T>;
+template <typename T> class range <const T>;
+template <typename T> class range <volatile T>;
+template <typename T> class range <const volatile T>;
+
+} //----------------------------------------------range layer
 #endif
