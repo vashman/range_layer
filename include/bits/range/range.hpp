@@ -11,20 +11,106 @@
 #include "range.fwd"
 
 namespace range_layer {
-
 namespace bits {
 
-/*===========================================================
+/*==============================================================================
   base_from_member
-===========================================================*/
+==============================================================================*/
 template <typename T>
 struct base_from_member {
 
 T member;
 
-};
+}; //-----------------------------------------------------------base_from_member
+} //------------------------------------------------------------------------bits
 
-} //-----------------------------------------------------bits
+/*==============================================================================
+  empty range
+
+# ```next```
+* Cannot be called since the range is always empty; has zero effect.
+* Throws to catch bugs.
+==============================================================================*/
+template <>
+class range <> {
+
+public:
+
+constexpr std::size_t size     () const;
+constexpr std::size_t position () const;
+void                  next     () const;
+
+}; //----------------------------------------------------------------empty range
+
+/*==============================================================================
+  owned range
+==============================================================================*/
+template <typename T>
+class range <T> : public bits::base_from_member<T>, range<T *> {
+
+public:
+
+explicit range      (T);
+        ~range      ()              = default;
+         range      (const range &) = default;
+         range      (range &&)      = default;
+range &  operator = (const range &) = default;
+range &  operator = (range &&)      = default;
+
+}; //----------------------------------------------------------------owend range
+
+/*==============================================================================
+  owned classed range
+==============================================================================*/
+template <typename T, typename D>
+class range <T, D> : public bits::base_from_member<T>, range<T *, D> {
+
+public:
+
+explicit range      (T, D);
+        ~range      ()              = default;
+         range      (const range &) = default;
+         range      (range &&)      = default;
+range &  operator = (const range &) = default;
+range &  operator = (range &&)      = default;
+
+}; //----------------------------------------------------------------owend range
+
+/*==============================================================================
+  decorator builder range
+==============================================================================*/
+template <typename T, typename D, typename... Ts>
+class range <T, D, Ts...> : public range <range<T, D>, Ts...> {
+
+public:
+
+explicit range      (T, D, Ts...);
+        ~range      ()              = default;
+         range      (const range &) = default;
+         range      (range &&)      = default;
+range &  operator = (const range &) = default;
+range &  operator = (range &&)      = default;
+
+}; //----------------------------------------------------decorator builder range
+
+/*==============================================================================
+  pointer range
+==============================================================================*/
+template <typename T>
+class range <T *>
+: public range <T *, typename range_class::spec<typename std::remove_cv<T>::type>::type>
+{
+
+public:
+
+explicit range      (T *);
+        ~range      ()              = default;
+         range      (const range &) = default;
+         range      (range &&)      = default;
+range &  operator = (const range &) = default;
+range &  operator = (range &&)      = default;
+
+}; //-----------------------------------------pointer range
 
 /*===========================================================
   const_range unique_ptr
@@ -107,3 +193,4 @@ T member;
 } //----------------------------------------------range layer
 #endif
 #include "range.tcc"
+

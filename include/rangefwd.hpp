@@ -19,7 +19,6 @@
   Range
 ===========================================================*/
 #include "bits/range/range.fwd"
-#include "bits/range/empty.fwd"
 //#include "bits/range/pointer.fwd"
 //#include "bits/range/default.fwd"
 //#include "bits/range/unique_ptr.fwd"

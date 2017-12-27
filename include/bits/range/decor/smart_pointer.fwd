@@ -10,26 +10,17 @@
 
 namespace range_layer {
 
-namespace enable_range {
-
-/*===========================================================
-  smart_pointer
-===========================================================*/
-struct smart_pointer;
-
-} //---------------------------------------------enable range
-
 /*===========================================================
   const range
 ===========================================================*/
 template <typename Pointer>
-class range <Pointer, const enable_range::smart_pointer>;
+class range <Pointer, const range_class::smart_pointer>;
 
 /*===========================================================
   range
 ===========================================================*/
 template <typename Pointer>
-class range <Pointer, enable_range::smart_pointer>;
+class range <Pointer, range_class::smart_pointer>;
 
 } //----------------------------------------------range layer
 #endif

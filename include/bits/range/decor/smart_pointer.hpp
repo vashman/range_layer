@@ -43,3 +43,4 @@ explicit range (Pointer);
 } //----------------------------------------------range layer
 #endif
 #include "smart_pointer.tcc"
+

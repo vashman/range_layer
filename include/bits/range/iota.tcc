@@ -13,108 +13,92 @@
 namespace range_layer {
 
 /*===========================================================
-  ctor
+  ctor range<T *>
 ===========================================================*/
 template <typename T>
-range<iota<T> * const>::range (
-  iota<T> * const _ptr
-) : range<const iota<T> * const> {_ptr}
-, handle {_ptr}
+range<T *, range_class::iota>::range (
+  T * _ptr
+)
+: handle {_ptr}
 {}
 
 /*===========================================================
-  ctor
+  ctor range<const T *>
 ===========================================================*/
 template <typename T>
-range<const iota<T> * const>::range (
-  const iota<T> * const _ptr
-) : const_handle {_ptr}
+range<const T *, range_class::iota>::range (
+  const T * _ptr
+)
+: range<const T *, range_class::variable> {_ptr}
 {}
 
-/*===========================================================
+/*================================================================
   read
-===========================================================*/
+
+* Can only have a single postion that is readable.
+* Ignores the index value, completly.
+================================================================*/
 template <typename T>
-T const &
-range<const iota<T> * const>::read (
+const T &
+range<T *, range_class::iota>::read (
+  const T //unsued
 ) const {
-return this->const_handle->var;
+return this->handle;
 }
 
 /*===========================================================
-  advance
+  next
 ===========================================================*/
 template <typename T>
 void
-range<iota<T> * const>::advance (
+range<T *, range_class::iota>::next (
 ){
-++(this->handle->var);
+++(this->handle);
 }
 
 /*===========================================================
-  reverse
+  prev
 ===========================================================*/
 template <typename T>
 void
-range<iota<T> * const>::reverse (
+range<T *, range_class::iota>::prev (
 ){
---(this->handle->var);
-}
-
-/*===========================================================
-  advance_n
-===========================================================*/
-template <typename T>
-void
-range<iota<T> * const>::advance_n (
-  T const & _n
-){
-(this->handle->var) += _n;
-}
-
-/*===========================================================
-  reverse_n
-===========================================================*/
-template <typename T>
-void
-range<iota<T> * const>::reverse_n (
-  T const & _n
-){
-(this->handle->var) -= _n;
+--(this->handle);
 }
 
 /*===========================================================
   size
 ===========================================================*/
 template <typename T>
-typename range<const iota<T> * const>::size_type
-range<const iota<T> * const>::size (
+T
+range<T *, range_class::iota>::size (
 ) const {
-return std::numeric_limits<size_type>::max();
+return std::numeric_limits<T>::max();
 }
 
 /*===========================================================
   position
 ===========================================================*/
 template <typename T>
-typename range<const iota<T> * const>::size_type
-range<const iota<T> * const>::position (
+T
+range<T *, range_class::iota>::position (
 ) const {
-return this->const_handle->var;
+return this->handle;
 }
 
 /*===========================================================
-  has_readable
+  has_io
 ===========================================================*/
 template <typename T>
-bool
-range<const iota<T> * const>::has_readable (
+constexpr bool
+range<T *, range_class::iota>::has_io (
 ) const {
 return !(
-   (std::numeric_limits<T>::max() == this->const_handle->var)
-|| (std::numeric_limits<T>::min() == this->const_handle->var)
+   (std::numeric_limits<T>::max() == *this->handle)
+|| (std::numeric_limits<T>::min() == *this->handle)
 );
 }
 
 } //----------------------------------------------range layer
 #endif
+

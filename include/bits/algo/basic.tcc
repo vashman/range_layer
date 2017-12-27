@@ -19,7 +19,7 @@ namespace range_layer {
 template <typename R>
 const auto &
 read (
-  R const & _range
+  const R & _range
 ){
 return _range.read();
 }
@@ -41,13 +41,36 @@ return _range;
   write
 ==============================================================================*/
 template <typename R, typename... Ts>
-R
+void
 write (
-  R _range
+  R & _range
 , Ts &&... _var
 ){
 _range.write(_var...);
-return _range;
+}
+
+/*==============================================================================
+  swap
+==============================================================================*/
+template <typename R, typename T>
+void
+swap (
+  R & _range
+, T & _var
+){
+_range.swap(_var);
+}
+
+/*==============================================================================
+  write
+==============================================================================*/
+template <typename R, typename... Ts>
+void
+write (
+  R && _range
+, Ts &&... _var
+){
+_range.write(_var...);
 }
 
 /*==============================================================================
@@ -69,7 +92,7 @@ return _range;
 template <typename R>
 bool
 has_input (
-  R const & _range
+  const R & _range
 ){
 return bits::has_input(_range, tag<typename is_synced<R>::type, is_synced<R>>{});
 }
@@ -80,7 +103,7 @@ return bits::has_input(_range, tag<typename is_synced<R>::type, is_synced<R>>{})
 template <typename R>
 bool
 has_output (
-  R const & _range
+  const R & _range
 ){
 return bits::has_output(_range, tag<typename is_synced<R>::type, is_synced<R>>{});
 }
@@ -91,7 +114,7 @@ return bits::has_output(_range, tag<typename is_synced<R>::type, is_synced<R>>{}
 template <typename R>
 bool
 has_io (
-  R const & _range
+  const R & _range
 ){
 return bits::has_io(_range, tag<typename is_synced<R>::type, is_synced<R>>{});
 }
@@ -158,7 +181,7 @@ return bits::prev (
 template <typename R>
 decltype(auto)
 read_size (
-  R const & _range
+  const R & _range
 ){
 return bits::read_size(_range, tag<typename is_synced<R>::type, is_synced<R>>{});
 }
@@ -169,7 +192,7 @@ return bits::read_size(_range, tag<typename is_synced<R>::type, is_synced<R>>{})
 template <typename R>
 decltype(auto)
 write_size (
-  R const & _range
+  const R & _range
 ){
 return bits::write_size(_range, tag<typename is_synced<R>::type, is_synced<R>>{});
 }
@@ -180,7 +203,7 @@ return bits::write_size(_range, tag<typename is_synced<R>::type, is_synced<R>>{}
 template <typename R>
 decltype(auto)
 rw_size (
-  R const & _range
+  const R & _range
 ){
 return bits::rw_size(_range, tag<typename is_synced<R>::type, is_synced<R>>{});
 }
@@ -191,7 +214,7 @@ return bits::rw_size(_range, tag<typename is_synced<R>::type, is_synced<R>>{});
 template <typename R>
 decltype(auto)
 size (
-  R const & _range
+  const R & _range
 ){
 return _range.size();
 }
@@ -202,7 +225,7 @@ return _range.size();
 template <typename R>
 decltype(auto)
 position (
-  R const & _range
+  const R & _range
 ){
 return _range.position();
 }
@@ -484,7 +507,7 @@ return _range;
 template <typename R>
 bool
 has_input (
-  R const & _range
+  const R & _range
 , const tag<std::true_type, is_synced<R>>
 ){
 return _range.has_io();
@@ -496,7 +519,7 @@ return _range.has_io();
 template <typename R>
 bool
 has_input (
-  R const & _range
+  const R & _range
 , const tag<std::false_type, is_synced<R>>
 ){
 return _range.has_input();
@@ -508,7 +531,7 @@ return _range.has_input();
 template <typename R>
 bool
 has_output (
-  R const & _range
+  const R & _range
 , const tag<std::true_type, is_synced<R>>
 ){
 return _range.has_io();
@@ -520,7 +543,7 @@ return _range.has_io();
 template <typename R>
 bool
 has_output (
-  R const & _range
+  const R & _range
 , const tag<std::false_type, is_synced<R>>
 ){
 return _range.has_output();
@@ -532,7 +555,7 @@ return _range.has_output();
 template <typename R>
 bool
 has_io (
-  R const & _range
+  const R & _range
 , const tag<std::true_type, is_synced<R>>
 ){
 return _range.has_io();
@@ -544,7 +567,7 @@ return _range.has_io();
 template <typename R>
 bool
 has_io (
-  R const & _range
+  const R & _range
 , const tag<std::false_type, is_synced<R>>
 ){
 return (has_input(_range) && has_output(_range));
@@ -556,7 +579,7 @@ return (has_input(_range) && has_output(_range));
 template <typename R>
 decltype(auto)
 read_size (
-  R const & _range
+  const R & _range
 , const tag<std::true_type, is_synced<R>>
 ){
 return _range.rw_size();
@@ -568,7 +591,7 @@ return _range.rw_size();
 template <typename R>
 decltype(auto)
 read_size (
-  R const & _range
+  const R & _range
 , const tag<std::false_type, is_synced<R>>
 ){
 return _range.read_size();
@@ -580,7 +603,7 @@ return _range.read_size();
 template <typename R>
 decltype(auto)
 write_size (
-  R const & _range
+  const R & _range
 , const tag<std::true_type, is_synced<R>>
 ){
 return _range.rw_size();
@@ -592,7 +615,7 @@ return _range.rw_size();
 template <typename R>
 decltype(auto)
 write_size (
-  R const & _range
+  const R & _range
 , const tag<std::false_type, is_synced<R>>
 ){
 return _range.write_size();
@@ -604,7 +627,7 @@ return _range.write_size();
 template <typename R>
 decltype(auto)
 rw_size (
-  R const & _range
+  const R & _range
 , const tag<std::true_type, is_synced<R>>
 ){
 return _range.rw_size();
@@ -616,7 +639,7 @@ return _range.rw_size();
 template <typename R>
 decltype(auto)
 rw_size (
-  R const & _range
+  const R & _range
 , const tag<std::false_type, is_synced<R>>
 ){
 return std::min(read_size(_range), write_size(_range));

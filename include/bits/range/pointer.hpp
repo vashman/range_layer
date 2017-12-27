@@ -10,9 +10,9 @@
 
 namespace range_layer {
 
-/*===========================================================
+/*==============================================================================
   pointer range
-===========================================================*/
+==============================================================================*/
 template <typename T>
 class range <T *> : public range<T * const> {
 
@@ -20,7 +20,7 @@ public:
 
 explicit range(T * _ptr) : range<T * const> {_ptr}{}
 
-}; //-------------------------------------------pointer range
+}; //--------------------------------------------------------------pointer range
 
 /*===========================================================
   const pointer range
@@ -44,13 +44,13 @@ public:
 
 using write_type = typename std::remove_pointer<T>::type;
 
-explicit range (T * const);
-         range (range const &) = delete;
-         range (range &&) = default;
-range &  operator = (range const &) = delete;
-range &  operator = (range &&) = default;
-void     write (write_type const &);
-bool     has_writable() const;
+explicit range       (T * const);
+         range       (range const &) = delete;
+         range       (range &&) = default;
+range &  operator =  (range const &) = delete;
+range &  operator =  (range &&) = default;
+void     write       (write_type const &);
+bool     has_writable () const;
 
 private:
 
@@ -68,13 +68,13 @@ using read_type = typename std::remove_pointer<T>::type;
 
 public:
 
-explicit              range (const T * const);
-read_type const &     read() const;
-constexpr std::size_t size() const;
-constexpr std::size_t position() const;
-void                  advance ();
-void                  reverse ();
-bool                  has_readable() const;
+explicit              range        (const T * const);
+const read_type &     read         () const;
+constexpr std::size_t size         () const;
+constexpr std::size_t position     () const;
+void                  advance      ();
+void                  reverse      ();
+bool                  has_readable () const;
 
 private:
 
@@ -85,3 +85,4 @@ bool is_end;
 } //----------------------------------------------range layer
 #endif
 #include "pointer.tcc"
+
