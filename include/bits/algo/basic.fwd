@@ -1,6 +1,6 @@
 // Basic range operations.
 
-//          Copyright Sundeep S. Sangha 2015 - 2017.
+//          Copyright Sundeep S. Sangha 2015 - 2018.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -12,18 +12,6 @@
 #include "../traits.fwd"
 
 namespace range_layer {
-
-/*==============================================================================
-  Tag
-
-* Creates a type for both version of the tag.
-* True tag exits, false tag does not exist.
-* For the tag to not exist it has to be known, and thus must exist.
-==============================================================================*/
-template <typename... Ts> struct tag {};
-template <typename... Ts> struct tag <std::true_type, Ts...>{};
-template <typename... Ts> struct tag <std::false_type, Ts...>{};
-
 /*==============================================================================
   Basic Range Operations
 
@@ -115,23 +103,13 @@ All non-modifing functions cannot;
 ## Returns
 * Returns the size of the writable block.
 ==============================================================================*/
-template <typename R>             bool           has_input    (const R &);
-template <typename R>             bool           has_output   (const R &);
-template <typename R>             bool           has_io       (const R &);
-template <typename R>             decltype(auto) size         (const R &);
-template <typename R>             decltype(auto) position     (const R &);
-template <typename R>             decltype(auto) read_size    (const R &);
-template <typename R>             decltype(auto) write_size   (const R &);
-template <typename R>             decltype(auto) rw_size      (const R &);
-template <typename R, typename N> const auto &   read         (const R &, N);
-
 namespace bits {
 
-template <typename R> bool           has_input  (const R &, const tag<std::true_type,  is_synced<R>>);
-template <typename R> bool           has_input  (const R &, const tag<std::false_type, is_synced<R>>);
-template <typename R> bool           has_output (const R &, const tag<std::true_type,  is_synced<R>>);
-template <typename R> bool           has_output (const R &, const tag<std::false_type, is_synced<R>>);
-template <typename R> bool           has_io     (const R &, const tag<std::true_type,  is_synced<R>>);
+template <typename R> bool           has_input  (const R &, true_tag <is_synced<R>>);
+template <typename R> bool           has_input  (const R &, false_tag<is_synced<R>>);
+template <typename R> bool           has_output (const R &, true_tag <is_synced<R>>);
+template <typename R> bool           has_output (const R &, false_tag<is_synced<R>>);
+template <typename R> bool           has_io     (const R &, true_tag <is_synced<R>>);
 template <typename R> bool           has_io     (const R &, const tag<std::false_type, is_synced<R>>);
 template <typename R> decltype(auto) read_size  (const R &, const tag<std::true_type,  is_synced<R>>);
 template <typename R> decltype(auto) read_size  (const R &, const tag<std::false_type, is_synced<R>>);
@@ -169,11 +147,6 @@ template <typename R> decltype(auto) rw_size    (const R &, const tag<std::false
 # ```R emplace (R, Ts &&...)```
 ## 
 ==============================================================================*/
-template <typename R, typename N, typename... Ts> void write (R &, N, Ts &&...);
-template <typename R, typename N, typename... Ts> void write (R &&, N, Ts&&...);
-template <typename R, typename T>                 void swap  (R &, T &);
-template <typename R, typename T>                 R    drain (R, T &);
-template <typename R, typename... Ts>             R    insert(R, Ts &&...);
 
 namespace bits {
 
@@ -224,10 +197,6 @@ template <typename R, typename... Ts> R emplace_back  (R, Ts &&...);*/
 # ```R prev (R)```
 * next & prev 
 ==============================================================================*/
-template <typename R>             R next        (R);
-template <typename R>             R prev        (R);
-template <typename R, typename N> R next        (R, N);
-template <typename R, typename N> R prev        (R, N);
 
 namespace bits {
 

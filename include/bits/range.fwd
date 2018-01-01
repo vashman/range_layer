@@ -42,6 +42,7 @@ template <typename H, typename S = H> struct allocator;
 
 /*==============================================================================
   Decorator
+1. S = Sentinal
 ==============================================================================*/
 template <typename Pred>             struct remove_if;
 template <typename T>                struct remove;
@@ -54,7 +55,7 @@ template <typename Func>             struct transform_read;
 template <typename Func>             struct transform;
 template <typename N>                struct sub_range_n;
 template <std::size_t I>             struct select;
-template <typename Sentinal>         struct sub_range;
+template <typename S>                struct sub_range;
                                      struct backward;
                                      struct circular;
                                      struct disable_read;
@@ -70,33 +71,54 @@ template <typename R, typename Func> class range <R, transform<Func>>;
 template <typename R>                class range <R, disable_read>;
 template <typename R>                class range <R, disable_write>;
 template <typename R>                class range <R, disable_decorator>;
-/*template <typename R>     class range <R, sub_range>*/
+template <typename R, typename S>    class range <R, sub_range<S>>;
 
 template <typename... Ts> range<Ts...> make_range (Ts...);
 
 /*==============================================================================
   Range operations
+
+# Template Types 
+1. T = Element
+2. H = Handle
 ==============================================================================*/
+/*------------------------------------------------------------------------------
+  Empty range
+------------------------------------------------------------------------------*/
 constexpr std::size_t size     (const range<> &);
 constexpr std::size_t position (const range<> &);
 constexpr range<>     next     (const range<>);
 
-/*template <typename... Ts> bool           has_input  (const range<Ts...> &);
-template <typename... Ts> bool           has_output (const range<Ts...> &);
-template <typename... Ts> bool           has_io     (const range<Ts...> &);
-template <typename... Ts> decltype(auto) size       (const range<Ts...> &);
-template <typename... Ts> decltype(auto) position   (const range<Ts...> &);
-template <typename... Ts> decltype(auto) read_size  (const range<Ts...> &);
-template <typename... Ts> decltype(auto) write_size (const range<Ts...> &);
-template <typename... Ts> decltype(auto) rw_size    (const range<Ts...> &);
-template <typename... Ts> const auto &   read       (const range<Ts...> &, size_type_t<range<Ts...>>);
+/*-----------------------------------------------------------------------------
+  Non-Modifing
+-----------------------------------------------------------------------------*/
+template <typename H> bool           has_input  (const range<H> &);
+template <typename H> bool           has_output (const range<H> &);
+template <typename H> bool           has_io     (const range<H> &);
+template <typename H> decltype(auto) size       (const range<H> &);
+template <typename H> decltype(auto) position   (const range<H> &);
+template <typename H> decltype(auto) read_size  (const range<H> &);
+template <typename H> decltype(auto) write_size (const range<H> &);
+template <typename H> decltype(auto) rw_size    (const range<H> &);
+template <typename H> const auto &   read       (const range<H> &, size_type_t<range<H>>);
 
-template <typename... Ts1, typename... Ts2> void          write (range<Ts1...> &, size_type_t<range<Ts1...>>, Ts2 &&...);
-template <typename... Ts1, typename... Ts2> void          write (range<Ts1...> &&, size_type_t<range<Ts1...>>, Ts2 &&...);
-template <typename... Ts, typename T>       void          swap  (range<Ts...> &, T &);
-template <typename... Ts, typename T>       range<Ts...>  drain (range<Ts...>, T &);
-template <typename... Ts1, typename... Ts2> range<Ts1...> insert(range<Ts1...>, Ts2 &&...);
-*/
+/*-----------------------------------------------------------------------------
+  Modify
+-----------------------------------------------------------------------------*/
+template <typename H, typename... Ts> void         write (range<H> &, size_type_t<range<H>>, Ts &&...);
+template <typename H, typename... Ts> void         write (range<H> &&, size_type_t<range<H>>, Ts &&...);
+template <typename H, typename... Ts> range<Ts...> insert(range<H>, Ts &&...);
+template <typename H>                 void         swap  (range<H> &, value_type_t<range<H>> &);
+template <typename H>                 range<Ts...> drain (range<H>, value_type_t<range<H>> &);
+
+/*-----------------------------------------------------------------------------
+  Transversal
+-----------------------------------------------------------------------------*/
+template <typename H> range<H> next (range<H>);
+template <typename H> range<H> prev (range<H>);
+template <typename H> range<H> next (range<H>, size_type_t<range<H>>);
+template <typename H> range<H> prev (range<H>, size_type_t<range<H>>);
+
 namespace bits {
 
 template <typename T> T & to_ref (T &);
