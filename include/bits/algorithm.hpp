@@ -22,12 +22,5 @@ template <typename Policy> class remote {};
 using default_policy = sequenced;
 } //-----------------------------------------execution policy
 } //----------------------------------------------range layer
-
-#include "algo/read.hpp"
-#include "algo/write.hpp"
-//#include "algo/sort.hpp"
-#include "algo/search.hpp"
-//#include "algo/hash.hpp"
-
 #endif
 

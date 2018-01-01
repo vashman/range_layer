@@ -22,9 +22,9 @@ const int cvar {2};
 //range rng_ptr     {&var};
 //range crng_ptr    {&var};
 auto rng         = make_range(var);
-auto crng        = make_range(cvar);
-auto rng_ptr     = make_range<int *>(&var);
-auto crng_ptr    = make_range<const int *>(&cvar);
+//auto crng        = make_range(cvar);
+//auto rng_ptr     = make_range<int *>(&var);
+//auto crng_ptr    = make_range<const int *>(&cvar);
 
 rng      = write_test(read_test (std::move(rng)));
 //crng     = read_test (std::move(crng));
@@ -39,9 +39,7 @@ Range
 read_test (
   Range _range
 ){
-  if (read_size(_range) > 0){
-  int i = read(_range, 0);
-  }
+//  if (read_size(_range) > 0) int i = read(_range, 0);
 return _range;
 }
 
@@ -50,6 +48,6 @@ Range
 write_test (
   Range _range
 ){
-  if (write_size(_range) > 0) write(_range, 0, 44);
+//  if (write_size(_range) > 0) write(_range, 0, 44);
 return _range;
 }

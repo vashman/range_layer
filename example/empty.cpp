@@ -15,6 +15,7 @@ int main(){
 range<> nothing {};
 assert(0 == size(nothing));
 assert(0 == position(nothing));
+nothing = next(std::move(nothing));
 
 return 0;
 }

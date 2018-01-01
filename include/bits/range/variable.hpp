@@ -9,60 +9,57 @@
 #define RANGE_LAYER_BITS_RANGE_VARIABLE_HPP
 
 namespace range_layer {
+namespace range_class {
 /*==============================================================================
   variable range
 ==============================================================================*/
-template <typename T>
-class range <T *, range_class::variable> 
-: public range <const T *, range_class::variable>
-{
+template <typename H, typename S>
+class  variable : public variable<const H, S> {
 
 public:
 
-explicit range      (T *);
-        ~range      ()              = default;
-         range      (const range &) = default;
-         range      (range &&)      = default;
-range &  operator = (const range &) = default;
-range &  operator = (range &&)      = default;
+explicit    variable   (S);
+           ~variable   ()                 = default;
+            variable   (const variable &) = default;
+            variable   (variable &&)      = default;
+variable &  operator = (const variable &) = default;
+variable &  operator = (variable &&)      = default;
 
-void write (const std::size_t, T);
-void swap  (T &);
-T    drain ();
-
-private:
-
-T * handle;
+void write (const std::size_t, H);
+void swap  (H &);
+H    drain ();
 
 }; //-------------------------------------------------------------variable range
 
 /*==============================================================================
   variable range
 ==============================================================================*/
-template <typename T>
-class range <const T *, range_class::variable> {
+template <typename H, typename S>
+class variable <const H, S> {
 
 public:
 
-explicit range      (const T *);
-        ~range      ()              = default;
-         range      (const range &) = default;
-         range      (range &&)      = default;
-range &  operator = (const range &) = default;
-range &  operator = (range &&)      = default;
+explicit    variable   (S);
+           ~variable   ()                 = default;
+            variable   (const variable &) = default;
+            variable   (variable &&)      = default;
+variable &  operator = (const variable &) = default;
+variable &  operator = (variable &&)      = default;
 
 constexpr bool        has_io   () const;
 constexpr std::size_t rw_size  () const;
 constexpr std::size_t size     () const;
 constexpr std::size_t position () const;
-const T &             read     (const std::size_t) const;
+const H &             read     (const std::size_t) const;
 void                  next     ();
 
 private:
 
-T * const_handle;
+S    handle;
+bool last;
 
 }; //-------------------------------------------------------const variable range
+} //-----------------------------------------------------------------range class
 } //-----------------------------------------------------------------range layer
 #endif
 #include "variable.tcc"

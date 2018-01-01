@@ -1,0 +1,108 @@
+//
+
+//          Copyright Sundeep S. Sangha 2015 - 2017.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef RANGE_LAYER_BITS_RANGE_FWD
+#define RANGE_LAYER_BITS_RANGE_FWD
+
+namespace range_layer {
+/*==============================================================================
+  Range
+
+# ```make_range```
+* Does not deduce pointer ranges correctly.
+
+# Template types
+* H  = Handle
+* T  = Element Type
+* R  = Range
+* D  = Decorator
+* Ts = Type list
+* S  = Type of Handle stored
+==============================================================================*/
+template <typename... Ts> class range;
+template <>               class range <>;
+template <typename H>     class range <H>;
+template <typename R, typename D1, typename D2, typename... Ds>
+                          class range <R, D1, D2, Ds...>;
+
+namespace range_class {
+
+template <typename T>                 struct spec;
+template <typename H, typename S = H> struct iota;
+template <typename H, typename S = H> struct variable;
+template <typename H, typename S = H> struct pointer;
+template <typename H, typename S = H> struct array;
+template <typename H, typename S = H> struct allocator;
+
+} //-----------------------------------------------------------------range class
+
+/*==============================================================================
+  Decorator
+==============================================================================*/
+template <typename Pred>             struct remove_if;
+template <typename T>                struct remove;
+template <typename T>                struct replace_read;
+template <typename T>                struct replace_write;
+template <typename T, typename Pred> struct replace_if_read;
+template <typename T, typename Pred> struct replace_if_write;
+template <typename Func>             struct transform_write;
+template <typename Func>             struct transform_read;
+template <typename Func>             struct transform;
+template <typename N>                struct sub_range_n;
+template <std::size_t I>             struct select;
+template <typename Sentinal>         struct sub_range;
+                                     struct backward;
+                                     struct circular;
+                                     struct disable_read;
+                                     struct disable_write;
+                                     struct checked_range;
+                                     struct back_insert;
+                                     struct disable_decorator;
+                                     struct remove_decorator;
+
+template <typename R, typename T, typename Pred>
+                                     class range <R, replace_if_read<T, Pred>>;
+template <typename R, typename Func> class range <R, transform<Func>>;
+template <typename R>                class range <R, disable_read>;
+template <typename R>                class range <R, disable_write>;
+template <typename R>                class range <R, disable_decorator>;
+/*template <typename R>     class range <R, sub_range>*/
+
+template <typename... Ts> range<Ts...> make_range (Ts...);
+
+/*==============================================================================
+  Range operations
+==============================================================================*/
+constexpr std::size_t size     (const range<> &);
+constexpr std::size_t position (const range<> &);
+constexpr range<>     next     (const range<>);
+
+/*template <typename... Ts> bool           has_input  (const range<Ts...> &);
+template <typename... Ts> bool           has_output (const range<Ts...> &);
+template <typename... Ts> bool           has_io     (const range<Ts...> &);
+template <typename... Ts> decltype(auto) size       (const range<Ts...> &);
+template <typename... Ts> decltype(auto) position   (const range<Ts...> &);
+template <typename... Ts> decltype(auto) read_size  (const range<Ts...> &);
+template <typename... Ts> decltype(auto) write_size (const range<Ts...> &);
+template <typename... Ts> decltype(auto) rw_size    (const range<Ts...> &);
+template <typename... Ts> const auto &   read       (const range<Ts...> &, size_type_t<range<Ts...>>);
+
+template <typename... Ts1, typename... Ts2> void          write (range<Ts1...> &, size_type_t<range<Ts1...>>, Ts2 &&...);
+template <typename... Ts1, typename... Ts2> void          write (range<Ts1...> &&, size_type_t<range<Ts1...>>, Ts2 &&...);
+template <typename... Ts, typename T>       void          swap  (range<Ts...> &, T &);
+template <typename... Ts, typename T>       range<Ts...>  drain (range<Ts...>, T &);
+template <typename... Ts1, typename... Ts2> range<Ts1...> insert(range<Ts1...>, Ts2 &&...);
+*/
+namespace bits {
+
+template <typename T> T & to_ref (T &);
+template <typename T> T & to_ref (T *);
+
+} //------------------------------------------------------------------------bits
+} //-----------------------------------------------------------------range layer
+#endif
+

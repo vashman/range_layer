@@ -8,7 +8,7 @@
 #ifndef RANGE_LAYER_RANGE_HPP
 #define RANGE_LAYER_RANGE_HPP
 
-#include "rangefwd.hpp"
+#include "range.fwd"
 #include "traits.hpp"
 
 /*==============================================================================
@@ -21,7 +21,7 @@
 ===========================================================*/
 #include "bits/range/range.hpp"
 #include "bits/range/variable.hpp"
-#include "bits/range/iota.hpp"
+//#include "bits/range/iota.hpp"
 //#include "bits/range/pointer.hpp"
 //#include "bits/range/default.hpp"
 //#include "bits/range/unique_ptr.hpp"

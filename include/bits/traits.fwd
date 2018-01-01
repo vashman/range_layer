@@ -8,10 +8,7 @@
 #ifndef RANGE_LAYER_BITS_TRAITS_FWD
 #define RANGE_LAYER_BITS_TRAITS_FWD
 
-#include <type_traits>
-
 namespace range_layer {
-
 /*==============================================================================
   Traits
 
@@ -83,15 +80,9 @@ namespace range_layer {
 * std::is_copable
 * std::is_move_assignment
 * std::is_copy_assignment
-
-
-Phil Test
-1. true tables - fill out / symbolize eng argument
-2. Terminolgy - inerance / best explaination / theroicalt explnation / inductive reasoning
-3. Evelauting reasinng / 5 - testabilty, ffrut, scope, simility, conservatsm (8 - 10 terms)
-  securtizze alteratives (acronym TEST).
 ==============================================================================*/
-template <typename R> struct range_type;
+template <typename R> struct size_type;
+template <typename R> struct value_type;
 template <typename R> struct is_range;
 template <typename R> struct is_synced;
 template <typename R> struct is_input;
@@ -110,72 +101,6 @@ template <typename R> struct is_clearable;
 template <typename R> struct is_front_expandable;//
 template <typename R> struct is_back_expandable;//*/
 template <typename R> struct is_decorator;
-
-/*===========================================================
-  is_shrinkable
-
-* When true, calling advance_shrink shrinks the size of the
-  range by removing elements from the beggining.
-* The removed elements are destroyed.
-* The ranges postion remains the same, until the element at
-  the position is removed, then the postion advances by 1.
-
-  pre:  | 0| 1|*2| 3| 4
-  n = 1
-  post: | 0| 1|*2| 3
-  n = 3
-  post: | 0| 1|*
-===========================================================*/
-
-/*===========================================================
-  is_erasable
-
-* When true, calling erase shrinks the size of the range by
-  removing the current element.
-* The removed elements are destroyed.
-* The postion does not change.
-
-  pre:  | 0| 1|*2| 3| 4
-  post: | 0| 1|*3| 4
-
-  pre:  | 0| 1| 2| 3|*4
-  post: | 0| 1| 2| 3|*
-===========================================================*/
-
-/*===========================================================
-  is_all_erasable
-
-* When true, calling erase shrinks the size of the range by
-  removing the current element.
-* The removed elements are destroyed.
-* The postion advacnes by 1.
-
-  pre:  | 0| 1|*2| 3| 4
-  post: *
-===========================================================*/
-
-/*===========================================================
-  is_expandable
-
-* When true, calling reverse_expand expands the size of the
-  range by adding to the end.
-* The postion does not change.
-
-  pre:  | 0| 1|*2| 3| 4
-  n = 1
-  post: | 0| 1|*2| 3| 4| #
-===========================================================*/
-
-/*===========================================================
-  is_insertable
-
-* When true, calling insert expands the size of the range by
-  adding to the current postion with a write_type.
-* The postion changes to the inserted element.
-
-  pre:  | 0| 1|*2| 3| 4
-  post: | 0| 1|*#| 2| 3| 4
-===========================================================*/
 
 } //-----------------------------------------------------------------range layer
 #endif

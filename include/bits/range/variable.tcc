@@ -9,46 +9,45 @@
 #define RANGE_LAYER_BITS_RANGE_VARIABLE_TCC
 
 namespace range_layer {
+namespace range_class {
 
 /*==============================================================================
-  ctor range <T *>
+  ctor range
 ==============================================================================*/
-template <typename T>
-range<T *, range_class::variable>::range (
-  T * _ptr
+template <typename H, typename S>
+variable<H, S>::variable (
+  S _handle
 )
-: range <const T *, range_class::variable> {_ptr}
-, handle {_ptr}
+: variable<const H, S> {_handle}
 {}
 
 /*==============================================================================
-  ctor range <const T *>
+  ctor const varaible
 ==============================================================================*/
-template <typename T>
-range<const T *, range_class::variable>::range (
-  const T * _ptr
+template <typename H, typename S>
+variable<const H, S>::variable (
+  S _handle
 )
-: const_handle {_ptr}
-{
-  if (_ptr == nullptr) throw;
-}
+: handle {_handle}
+, last   {false}
+{}
 
 /*==============================================================================
   has_io
 ==============================================================================*/
-template <typename T>
+template <typename H, typename S>
 constexpr bool
-range<const T *, range_class::variable>::has_io (
+variable<const H, S>::has_io (
 ) const {
-return (this->const_handle != nullptr);
+return this->last;
 }
 
 /*==============================================================================
   rw_size
 ==============================================================================*/
-template <typename T>
+template <typename H, typename S>
 constexpr std::size_t
-range<const T *, range_class::variable>::rw_size (
+variable<const H, S>::rw_size (
 ) const {
 return 1;
 }
@@ -56,9 +55,9 @@ return 1;
 /*==============================================================================
   size
 ==============================================================================*/
-template <typename T>
+template <typename H, typename S>
 constexpr std::size_t
-range<const T *, range_class::variable>::size (
+variable<const H, S>::size (
 ) const {
 return 1;
 }
@@ -66,9 +65,9 @@ return 1;
 /*==============================================================================
   position
 ==============================================================================*/
-template <typename T>
+template <typename H, typename S>
 constexpr std::size_t
-range<const T *, range_class::variable>::position (
+variable<const H, S>::position (
 ) const {
 return 0;
 }
@@ -76,57 +75,58 @@ return 0;
 /*==============================================================================
   read
 ==============================================================================*/
-template <typename T>
-const T &
-range<const T *, range_class::variable>::read (
+template <typename H, typename S>
+const H &
+variable<const H, S>::read (
   const std::size_t //unused
 ) const {
-return *this->const_handle;
+return bits::to_ref(this->handle);
 }
 
 /*==============================================================================
   write
 ==============================================================================*/
-template <typename T>
+template <typename H, typename S>
 void
-range<T *, range_class::variable>::write (
+variable<H, S>::write (
   const std::size_t //unused
-, T _var
+, H _var
 ){
-*this->handle = _var;
+bits::to_ref(this->handle) = _var;
 }
 
 /*==============================================================================
   swap
 ==============================================================================*/
-template <typename T>
+template <typename H, typename S>
 void
-range<T *, range_class::variable>::swap (
-  T & _other
+variable<H, S>::swap (
+  H & _other
 ){
-swap(_other, *this->handle);
+swap(_other, bits::to_ref(this->handle));
 }
 
 /*==============================================================================
   drain
 ==============================================================================*/
-template <typename T>
-T
-range<T *, range_class::variable>::drain (
+template <typename H, typename S>
+H
+variable<H, S>::drain (
 ){
-return std::move(*this->handle);
+return std::move(bits::to_ref(this->handle));
 }
 
 /*==============================================================================
   next
 ==============================================================================*/
-template <typename T>
+template <typename H, typename S>
 void
-range<const T *, range_class::variable>::next (
+variable<const H, S>::next (
 ){
-this->const_handle = nullptr;
+this->last = true;
 }
 
+} //-----------------------------------------------------------------range class
 } //-----------------------------------------------------------------range layer
 #endif
 

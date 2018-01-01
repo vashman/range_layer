@@ -138,7 +138,6 @@ disable_decorator_func (
 /*===========================================================
   disable decorator
 ===========================================================*/
-struct disable_decorator;
 
 /*===========================================================
   remove decorator
@@ -146,13 +145,10 @@ struct disable_decorator;
 * Removes the decorator status of the range, making the
   decorator permanent.
 ===========================================================*/
-struct remove_decorator;
 
 /*===========================================================
   remove if
 ===========================================================*/
-template <typename Pred>
-struct remove_if;
 
 template <typename Pred>
 remove_if<Pred>
@@ -164,9 +160,6 @@ make_remove_if (
   remove
 ===========================================================*/
 template <typename T>
-struct remove;
-
-template <typename T>
 remove<T>
 make_remove (
   T
@@ -175,9 +168,6 @@ make_remove (
 /*===========================================================
   replace_read
 ===========================================================*/
-template <typename T>
-struct replace_read;
-
 template <typename T>
 replace_read<T>
 make_replace_read (
@@ -189,9 +179,6 @@ make_replace_read (
   output replace
 ===========================================================*/
 template <typename T>
-struct replace_write;
-
-template <typename T>
 replace_write<T>
 make_replace_write (
   T
@@ -201,9 +188,6 @@ make_replace_write (
 /*===========================================================
   input_replace if
 ===========================================================*/
-template <typename T, typename Pred>
-struct replace_if_read;
-
 template <typename T, typename Pred>
 replace_if_read<T, Pred>
 make_replace_if_read (
@@ -215,9 +199,6 @@ make_replace_if_read (
   output_replace if
 ===========================================================*/
 template <typename T, typename Pred>
-struct replace_if_write;
-
-template <typename T, typename Pred>
 replace_if_write<T, Pred>
 make_replace_if_write (
   T
@@ -228,9 +209,6 @@ make_replace_if_write (
   write transform
 ===========================================================*/
 template <typename Func>
-struct transform_write;
-
-template <typename Func>
 transform_write<Func>
 make_transform_write (
   Func
@@ -239,9 +217,6 @@ make_transform_write (
 /*===========================================================
   read transform
 ===========================================================*/
-template <typename Func>
-struct transform_read;
-
 template <typename Func>
 transform_read<Func>
 make_transform_read (
@@ -252,9 +227,6 @@ make_transform_read (
   transform
 ===========================================================*/
 template <typename Func>
-struct transform;
-
-template <typename Func>
 transform<Func>
 make_transform (
   Func
@@ -263,13 +235,10 @@ make_transform (
 /*===========================================================
   backward
 ===========================================================*/
-struct backward;
 
 /*===========================================================
   sub_range_n
 ===========================================================*/
-template <typename N>
-struct sub_range_n;
 
 template <typename N>
 sub_range_n<N>
@@ -277,26 +246,10 @@ make_sub_range_n (
   N
 );
 
-/*===========================================================
-  circular
-===========================================================*/
-struct circular;
-
-/*===========================================================
-  disable_input
-===========================================================*/
-struct disable_read;
-
-/*===========================================================
-  disable_output
-===========================================================*/
-struct disable_write;
 
 /*===========================================================
   select
 ===========================================================*/
-template <std::size_t I>
-struct select;
 //
 ///*===========================================================
 //  extend_life
@@ -394,24 +347,12 @@ struct select;
 /*===========================================================
   sub_range
 ===========================================================*/
-template <typename Sentinal>
-struct sub_range;
 
 template <typename Sentinal>
 sub_range<Sentinal>
 make_sub_range (
   Sentinal
 );
-
-/*===========================================================
-  checked_range
-===========================================================*/
-struct checked_range;
-
-/*===========================================================
-  back_insert
-===========================================================*/
-struct back_insert;
 
 /*===========================================================
   extend_range
