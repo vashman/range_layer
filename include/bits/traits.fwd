@@ -99,7 +99,7 @@ template <typename R> struct is_shrinkable;
 template <typename R> struct is_expandable;
 template <typename R> struct is_clearable;
 template <typename R> struct is_front_expandable;//
-template <typename R> struct is_back_expandable;//*/
+template <typename R> struct is_back_expandable;*///
 template <typename R> struct is_decorator;
 
 } //-----------------------------------------------------------------range layer

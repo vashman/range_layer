@@ -266,30 +266,6 @@ public:
 static constexpr bool value = !(bits::is_detected<func_t, R>::value);
 };
 
-/*==============================================================================
-  Range operations
-==============================================================================*/
-constexpr std::size_t
-size (
- const range<> &
-){
-return 0;
-}
-
-constexpr std::size_t
-position (
-  const range<> &
-){
-return 0;
-}
-
-constexpr range<>
-next (
-  const range<> _rng
-){
-return _rng;
-}
-
 } //-----------------------------------------------------------------range layer
 #endif
 #include "range.tcc"

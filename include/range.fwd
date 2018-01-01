@@ -5,20 +5,20 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_LAYER_RANGEFWD_HPP
-#define RANGE_LAYER_RANGEFWD_HPP
+#ifndef RANGE_LAYER_RANGE_FWD
+#define RANGE_LAYER_RANGE_FWD
 
 #include "bits/traits.fwd"
 
 /*==============================================================================
   Algorithm
 ==============================================================================*/
-#include "bits/algo/basic.fwd"
+//#include "bits/algo/basic.fwd"
 
 /*===========================================================
   Range
 ===========================================================*/
-#include "bits/range/range.fwd"
+#include "bits/range.fwd"
 //#include "bits/range/pointer.fwd"
 //#include "bits/range/default.fwd"
 //#include "bits/range/unique_ptr.fwd"
@@ -32,12 +32,6 @@
 //#include "bits/range/decorator.fwd"
 //#include "bits/range/iota.fwd"
 //#include "bits/range/generate.fwd"
-
-/*===========================================================
-  Decorators
-===========================================================*/
-//#include "bits/decor/disable_output.hpp"
-//#include "bits/decor/disable_input.hpp"
 
 #endif
 

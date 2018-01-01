@@ -14,13 +14,13 @@
 /*==============================================================================
   Algorithm
 ==============================================================================*/
-#include "bits/algo/basic.hpp"
+//#include "bits/algo/basic.hpp"
 
 /*===========================================================
   Range
 ===========================================================*/
-#include "bits/range/range.hpp"
-#include "bits/range/variable.hpp"
+#include "bits/range.hpp"
+//#include "bits/range/variable.hpp"
 //#include "bits/range/iota.hpp"
 //#include "bits/range/pointer.hpp"
 //#include "bits/range/default.hpp"

@@ -7,6 +7,7 @@
 
 #include <cassert>
 #include "../include/range.hpp"
+#include "../src/range.cpp"
 
 using range_layer::range;
 
