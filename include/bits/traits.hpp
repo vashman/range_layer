@@ -22,8 +22,7 @@ template <typename R> struct is_prev_linear {static constexpr bool value = false
 template <typename R> struct is_reversable  {static constexpr bool value = false;};
 template <typename R> struct is_decorator   {static constexpr bool value = false;};
 
-template <typename R> using                 value_type_t     = typename value_type<R>::type;
-template <typename R> using                 size_type_t      = typename size_type<R>::type;
+// need to be inline constexpr bool
 template <typename R> constexpr bool is_range_v       = is_range<R>::value;
 template <typename R> constexpr bool is_synced_v      = is_synced<R>::value;
 template <typename R> constexpr bool is_output_v      = is_output<R>::value;

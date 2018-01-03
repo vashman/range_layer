@@ -18,6 +18,9 @@ class  variable : public variable<const H, S> {
 
 public:
 
+using value_type = H;
+using size_type  = std::size_t;
+
 explicit    variable   (S);
            ~variable   ()                 = default;
             variable   (const variable &) = default;
@@ -38,6 +41,9 @@ template <typename H, typename S>
 class variable <const H, S> {
 
 public:
+
+using value_type = H;
+using size_type  = std::size_t;
 
 explicit    variable   (S);
            ~variable   ()                 = default;

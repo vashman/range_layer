@@ -51,7 +51,14 @@ return *_ptr;
 /*==============================================================================
   empty range
 ==============================================================================*/
-template <> class range <> {}; //------------------------------------empty range
+template <> class range <> {
+
+public:
+
+using value_type = void;
+using size_type  = int;
+
+}; //----------------------------------------------------------------empty range
 
 /*==============================================================================
   range
@@ -60,6 +67,9 @@ template <typename H>
 class range <H> : public range_class::spec<H>::type {
 
 public:
+
+using value_type = typename range_class::spec<H>::type::value_type;
+using size_type  = typename range_class::spec<H>::type::size_type;
 
 explicit range      (H);
         ~range      ()              = default;

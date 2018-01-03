@@ -8,6 +8,9 @@
 #ifndef RANGE_LAYER_BITS_RANGE_FWD
 #define RANGE_LAYER_BITS_RANGE_FWD
 
+#include "tag.hpp"
+#include "traits.fwd"
+
 namespace range_layer {
 /*==============================================================================
   Range
@@ -105,11 +108,11 @@ template <typename H> const auto &   read       (const range<H> &, size_type_t<r
 /*-----------------------------------------------------------------------------
   Modify
 -----------------------------------------------------------------------------*/
-template <typename H, typename... Ts> void         write (range<H> &, size_type_t<range<H>>, Ts &&...);
-template <typename H, typename... Ts> void         write (range<H> &&, size_type_t<range<H>>, Ts &&...);
-template <typename H, typename... Ts> range<Ts...> insert(range<H>, Ts &&...);
-template <typename H>                 void         swap  (range<H> &, value_type_t<range<H>> &);
-template <typename H>                 range<Ts...> drain (range<H>, value_type_t<range<H>> &);
+template <typename H, typename... Ts> void     write (range<H> &, size_type_t<range<H>>, Ts &&...);
+template <typename H, typename... Ts> void     write (range<H> &&, size_type_t<range<H>>, Ts &&...);
+template <typename H, typename... Ts> range<H> insert(range<H>, Ts &&...);
+template <typename H>                 void     swap  (range<H> &, value_type_t<range<H>> &);
+template <typename H>                 range<H> drain (range<H>, value_type_t<range<H>> &);
 
 /*-----------------------------------------------------------------------------
   Transversal
@@ -123,6 +126,30 @@ namespace bits {
 
 template <typename T> T & to_ref (T &);
 template <typename T> T & to_ref (T *);
+
+/*-----------------------------------------------------------------------------
+  Non-Modifing
+-----------------------------------------------------------------------------*/
+template <typename H> bool           has_input  (const range<H> &, true_tag <is_synced<range<H>>>);
+template <typename H> bool           has_input  (const range<H> &, false_tag<is_synced<range<H>>>);
+template <typename H> bool           has_output (const range<H> &, true_tag <is_synced<range<H>>>);
+template <typename H> bool           has_output (const range<H> &, false_tag<is_synced<range<H>>>);
+template <typename H> bool           has_io     (const range<H> &, true_tag <is_synced<range<H>>>);
+template <typename H> bool           has_io     (const range<H> &, false_tag<is_synced<range<H>>>);
+template <typename H> decltype(auto) read_size  (const range<H> &, true_tag <is_synced<range<H>>>);
+template <typename H> decltype(auto) read_size  (const range<H> &, false_tag<is_synced<range<H>>>);
+template <typename H> decltype(auto) write_size (const range<H> &, true_tag <is_synced<range<H>>>);
+template <typename H> decltype(auto) write_size (const range<H> &, false_tag<is_synced<range<H>>>);
+template <typename H> decltype(auto) rw_size    (const range<H> &, true_tag <is_synced<range<H>>>);
+template <typename H> decltype(auto) rw_size    (const range<H> &, false_tag<is_synced<range<H>>>);
+
+/*-----------------------------------------------------------------------------
+  Transversal
+-----------------------------------------------------------------------------*/
+template <typename H> range<H> next (range<H>, size_type_t<range<H>>, true_tag<is_next_linear<range<H>>>);
+template <typename H> range<H> prev (range<H>, size_type_t<range<H>>, true_tag<is_prev_linear<range<H>>>);
+template <typename H> range<H> next (range<H>, size_type_t<range<H>>, false_tag<is_next_linear<range<H>>>);
+template <typename H> range<H> prev (range<H>, size_type_t<range<H>>, false_tag<is_prev_linear<range<H>>>);
 
 } //------------------------------------------------------------------------bits
 } //-----------------------------------------------------------------range layer

@@ -102,6 +102,9 @@ template <typename R> struct is_front_expandable;//
 template <typename R> struct is_back_expandable;*///
 template <typename R> struct is_decorator;
 
+template <typename R> using value_type_t = typename value_type<R>::type;
+template <typename R> using size_type_t = typename size_type<R>::type;
+
 } //-----------------------------------------------------------------range layer
 #endif
 

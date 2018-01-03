@@ -198,17 +198,6 @@ template <typename R, typename... Ts> R emplace_back  (R, Ts &&...);*/
 * next & prev 
 ==============================================================================*/
 
-namespace bits {
-
-template <typename R> struct has_next;
-template <typename R> struct has_prev;
-
-template <typename R, typename N> R next (R, N, const tag<std::true_type, bits::has_next<R>>);
-template <typename R, typename N> R next (R, N, const tag<std::false_type, bits::has_next<R>>);
-template <typename R, typename N> R prev (R, N, const tag<std::true_type, bits::has_prev<R>>);
-template <typename R, typename N> R prev (R, N, const tag<std::false_type, bits::has_prev<R>>);
-
-} //------------------------------------------------------------------------bits
 } //-----------------------------------------------------------------range layer
 #endif
 
